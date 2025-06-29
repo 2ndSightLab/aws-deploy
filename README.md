@@ -1,5 +1,5 @@
 # aws-deploy-test
-Deploy anything on AWS or 
+Deploy anything on AWS (simple resources no sub resources at this point) 
 
 ```
 cd ~
