@@ -1,24 +1,18 @@
-#!/bin/bash
 get_identity_name_from_arn() {
     local arn=$1
-    
+
     # Check if ARN is provided
     if [ -z "$arn" ]; then
         echo "Error: ARN must be provided." >&2
         return 1
     fi
-    
+
     # Split the ARN into parts
     local arn_parts=(${arn//:/ })
-    
+
     # Get the resource type and name
-    local resource_path=${arn_parts[5]}
+    local resource_path=${arn_parts[5]:-${arn_parts[4]}}
     
-    # Debug output to see what's happening
-    # echo "DEBUG: ARN=$arn" >&2
-    # echo "DEBUG: resource_path=$resource_path" >&2
-    
-    # Handle different ARN formats
     case $resource_path in
         "root")
             echo "root"
