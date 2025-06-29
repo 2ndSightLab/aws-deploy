@@ -83,14 +83,14 @@ git pull private main
 
 To further protect your private and public repos create separate access keys. Only use the access key for the public repository when you really need it. Then make sure you remove it from memory.\
 \
-Go to GitHub Settings: Click your profile picture > Settings.\
-Find Developer Settings: Click "Developer settings" in the left sidebar.\
-Choose Fine-grained Tokens: Click "Personal access tokens" > "Fine-grained tokens".\
-Make a New Token: Click "Generate new token".\
-Name and Set Expiration: Give it a name and choose an expiration date.\
-Select Repositories:\
-Choose who owns the token: Select either your personal account or an organization.\
-Limit to specific repos: Pick "Only select repositories".\
-Choose the repos: Select the exact repositories the token needs access to.\
-Set Permissions: Choose the minimum permissions the token needs (e.g., read-only for specific actions).\
-Create and Copy: Click "Generate token" and immediately copy the token. You won't see it again.
+> Go to GitHub Settings: Click your profile picture > Settings.\
+> Find Developer Settings: Click "Developer settings" in the left sidebar.\
+> Choose Fine-grained Tokens: Click "Personal access tokens" > "Fine-grained tokens".\
+> Make a New Token: Click "Generate new token".\
+> Name and Set Expiration: Give it a name and choose an expiration date.\
+> Select Repositories:\
+> Choose who owns the token: Select either your personal account or an organization.\
+> Limit to specific repos: Pick "Only select repositories".\
+> Choose the repos: Select the exact repositories the token needs access to.\
+> Set Permissions: Choose the minimum permissions the token needs (e.g., read-only for specific actions).\
+> Create and Copy: Click "Generate token" and immediately copy the token. You won't see it again.
