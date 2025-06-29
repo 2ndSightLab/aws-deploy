@@ -1,4 +1,4 @@
-# aws-deploy-test
+ws-deploy-test
 Deploy anything on AWS (simple resources no sub resources at this point) 
 
 ```
@@ -100,3 +100,20 @@ Remove the git credentials from memory after performing required actions.
 ```
 git credential-cache exit
 ```
+
+Stop git from guessing credentials:
+
+```
+git config --global user.useConfigOnly true
+git config  user.useConfigOnly true
+```
+
+Remove any existing configured credentials:
+```
+git config --global --unset user.name
+git config --global --unset user.email
+git config --unset user.name
+git config --unset user.email
+```
+
+You can set the username and email for the purposes of commit, but then login with a different user when you push the code. Not sure how I feel about that in a large roganization but it keeps my details somewhat out of CloudShell, though not completely.
