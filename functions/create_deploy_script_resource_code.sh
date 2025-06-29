@@ -15,30 +15,23 @@ create_deploy_script_resource_code() {
     echo "SCHEMA:"
     echo $schema
 
-    # Extract properties into arrays
-    readarray -t property_names < <(jq -r '.Schema | fromjson | .properties | keys[]' <<< "$schema")
+    readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$schema")
     
     # Process each property
     for property in "${property_names[@]}"; do
         # Extract property details using jq
-        type=$(jq -r ".Schema | fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$schema")
-        description=$(jq -r ".Schema | fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$schema")
-
-        echo "type: $type"
+        type=$(jq -r "fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$schema")
+        description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$schema")
         
         # Extract enum values if they exist
-        if jq -e ".Schema | fromjson | .properties[\"$property\"].enum" <<< "$schema" > /dev/null; then
-            enum_values=$(jq -r ".Schema | fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$schema")
+        if jq -e "fromjson | .properties[\"$property\"].enum" <<< "$schema" > /dev/null; then
+            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$schema")
         else
             enum_values="[]"
         fi
-
-        echo "enum_values: $enum_values"
         
         # Extract minimum length if it exists
-        min_length=$(jq -r ".Schema | fromjson | .properties[\"$property\"].minLength // 0" <<< "$schema")
-
-        echo "min_length: $min_length"
+        min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$schema")
         
         # Generate script content
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
@@ -53,7 +46,6 @@ create_deploy_script_resource_code() {
         
         echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         echo "" >> "$SCRIPT_FILE_PATH"
-        
     done
 
     # Add conditional logic to only include parameters with values
