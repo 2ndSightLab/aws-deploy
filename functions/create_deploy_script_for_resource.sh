@@ -10,9 +10,7 @@ generate_resource_code() {
     resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    #properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description)|\(.value.enum // [])|\(.value.minLength // 0)"')
-    echo "aws cloudformation describe-type --type RESOURCE --type-name \"$resource_type\" | jq -r '.Schema | fromjson | .properties | to_entries[] | \"\\(.key)|\\(.value.type)|\\(.value.description // \"No description available\")|\\(.value.enum // [])|\\(.value.minLength // 0)\"'"
-    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | fromjson | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description // "No description available")|\(.value.enum // [])|\(.value.minLength // 0)"')
+    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | fromjson | .properties | to_entries[] | "\(.key)|\(.value.type // "unknown")|\(.value.description // "No description available")|\(.value.enum // [])|\(.value.minLength // 0)"')
 
     # Add echo and read statements for each property with description, type, required status, and enum values
     echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
@@ -21,7 +19,8 @@ generate_resource_code() {
         echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
         
         # Determine if the property is required based on minimum length
-        if [ "$min_length" -gt 0 ]; then
+        # Use a more robust check for integer comparison
+        if [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]]; then
             echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
         else
             echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
@@ -87,22 +86,4 @@ generate_resource_code() {
     echo "deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENCODED_PARAMETERS \$IAM_CAPABILITY" >> "$SCRIPT_FILE_PATH"
 }
 
-create_deploy_script_for_resource() {
-    local SERVICE_NAME="$1"
-    local RESOURCE_NAME="$2"
-    
-    local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
-    local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
-    
-    # Create the script file with shebang
-    echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
-    
-    # Make the script executable
-    chmod +x "$SCRIPT_FILE_PATH"
-    
-    # Generate the resource code
-    generate_resource_code "$SERVICE_NAME" "$RESOURCE_NAME" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
-    
-    echo "Created deployment script at $SCRIPT_FILE_PATH"
-}
 
