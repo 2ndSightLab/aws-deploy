@@ -1,6 +1,6 @@
 #!/bin/bash -e
 # Function to generate resource code and write it to the script file
-generate_resource_code() {
+create_deploy_script_resource_code() {
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
     local SCRIPT_FILE_PATH="$3"
