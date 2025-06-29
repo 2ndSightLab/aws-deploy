@@ -100,3 +100,9 @@ Remove the git credentials from memory after performing required actions.
 ```
 git credential-cache exit
 ```
+
+Stop git from guessing credentials:
+
+```
+git config --global user.useConfigOnly true
+```
