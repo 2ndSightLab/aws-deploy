@@ -81,7 +81,7 @@ git pull private main
 # You are now ready to continue making changes, committing, and pushing to the private repo as described in the first part of this workflow.
 ```
 
-To further protect your private and public repos create separate access keys. Only use the access key for the public repository when you really need it. Then make sure you remove it from memory.\
+To further protect your private and public repos create separate access keys. Only use the access key for the public repository when you really need it. Then make sure you remove it from memory.
 
 > Go to GitHub Settings: Click your profile picture > Settings.\
 > Find Developer Settings: Click "Developer settings" in the left sidebar.\
@@ -94,3 +94,9 @@ To further protect your private and public repos create separate access keys. On
 > Choose the repos: Select the exact repositories the token needs access to.\
 > Set Permissions: Choose the minimum permissions the token needs (e.g., read-only for specific actions).\
 > Create and Copy: Click "Generate token" and immediately copy the token. You won't see it again.
+
+Remove the git credentials from memory after performing required actions.
+
+```
+git credential-cache exit
+```
