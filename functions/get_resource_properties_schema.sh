@@ -3,6 +3,6 @@
 get_resource_property_schema(){
   resource_type="$1"
   
-  schema=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" --query 'Schema' --output text)
+  schema=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" --query 'Schema' --output json)
   echo $schema
 }
