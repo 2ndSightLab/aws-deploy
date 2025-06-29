@@ -10,7 +10,9 @@ generate_resource_code() {
     resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description)|\(.value.enum // [])|\(.value.minLength // 0)"')
+    #properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description)|\(.value.enum // [])|\(.value.minLength // 0)"')
+    echo "aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | fromjson | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description // "No description available")|\(.value.enum // [])|\(.value.minLength // 0)"'"
+    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | fromjson | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description // "No description available")|\(.value.enum // [])|\(.value.minLength // 0)"')
 
     # Add echo and read statements for each property with description, type, required status, and enum values
     echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
