@@ -115,3 +115,5 @@ git config --global --unset user.email
 git config --unset user.name
 git config --unset user.email
 ```
+
+You can set the username and email for the purposes of commit, but then login with a different user when you push the code.
