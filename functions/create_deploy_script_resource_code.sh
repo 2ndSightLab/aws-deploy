@@ -16,11 +16,11 @@ create_deploy_script_resource_code() {
     echo $schema
 
     #ask the user to enter each property value
-    jq -r '.properties | to_entries[] | 
-         [.key, 
+    jq -r 'fromjson | .properties | to_entries[] | 
+        [.key, 
          (.value.type // "unknown"), 
          (.value.description // "No description available"), 
-         (.value.enum // []), 
+         (if .value.enum then (.value.enum | join(";")) else "[]" end), 
          (.value.minLength // 0)] | 
         @tsv' <<< "$schema" | 
     while IFS=$'\t' read -r property type description enum_values min_length; do
