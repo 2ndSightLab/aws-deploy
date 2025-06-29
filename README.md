@@ -82,7 +82,7 @@ git pull private main
 ```
 
 To further protect your private and public repos create separate access keys. Only use the access key for the public repository when you really need it. Then make sure you remove it from memory.\
-\
+
 > Go to GitHub Settings: Click your profile picture > Settings.\
 > Find Developer Settings: Click "Developer settings" in the left sidebar.\
 > Choose Fine-grained Tokens: Click "Personal access tokens" > "Fine-grained tokens".\
