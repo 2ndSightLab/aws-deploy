@@ -15,15 +15,27 @@ create_deploy_script_resource_code() {
     echo "SCHEMA:"
     echo $schema
 
-    #ask the user to enter each property value
-    jq -r '.Schema | fromjson | .properties | to_entries[] | 
-        [.key, 
-         (.value.type // "unknown"), 
-         (.value.description // "No description available"), 
-         (if .value.enum then (.value.enum | join(";")) else "[]" end), 
-         (.value.minLength // 0)] | 
-        @tsv' <<< "$schema_json" | 
-    while IFS=$'\t' read -r property type description enum_values min_length; do
+
+    # Extract properties into arrays
+    readarray -t property_names < <(jq -r '.Schema | fromjson | .properties | keys[]' <<< "$schema")
+    
+    # Process each property
+    for property in "${property_names[@]}"; do
+        # Extract property details using jq
+        type=$(jq -r ".Schema | fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$schema")
+        description=$(jq -r ".Schema | fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$schema")
+        
+        # Extract enum values if they exist
+        if jq -e ".Schema | fromjson | .properties[\"$property\"].enum" <<< "$schema" > /dev/null; then
+            enum_values=$(jq -r ".Schema | fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$schema")
+        else
+            enum_values="[]"
+        fi
+        
+        # Extract minimum length if it exists
+        min_length=$(jq -r ".Schema | fromjson | .properties[\"$property\"].minLength // 0" <<< "$schema")
+        
+        # Generate script content
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
         echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
