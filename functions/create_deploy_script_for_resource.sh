@@ -15,13 +15,29 @@ create_deploy_script_for_resource(){
     # Set resource type directly
     resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
     
-    # Get properties for the resource type
-    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema' | jq -r '.properties | keys[]')
+    # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
+    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | .properties | to_entries[] | "\(.key)|\(.value.type)|\(.value.description)|\(.value.enum // [])|\(.value.minLength // 0)"')
     
-    # Add echo and read statements for each property
-    for property in $properties; do
+    # Add echo and read statements for each property with description, type, required status, and enum values
+    echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
+        echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
+        echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
+        
+        # Determine if the property is required based on minimum length
+        if [ "$min_length" -gt 0 ]; then
+            echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
+        else
+            echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
+        fi
+        
+        # Check if enum_values is not empty
+        if [ "$enum_values" != "[]" ]; then
+            echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
+        fi
+        
         echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
+        echo "" >> "$SCRIPT_FILE_PATH"
     done
     
     # Build parameter-overrides string for CloudFormation deploy
