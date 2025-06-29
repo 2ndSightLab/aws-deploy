@@ -49,11 +49,6 @@ create_deploy_script_resource_code() {
         echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         echo "" >> "$SCRIPT_FILE_PATH"
     done
-    
-    # Build parameter-overrides string for CloudFormation deploy
-    echo "" >> "$SCRIPT_FILE_PATH"
-    echo "# Build parameter-overrides string for CloudFormation deploy" >> "$SCRIPT_FILE_PATH"
-    echo "PARAMETER_OVERRIDES=\"\"" >> "$SCRIPT_FILE_PATH"
 
     # Add conditional logic to only include parameters with values
     echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
