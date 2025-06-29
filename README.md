@@ -116,4 +116,4 @@ git config --unset user.name
 git config --unset user.email
 ```
 
-You can set the username and email for the purposes of commit, but then login with a different user when you push the code.
+You can set the username and email for the purposes of commit, but then login with a different user when you push the code. Not sure how I feel about that in a large roganization but it keeps my details somewhat out of CloudShell, though not completely.
