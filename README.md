@@ -106,3 +106,11 @@ Stop git from guessing credentials:
 ```
 git config --global user.useConfigOnly true
 ```
+
+Remove any existing configured credentials:
+```
+git config --global --unset user.name
+git config --global --unset user.email
+git config --unset user.name
+git config --unset user.email
+```
