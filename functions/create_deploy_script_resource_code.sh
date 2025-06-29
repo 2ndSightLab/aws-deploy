@@ -16,8 +16,8 @@ create_deploy_script_resource_code() {
     echo $schema
 
     #ask the user to enter each property value
-    jq -r 'fromjson | .properties | to_entries[] | 
-        [.key, 
+    jq -r '.properties | to_entries[] | 
+         [.key, 
          (.value.type // "unknown"), 
          (.value.description // "No description available"), 
          (.value.enum // []), 
