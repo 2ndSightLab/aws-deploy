@@ -20,3 +20,9 @@ cd aws-deploy-test
 chmod 700 deploy.sh
 ./deploy.sh
 ```
+
+I do not like that AWS CloudShell has a github credential helper that wants you to store your credentials. To prompt for credentials instead run this:
+
+```
+git config --global --unset credential.helper
+```
