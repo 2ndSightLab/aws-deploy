@@ -15,7 +15,6 @@ create_deploy_script_resource_code() {
     echo "SCHEMA:"
     echo $schema
 
-
     # Extract properties into arrays
     readarray -t property_names < <(jq -r '.Schema | fromjson | .properties | keys[]' <<< "$schema")
     
@@ -24,6 +23,8 @@ create_deploy_script_resource_code() {
         # Extract property details using jq
         type=$(jq -r ".Schema | fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$schema")
         description=$(jq -r ".Schema | fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$schema")
+
+        echo "type: $type"
         
         # Extract enum values if they exist
         if jq -e ".Schema | fromjson | .properties[\"$property\"].enum" <<< "$schema" > /dev/null; then
@@ -31,9 +32,13 @@ create_deploy_script_resource_code() {
         else
             enum_values="[]"
         fi
+
+        echo "enum_values: $enum_values"
         
         # Extract minimum length if it exists
         min_length=$(jq -r ".Schema | fromjson | .properties[\"$property\"].minLength // 0" <<< "$schema")
+
+        echo "min_length: $min_length"
         
         # Generate script content
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
@@ -48,6 +53,7 @@ create_deploy_script_resource_code() {
         
         echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         echo "" >> "$SCRIPT_FILE_PATH"
+        
     done
 
     # Add conditional logic to only include parameters with values
@@ -71,7 +77,7 @@ create_deploy_script_resource_code() {
        echo "Property code written:"
        cat $SCRIPT_FILE_PATH
     fi
-
+    
     # Add base64 encoding of parameter overrides with proper handling of special characters
     echo "" >> "$SCRIPT_FILE_PATH"
     echo "# Base64 encode the parameter overrides" >> "$SCRIPT_FILE_PATH"
