@@ -56,6 +56,12 @@ create_deploy_script_resource_code() {
         echo "fi" >> "$SCRIPT_FILE_PATH"
     done
 
+    # Check if the file is empty
+    if [ ! -s "$SCRIPT_FILE_PATH" ]; then
+        echo "Error: The generated script file is empty." >&2
+        exit 1
+    fi
+
     # Add base64 encoding of parameter overrides with proper handling of special characters
     echo "" >> "$SCRIPT_FILE_PATH"
     echo "# Base64 encode the parameter overrides" >> "$SCRIPT_FILE_PATH"
