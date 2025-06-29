@@ -105,6 +105,7 @@ Stop git from guessing credentials:
 
 ```
 git config --global user.useConfigOnly true
+git config  user.useConfigOnly true
 ```
 
 Remove any existing configured credentials:
