@@ -10,26 +10,26 @@ create_deploy_script_resource_code() {
     resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    properties=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema | fromjson | .properties | to_entries[] | "\(.key)|\(.value.type // "unknown")|\(.value.description // "No description available")|\(.value.enum // [])|\(.value.minLength // 0)"')
+    schema=$(get_resource_property_schema $resource_type)
 
-    # Add echo and read statements for each property with description, type, required status, and enum values
-    echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
+    #ask the user to enter each property value
+    jq -r 'fromjson | .properties | to_entries[] | 
+        [.key, 
+         (.value.type // "unknown"), 
+         (.value.description // "No description available"), 
+         (.value.enum // []), 
+         (.value.minLength // 0)] | 
+        @tsv' <<< "$schema" | 
+    while IFS=$'\t' read -r property type description enum_values min_length; do
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
         echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
         
-        # Determine if the property is required based on minimum length
-        # Use a more robust check for integer comparison
-        if [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]]; then
-            echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
-        else
+        [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]] && 
+            echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH" ||
             echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
-        fi
         
-        # Check if enum_values is not empty
-        if [ "$enum_values" != "[]" ]; then
-            echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-        fi
+        [ "$enum_values" != "[]" ] && echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
         
         echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         echo "" >> "$SCRIPT_FILE_PATH"
