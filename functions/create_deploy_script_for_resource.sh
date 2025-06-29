@@ -14,7 +14,7 @@ create_deploy_script_for_resource() {
     chmod +x "$SCRIPT_FILE_PATH"
     
     # Generate the resource code
-    generate_resource_code "$SERVICE_NAME" "$RESOURCE_NAME" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+    create_deploy_script_resource_code "$SERVICE_NAME" "$RESOURCE_NAME" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
     
     echo "Created deployment script at $SCRIPT_FILE_PATH"
 }
