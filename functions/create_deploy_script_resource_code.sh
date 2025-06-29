@@ -12,6 +12,9 @@ create_deploy_script_resource_code() {
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
     schema=$(get_resource_property_schema $resource_type)
 
+    echo "SCHEMA:"
+    echo $schema
+
     #ask the user to enter each property value
     jq -r 'fromjson | .properties | to_entries[] | 
         [.key, 
