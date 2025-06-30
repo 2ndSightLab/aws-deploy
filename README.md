@@ -90,6 +90,9 @@ git push private main
 # (This should be the case if you've been pushing to 'private main')
 # git pull private main # You might run this one last time for safety
 
+# Fetch the latest changes from the private repo to make sure have the latest
+git pull private main
+
 # Push the local 'main' branch (containing the working private changes) to the public remote
 git push public main
 
@@ -101,9 +104,6 @@ git push --force public main
 # You are likely already on the local 'main' branch, which is synced with the private repo's 'main'.
 # If you were on a different branch temporarily, switch back:
 git checkout main
-
-# Fetch the latest changes from the private repo (in case someone else made changes)
-git pull private main
 
 # You are now ready to continue making changes, committing, and pushing to the private repo as described in the first part of this workflow.
 ```
