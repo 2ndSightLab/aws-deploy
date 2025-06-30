@@ -34,6 +34,7 @@ create_deploy_script_resource_properties() {
             local type=""
             local required=""
             local enum_values=""
+            local cf_type=""
             
             echo "echo \"Property: $property\"" >> "$SCRIPT_FILE_PATH"
             
@@ -53,9 +54,18 @@ create_deploy_script_resource_properties() {
             else
 
                 #echo "Processing non-complex type"
-                local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+                type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
-                echo "Type: $type"
+                
+                # Map JSON Schema types to CloudFormation parameter types
+                # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
+                case "$param_type" in
+                    "integer"|"number") cf_type="Number" ;;
+                    "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
+                    "array") cf_type="CommaDelimitedList" ;;
+                    *) echo "Other type to String: $param_type"; cf_type="String" ;;
+                esac
+                echo "CloudFormation Type: $cf_type"
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
@@ -64,12 +74,22 @@ create_deploy_script_resource_properties() {
                 else
                     echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
-                echo "Required: $required"
                 
                 local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
+
+                
                 if [[ -n "$enum_values" && "$enum_values" != "" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
                     echo "Enum: $enum_values"
+                else
+                    if [ type == "boolean" ]; then 
+                        if [[ "$required" == "true" ]]; then
+                            echo "echo \"Allowed values: true, false\"" >> "$SCRIPT_FILE_PATH"
+    
+                        else
+                            echo "echo \"Allowed values: true, false, <empty>\"" >> "$SCRIPT_FILE_PATH"
+                        fi
+                    fi
                 fi
                 
                 echo "echo \"Enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
