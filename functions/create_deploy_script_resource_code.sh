@@ -14,8 +14,8 @@ create_deploy_script_resource_code() {
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
      while read -r property; do
-            description=$(echo "$properties_json" | jq --arg prop "$property" '.[$prop].description | tostring')
-            echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
+            description_b64=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description | @base64')
+            echo "echo \"Description: $(echo "$description_b64" | base64 -d)\"" >> "$SCRIPT_FILE_PATH"
             
             ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
