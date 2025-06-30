@@ -3,15 +3,12 @@
 echo "source all the files in the functions directory"
 for file in functions/*; do [ -f "$file" ] && source "$file"; done
 
-echo "get_region"
 REGION=$(get_region)
-echo "REGION: $REGION."
+echo "CURRENT REGION: $REGION."
 
-echo "get_durrent_identity_arn"
 IDENTITY_ARN=$(get_current_identity_arn)
 echo "IDENITTY_ARN: $IDENTITY_ARN"
 
-echo "get_identity_name_from_arn $IDENTITY_ARN"
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
 echo "IDENTITY_NAME: $IDENTITY_NAME"
 
@@ -69,5 +66,9 @@ SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
 create_deploy_script_for_resource $SERVICE_NAME $RESOURCE_NAME
 if [ ! -f $SCRIPT_FILE_PATH ]; then echo "$SCRIPT_FILE_PATH does not exist. Exiting."; exit; fi
 
-echo "Execute th edeploy script $SCRIPT_FILE_PATH"
-source $SCRIPT_FILE_PATH
+echo "Do you want to deploy the resource now (y)?"
+read ok
+if [ "$ok" == "y" ]; then
+    echo "Execute the deploy script $SCRIPT_FILE_PATH"
+    source $SCRIPT_FILE_PATH
+fi
