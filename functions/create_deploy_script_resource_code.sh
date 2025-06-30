@@ -39,13 +39,13 @@ create_deploy_script_resource_code() {
             local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
-                echo "Processing complex type: $ref"
+                #echo "Processing complex type: $ref"
                 local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 local object_schema_b64=$(echo "$object_schema" | base64)
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
             else
 
-                echo "Processing non-complex type"
+                #echo "Processing non-complex type"
                 local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 echo "Type: $type"
