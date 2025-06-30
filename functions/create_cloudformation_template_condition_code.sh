@@ -34,7 +34,7 @@ create_cloudformation_template_condition_code(){
             local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
             # Only create conditions for optional properties
-            if [[ "$required" == "true" ]]; then
+            if [[ "$required" == "false" || "$required" == "No" ]]; then
                 echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
                     # For array types, check if the array is empty using Fn::Join
