@@ -5,7 +5,13 @@ create_deploy_script_resource_code() {
     local SCHEMA="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
- 
+
+    echo "***SCHEMA***"
+    echo $SCHEMA
+    echo "****DEFINITIONS***" 
+    definitions_json=$(jq -r 'fromjson | .definitions' <<< "$SCHEMA")
+    echo $definitions_json
+    
     properties_json=$(jq -r 'fromjson | .properties' <<< "$SCHEMA")
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
@@ -18,7 +24,6 @@ create_deploy_script_resource_code() {
         if [[ -n "$ref" && "$ref" != "null" ]]; then
             echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
             
-            # Using property name as definition name instead of extracting from ref
             object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname] // {}' <<< "$SCHEMA")
             
             echo "create_deploy_script_resource_code \"$object_schema\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
