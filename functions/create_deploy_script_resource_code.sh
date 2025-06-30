@@ -15,7 +15,7 @@ create_deploy_script_resource_code() {
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
-     echo ""
+     echo "echo ''" >>  "$SCRIPT_FILE_PATH"
      echo "echo \"Enter property values for $RESOURCE_TYPE:\""  >> "$SCRIPT_FILE_PATH"
      while read -r property; do
 
