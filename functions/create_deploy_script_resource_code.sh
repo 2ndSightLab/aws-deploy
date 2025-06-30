@@ -27,11 +27,11 @@ create_deploy_script_resource_code() {
             
             echo "Processing property: $property"
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
-                
+            echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
+            
             local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
-
                 echo "Processing complex type: $ref"
                 local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 local object_schema_b64=$(echo "$object_schema" | base64)
@@ -39,7 +39,6 @@ create_deploy_script_resource_code() {
             else
 
                 echo "Processing non-complex type"
-                echo $properties_json
                 local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 echo "Type: $type"
@@ -53,14 +52,14 @@ create_deploy_script_resource_code() {
                 echo "Required: $required"
                 
                 local enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
-                if [[ -n "$enum_values" && "$enum_values" != "null" ]]; then
+                if [[ -n "$enum_values" && "$enum_values" != "" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
                     echo "Enum: $enum_values"
                 else
                     echo "No enum"
                 fi
                 
-                echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
+                echo "echo \"Enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
                 echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
 
                 # Add to parameter overrides
