@@ -44,9 +44,6 @@ create_deploy_script_resource_code() {
         
         echo "" >> "$SCRIPT_FILE_PATH"
     done < <(echo "$properties_json" | jq -r 'keys[]')
-    
-        echo "" >> "$SCRIPT_FILE_PATH"
-    done < <(echo "$properties_json" | jq -r 'keys[]')
 
     # Add conditional logic to only include parameters with values
     echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
