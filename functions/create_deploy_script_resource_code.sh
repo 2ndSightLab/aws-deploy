@@ -1,20 +1,11 @@
 #!/bin/bash -e
 # Function to generate resource code and write it to the script file
 create_deploy_script_resource_code() {
-    local SERVICE_NAME="$1"
-    local RESOURCE_NAME="$2"
+    local RESOURCE_TYPE="$1"
+    local SCHEMA="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
     
-    # Set resource type directly
-    resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
-
-    # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    schema=$(get_resource_property_schema $resource_type)
-
-    echo "SCHEMA:"
-    echo $schema
-
     readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$schema")
     
     # Process each property
