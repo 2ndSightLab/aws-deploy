@@ -17,9 +17,7 @@ create_deploy_script_for_resource() {
     local RESOURCE_TYPE="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    local SCHEMA=$(get_resource_schema $resource_type)
-
-    echo "SCRIPT SCHEMA OUTER $SCHEMA"
+    local SCHEMA=$(get_resource_schema $RESOURCE_TYPE)
 
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
     
