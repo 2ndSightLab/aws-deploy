@@ -33,7 +33,7 @@ create_deploy_script_resource_code() {
                 
                 object_schema_b64=$(echo "$object_schema" | base64)
                 
-                create_deploy_script_resource_code $property $object_schema $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
+                create_deploy_script_resource_code $property $object_schema_b64 $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
             else
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
