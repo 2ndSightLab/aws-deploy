@@ -26,9 +26,9 @@ create_deploy_script_resource_code() {
      while read -r property; do
             
             echo "Processing property: $property from $properties_json"
-            echo "$properties_json" | -r -arg prop "$property" '.[prop]'
-            echo "$properties_json" | -r -arg prop "$property" '.[prop].description'
-            echo "$properties_json" | -r -arg prop "$property" '.'
+            echo "$properties_json" | jq -r --arg prop "$property" '.[prop]'
+            echo "$properties_json" | jq -r --arg prop "$property" '.[prop].description'
+            echo "$properties_json" | jq -r --arg prop "$property" '.'
               
              
             description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
