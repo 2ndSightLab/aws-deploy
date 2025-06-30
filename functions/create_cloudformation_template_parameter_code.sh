@@ -44,7 +44,13 @@ create_cloudformation_template_parameter_code(){
             # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
             case "$param_type" in
                 "integer"|"number") cf_type="Number" ;;
-                "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
+                "boolean") 
+                     cf_type="String"; 
+                     if [[ "$required" == "true" ]]; then
+                        echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
+                     else
+                        echo "    AllowedValues: [true, false, '']" >> "$TEMPLATE_FILE_PATH" ;;
+                     fi
                 "array") cf_type="CommaDelimitedList" ;;
                 *) echo "Other type to String: $param_type"; cf_type="String" ;;
             esac
