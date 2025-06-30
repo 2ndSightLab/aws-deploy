@@ -19,6 +19,7 @@ create_deploy_script_resource_code() {
     echo $SCHEMA
     
     properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    
     echo "****PROPERTIES***" 
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
