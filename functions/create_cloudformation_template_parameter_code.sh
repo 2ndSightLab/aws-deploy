@@ -40,17 +40,26 @@ create_cloudformation_template_parameter_code(){
             # Map JSON Schema types to CloudFormation parameter types
             # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
             case "$param_type" in
-                "integer"|"number") cf_type="Number" ;;
+                "integer"|"number") 
+                    cf_type="Number" 
+                    ;;
                 "boolean") 
-                     cf_type="String"; 
-                     if [[ "$required" == "true" ]]; then
-                        echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
-                     else
-                        echo "    AllowedValues: [true, false, '']" >> "$TEMPLATE_FILE_PATH" ;;
-                     fi
-                "array") cf_type="CommaDelimitedList" ;;
-                *) echo "Other type to String: $param_type"; cf_type="String" ;;
+                    cf_type="String"
+                    if [[ "$required" == "true" ]]; then
+                        echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH"
+                    else
+                        echo "    AllowedValues: [true, false, '']" >> "$TEMPLATE_FILE_PATH"
+                    fi
+                    ;;
+                "array") 
+                    cf_type="CommaDelimitedList" 
+                    ;;
+                *) 
+                    echo "Other type to String: $param_type"
+                    cf_type="String" 
+                    ;;
             esac
+
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
