@@ -1,8 +1,8 @@
 #!/bin/bash -e
 # Function to generate resource code and write it to the script file
 create_deploy_script_resource_code() {
-    local SCHEMA_B64="$1"
-    local RESOURCE_TYPE="$2"
+    local RESOURCE_TYPE="$1"
+    local SCHEMA_B64="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
     
