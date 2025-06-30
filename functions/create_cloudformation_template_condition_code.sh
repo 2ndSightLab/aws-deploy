@@ -37,16 +37,15 @@ create_cloudformation_template_condition_code(){
             if [[ "$required" == "false" || "$required" == "No" ]]; then
                 echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
-                    
                     # For array types, check if the array is empty using Fn::Join
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
                     echo "          - Fn::Join:" >> "$TEMPLATE_FILE_PATH"
+                    echo "              - "" >> "$TEMPLATE_FILE_PATH"
                     echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                     echo "          - ''" >> "$TEMPLATE_FILE_PATH"
                 else
                     # For non-array types, check if the value is not empty
-                    echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
                     echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
