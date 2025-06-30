@@ -6,9 +6,8 @@ create_cloudformation_template_resource_code(){
     local TEMPLATE_FILE_PATH="$3"
     local indent="$4"
     
-    if [[ -z \"\$RESOURCE_TYPE\" ]]; then
-       echo "Error: Resource type is not set."
-       exit
+    if echo "$readOnlyProps" | grep -q "^$property$"; then
+        continue
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
