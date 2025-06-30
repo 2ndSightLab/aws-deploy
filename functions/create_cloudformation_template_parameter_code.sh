@@ -18,16 +18,16 @@ create_cloudformation_template_parameter_code(){
     
      while read -r property; do
         
+        echo "Processing property: $property in parameters"
+        if echo "$readOnlyProps" | grep -q "^$property$"; then
+            continue
+        fi
+        
         local cf_type=""
         local param_type=""
         local required=""
         local ref=""
         local object_schema=""
-
-        echo "Processing property: $property in parameters"
-        if echo "$readOnlyProps" | grep -q "^$property$"; then
-            continue
-        fi
 
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
@@ -37,8 +37,9 @@ create_cloudformation_template_parameter_code(){
             object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
-            required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+           echo "processing simple type"
+           param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+           required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
             
             # Map JSON Schema types to CloudFormation parameter types
             # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
@@ -46,12 +47,12 @@ create_cloudformation_template_parameter_code(){
                 "integer"|"number") 
                     cf_type="Number" 
                     ;;
-                "boolean") 
+                "boolean")
                     cf_type="String"
                     if [[ "$required" == "true" ]]; then
-                        echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH"
+                        allowed_values="    AllowedValues: [true, false]"
                     else
-                        echo "    AllowedValues: [true, false, '']" >> "$TEMPLATE_FILE_PATH"
+                        allowed_values="    AllowedValues: [true, false, '']"                        
                     fi
                     ;;
                 "array") 
@@ -61,18 +62,17 @@ create_cloudformation_template_parameter_code(){
                     cf_type="String" 
                     ;;
             esac
-
-            echo "cf_type: $cf_type"
-            echo "param_type: $param_type"
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
-            
             if [[ "$required" == "true" ]]; then
                 echo "    Description: Required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
             else
                 echo "    Description: Optional - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
                 echo "    Default: ''" >> "$TEMPLATE_FILE_PATH"
+            fi
+            if [ "$allowed_values" != "" ]; then 
+                echo "    AllowedValues: $allowed_values" >> "$TEMPLATE_FILE_PATH"
             fi
         fi
         
