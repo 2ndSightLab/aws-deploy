@@ -4,8 +4,6 @@ create_cloudformation_template_parameter_code(){
     local SCHEMA_B64="$2"
     local TEMPLATE_FILE_PATH="$3"
     
-   # Add Parameters
-    echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
     if [[ -z \"\$RESOURCE_TYPE\" ]]; then
        echo "Error: Resource type is not set."
        exit
