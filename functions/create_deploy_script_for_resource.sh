@@ -17,7 +17,7 @@ create_deploy_script_for_resource() {
     RESOURCE_TYPE="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    SCHEMA=$(get_resource_property_schema $resource_type)
+    SCHEMA=$(get_resource_schema $resource_type)
     
     # Generate the resource code
     create_deploy_script_resource_code "$RESOURCE_TYPE" "$SCHEMA" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
