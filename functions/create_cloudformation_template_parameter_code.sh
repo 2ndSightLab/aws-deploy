@@ -1,5 +1,5 @@
 #!/bin/bash
-create_cloudformation_template_resource_code(){
+create_cloudformation_template_parameter_code(){
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
     local SCRIPT_FILE_PATH="$3"
