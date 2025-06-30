@@ -30,10 +30,14 @@ create_deploy_script_resource_code() {
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA")
+
+                echo "REF OBJECT SCHEMA"
+                echo $object_schema
                 
                 object_schema_b64=$(echo "$object_schema" | base64)
                 
-                create_deploy_script_resource_code $property $object_schema_b64 $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
+                create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+                
             else
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
