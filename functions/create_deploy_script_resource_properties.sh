@@ -38,8 +38,7 @@ create_deploy_script_resource_properties() {
             
             echo "echo \"Property: $property\"" >> "$SCRIPT_FILE_PATH"
             
-            #DEBUG:
-            echo "Property: $property"
+            #echo "Property: $property"
             
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
             echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
@@ -65,7 +64,7 @@ create_deploy_script_resource_properties() {
                     "array") cf_type="CommaDelimitedList" ;;
                     *) echo "Other type to String: $param_type"; cf_type="String" ;;
                 esac
-                echo "CloudFormation Type: $cf_type"
+                #echo "CloudFormation Type: $cf_type"
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
@@ -80,7 +79,7 @@ create_deploy_script_resource_properties() {
                 
                 if [[ -n "$enum_values" && "$enum_values" != "" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-                    echo "Enum: $enum_values"
+                    #echo "Enum: $enum_values"
                 else
                     if [ type == "boolean" ]; then 
                         if [[ "$required" == "true" ]]; then
