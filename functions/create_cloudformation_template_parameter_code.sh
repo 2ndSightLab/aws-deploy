@@ -18,7 +18,6 @@ create_cloudformation_template_parameter_code(){
         #echo "Processing property: $property in parameters"
         
         if echo "$readOnlyProps" | grep -q "^$property$"; then
-            echo "Skipping read-only property: $property" 
             continue
         fi
 
