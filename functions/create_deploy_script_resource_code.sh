@@ -7,7 +7,7 @@ create_deploy_script_resource_code() {
     local TEMPLATE_FILE_PATH="$4"
  
     properties_json=$(jq -r 'fromjson | .properties' <<< "$SCHEMA")
-    echo "Properties JSON: $properties_json"
+    echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
     while read -r property; do
         description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description // "No description available"')
