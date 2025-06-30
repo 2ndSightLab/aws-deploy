@@ -50,7 +50,7 @@ create_deploy_script_resource_code() {
                     echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
                 
-                enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum | join(";")' 2>/dev/null || echo "")
+                enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
                 if [[ -n "$enum_values" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
                 fi
