@@ -9,10 +9,6 @@ create_deploy_script_resource_code() {
     echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
     
-    definitions_json=$(jq -r 'fromjson | .definitions' <<< "$SCHEMA")
-    echo "****DEFINITIONS for $RESOURCE_TYPE***" 
-    echo $definitions_json
-    
     properties_json=$(jq -r 'fromjson | .properties' <<< "$SCHEMA")
     echo "****PROPERTIES***" 
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
