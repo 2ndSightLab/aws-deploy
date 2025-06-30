@@ -27,7 +27,7 @@ chmod 700 deploy.sh
    
 # Revisions:
 
-6/29/25 - created new public repo for aws-deploy code
+6/29/25 - created new public repo for aws-deploy code\
 6/30/25 - added support for sub resources
 
 # Known Issues:
