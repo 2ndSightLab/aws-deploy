@@ -2,11 +2,17 @@
 create_cloudformation_template_condition_code(){
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
-    local SCRIPT_FILE_PATH="$3"
-    local TEMPLATE_FILE_PATH="$4"
+    local TEMPLATE_FILE_PATH="$3"
+
+    if [[ -z \"\$RESOURCE_TYPE\" ]]; then
+       echo "Error: Resource type is not set."
+       exit
+    fi
     
-    # Add Conditions with proper handling for array types and full function names
-    echo "Conditions:" >> "$TEMPLATE_FILE_PATH"
+    local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
+    local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
+
     for prop_info in $properties_info; do
         IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
         # Only create conditions for optional properties
