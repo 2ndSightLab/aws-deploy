@@ -34,7 +34,7 @@ create_cloudformation_template_condition_code(){
 
             # Only create conditions for optional properties
             if [[ "$required" == "false" || "$required" == "No" ]]; then
-                #echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
+                echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
                     # For array types, check if the array is empty using Fn::Join
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
