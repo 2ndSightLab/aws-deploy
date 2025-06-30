@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# Function to generate resource code and write it to the script file
+
 create_deploy_script_resource_code() {
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
@@ -15,9 +15,12 @@ create_deploy_script_resource_code() {
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
+     echo "Script preoprties:"
+     echo "$properties_json"
+     
      while read -r property; do
 
-            echo "Processing property: $property in template resources"
+            echo "Processing property: $property in script resource code"
         
             # Check if property is in the read-only list
             if echo "$readOnlyProps" | grep -q "^$property$"; then
@@ -25,14 +28,12 @@ create_deploy_script_resource_code() {
                 continue
             fi
             
-            object_schema=""
-            description=""
-            type=""
-            required=""
-            enum_values=""
+            local object_schema=""
+            local description=""
+            local type=""
+            local required=""
+            local enum_values=""
             
-            echo "Processing property: $property"
-            echo ""
             echo "Property: $property"
 
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
