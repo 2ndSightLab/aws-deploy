@@ -18,8 +18,8 @@ create_deploy_script_resource_code() {
         if [[ -n "$ref" && "$ref" != "null" ]]; then
             echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
             
-            definition_name=${ref#*#/definitions/}
-            object_schema=$(jq -r --arg defname "$definition_name" 'fromjson | .definitions[$defname] // {}' <<< "$SCHEMA")
+            # Using property name as definition name instead of extracting from ref
+            object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname] // {}' <<< "$SCHEMA")
             
             echo "create_deploy_script_resource_code \"$object_schema\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
         else
