@@ -14,7 +14,7 @@ create_cloudformation_template_parameter_code(){
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
     echo "Properties JSON:"
-    ecoh $properties_json
+    echo $properties_json
     
      while read -r property; do
 
