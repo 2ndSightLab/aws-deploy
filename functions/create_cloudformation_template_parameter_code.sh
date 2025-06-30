@@ -18,7 +18,7 @@ create_cloudformation_template_parameter_code(){
     
      while read -r property; do
         
-        echo "Processing property: $property in parameters"
+        #echo "Processing property: $property in parameters"
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             continue
         fi
