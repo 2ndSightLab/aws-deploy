@@ -17,6 +17,8 @@ create_deploy_script_resource_code() {
 
      while read -r property; do
 
+            echo "Processing property: $property in template resources"
+        
             # Check if property is in the read-only list
             if echo "$readOnlyProps" | grep -q "^$property$"; then
                 echo "# Skipping read-only property: $property" >> "$SCRIPT_FILE_PATH"
