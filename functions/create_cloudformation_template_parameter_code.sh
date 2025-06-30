@@ -17,7 +17,9 @@ create_cloudformation_template_parameter_code(){
     #local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
      while read -r property; do
-    
+
+        echo "Processing property: $property in parameters"
+        
         # Check if property is in the read-only list
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             echo "# Skipping read-only property: $property" >> "$SCRIPT_FILE_PATH"
