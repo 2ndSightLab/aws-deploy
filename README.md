@@ -1,5 +1,6 @@
-ws-deploy-test
-Deploy anything on AWS (simple resources no sub resources at this point) 
+Deploy anything on AWS 
+
+1. Execute this in CloudShell or similar
 
 ```
 cd ~
@@ -10,16 +11,29 @@ chmod 700 deploy.sh
 ./deploy.sh
 ```
 
-Test Respository (work in progress):
+2. Enter an environment (like dev, qa, prod - it's just used in names)
 
-```
-cd ~
-rm -rf aws-deploy-test
-git clone https://github.com/2ndSightLab/aws-deploy-test.git
-cd aws-deploy-test
-chmod 700 deploy.sh
-./deploy.sh
-```
+3. Enter the service of the resource you want to deploy (Case sensitive. Type help for a list of resources.)
+
+4. Enter the resource type you want to deploy. (Case sensitive. Type help for a list of resources.)
+
+5. The CloudFormation script is generated and name is printed to screen. You can go look at it.
+
+6. The script to deploy the CloudForamtion template is generated.
+
+7. You will be prompted for property values. Enter as needed, skip optional as needed.
+
+8. The script executes and deploys the CloudForamtion stacks.
+   
+# Known Issues:
+
+
+Policies Do not follow the formal model \ 
+Things with JSON like Step Function configurations - you're on your own \
+\
+^^^^ and this is why everything should be first class CLoudForamtion citizen rather than a blog of JSON in a property.  \
+
+# FYI ON GITHUB REPOS:
 
 I do not like that AWS CloudShell has a github credential helper that wants you to store your credentials. To prompt for credentials instead run this:
 
