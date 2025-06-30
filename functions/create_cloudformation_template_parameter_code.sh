@@ -55,7 +55,6 @@ create_cloudformation_template_parameter_code(){
                     cf_type="CommaDelimitedList" 
                     ;;
                 *) 
-                    echo "Other type to String: $param_type"
                     cf_type="String" 
                     ;;
             esac
