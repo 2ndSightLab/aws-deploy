@@ -26,7 +26,7 @@ create_deploy_script_resource_code() {
             type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type // ""')
             echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
             
-            required=$(jq -r --arg prop "$property" 'fromjson | .required | contains([$prop]) | tostring' <<< "$SCHEMA")
+            required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$SCHEMA")
             if [[ "$required" == "true" ]]; then
                 echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
             else
@@ -41,6 +41,9 @@ create_deploy_script_resource_code() {
             echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
             echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         fi
+        
+        echo "" >> "$SCRIPT_FILE_PATH"
+    done < <(echo "$properties_json" | jq -r 'keys[]')
     
         echo "" >> "$SCRIPT_FILE_PATH"
     done < <(echo "$properties_json" | jq -r 'keys[]')
