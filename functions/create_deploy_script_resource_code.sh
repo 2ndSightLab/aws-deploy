@@ -5,44 +5,45 @@ create_deploy_script_resource_code() {
     local SCHEMA="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
-    
-    readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$SCHEMA")
-    
-    for property in "${property_names[@]}"; do
-        description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$SCHEMA")
+ 
+    properties_json=$(jq -r 'fromjson | .properties' <<< "$SCHEMA")
+    echo "Properties JSON: $properties_json"
+
+    while read -r property; do
+        description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description // "No description available"')
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
         
-        ref=$(jq -r --arg prop "$property" 'fromjson | .properties[$prop]["$ref"] // ""' <<< "$SCHEMA")
-        echo "REF:"
-        echo $ref
+        ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"] // ""')
         
-        if [[ -n "$ref" ]]; then
+        if [[ -n "$ref" && "$ref" != "null" ]]; then
             echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
             
             definition_name=${ref#*#/definitions/}
             object_schema=$(jq -r --arg defname "$definition_name" 'fromjson | .definitions[$defname] // {}' <<< "$SCHEMA")
-            echo "OBJECT SCHEMA:"
-            echo $object_schema
             
             echo "create_deploy_script_resource_code \"$object_schema\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
         else
-            type=$(jq -r "fromjson | .properties[\"$property\"].type // \"\"" <<< "$SCHEMA")
+            type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type // ""')
             echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
             
-            min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$SCHEMA")
-            [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]] && 
-                echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH" ||
+            required=$(jq -r --arg prop "$property" 'fromjson | .required | contains([$prop]) | tostring' <<< "$SCHEMA")
+            if [[ "$required" == "true" ]]; then
+                echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
+            else
                 echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
+            fi
             
-            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$SCHEMA" 2>/dev/null || echo "[]")
-            [ "$enum_values" != "[]" ] && echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
+            enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum | join(";")' 2>/dev/null || echo "")
+            if [[ -n "$enum_values" && "$enum_values" != "null" ]]; then
+                echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
+            fi
             
             echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
             echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         fi
-        
+    
         echo "" >> "$SCRIPT_FILE_PATH"
-    done
+    done < <(echo "$properties_json" | jq -r 'keys[]')
 
     # Add conditional logic to only include parameters with values
     echo "$properties" | while IFS='|' read -r property type description enum_values min_length; do
