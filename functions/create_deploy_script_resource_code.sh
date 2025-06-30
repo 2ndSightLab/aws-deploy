@@ -6,23 +6,23 @@ create_deploy_script_resource_code() {
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
     
-    readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$schema")
+    readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$SCHEMA")
     
     # Process each property
     for property in "${property_names[@]}"; do
         # Extract property details using jq
-        type=$(jq -r "fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$schema")
-        description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$schema")
+        type=$(jq -r "fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$SCHEMA")
+        description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$SCHEMA")
         
         # Extract enum values if they exist
-        if jq -e "fromjson | .properties[\"$property\"].enum" <<< "$schema" > /dev/null; then
-            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$schema")
+        if jq -e "fromjson | .properties[\"$property\"].enum" <<< "$SCHEMA" > /dev/null; then
+            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$SCHEMA")
         else
             enum_values="[]"
         fi
         
         # Extract minimum length if it exists
-        min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$schema")
+        min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$SCHEMA")
         
         # Generate script content
         echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
