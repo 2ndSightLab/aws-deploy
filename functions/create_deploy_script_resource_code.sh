@@ -24,19 +24,15 @@ create_deploy_script_resource_code() {
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
      while read -r property; do
-            description_b64=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description | @base64')
+            description_b64=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description | tojson | @base64')
             echo "echo \"Description: $(echo "$description_b64" | base64 -d)\"" >> "$SCRIPT_FILE_PATH"
             
             ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
-                object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA")
-
-                echo "REF OBJECT SCHEMA"
-                echo $object_schema
-                
+            
+                object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 object_schema_b64=$(echo "$object_schema" | base64)
-                
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
                 
             else
