@@ -28,16 +28,20 @@ create_deploy_script_resource_code() {
             if [[ -n "$description" ]]; then
                 echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
             fi
+            echo "Description: description"
                 
             ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
-            
+
+                echo "Processing complex type: $property"
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 object_schema_b64=$(echo "$object_schema" | base64)
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
                 
             else
+
+                echo "Processing non-complex type: $property"
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 
