@@ -8,42 +8,36 @@ create_deploy_script_resource_code() {
     
     readarray -t property_names < <(jq -r 'fromjson | .properties | keys[]' <<< "$SCHEMA")
     
-    # Process each property
     for property in "${property_names[@]}"; do
-        # Extract property details using jq
-        type=$(jq -r "fromjson | .properties[\"$property\"].type // \"unknown\"" <<< "$SCHEMA")
         description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$SCHEMA")
-        
-        # Extract enum values if they exist
-        if jq -e "fromjson | .properties[\"$property\"].enum" <<< "$SCHEMA" > /dev/null; then
-            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$SCHEMA")
-        else
-            enum_values="[]"
-        fi
-        
-        # Extract minimum length if it exists
-        min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$SCHEMA")
-        
-        # Generate script content
-        echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
-        echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
         
-        [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]] && 
-            echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH" ||
-            echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
+        ref=$(jq -r "fromjson | .properties[\"$property\"].\$ref // \"\"" <<< "$SCHEMA")
         
-        [ "$enum_values" != "[]" ] && echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-        
-        # Check if property is an object type
-        if [[ "$type" == "object" ]]; then
-            echo "echo \"This property is a complex object type\"" >> "$SCRIPT_FILE_PATH"
-            echo "create_deploy_script_resource_code \"$SERVICE_NAME\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
+        if [[ -n "$ref" ]]; then
+            echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
+            
+            definition_name=${ref#*#/definitions/}
+            object_schema=$(jq -r "fromjson | .definitions[\"$definition_name\"] // {}" <<< "$SCHEMA")
+            
+            echo "create_deploy_script_resource_code \"$object_schema\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
         else
+            type=$(jq -r "fromjson | .properties[\"$property\"].type // \"\"" <<< "$SCHEMA")
+            echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
+            
+            min_length=$(jq -r "fromjson | .properties[\"$property\"].minLength // 0" <<< "$SCHEMA")
+            [[ -n "$min_length" && "$min_length" =~ ^[0-9]+$ && "$min_length" -gt 0 ]] && 
+                echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH" ||
+                echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
+            
+            enum_values=$(jq -r "fromjson | .properties[\"$property\"].enum | join(\";\")" <<< "$SCHEMA" 2>/dev/null || echo "[]")
+            [ "$enum_values" != "[]" ] && echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
+            
+            echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
             echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
         fi
-        echo "" >> "$SCRIPT_FILE_PATH"
         
+        echo "" >> "$SCRIPT_FILE_PATH"
     done
 
     # Add conditional logic to only include parameters with values
