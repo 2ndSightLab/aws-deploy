@@ -42,7 +42,7 @@ create_cloudformation_template_parameter_code(){
             esac
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
-            echo "  Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
+            echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
             
             if [[ "$required" == "true" ]]; then
                 echo "    Description: Required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
