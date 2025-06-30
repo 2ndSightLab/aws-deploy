@@ -28,6 +28,8 @@ chmod 700 deploy.sh
 # Revisions:
 
 6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter\
+          ask the user if they want to deploy now, print property name and allowed values to screen\
+          clean up output\
 6/30/25 - added support for sub resources\
 6/29/25 - created new public repo for aws-deploy code
 
