@@ -26,7 +26,11 @@ create_deploy_script_resource_code() {
      while read -r property; do
             
             echo "Processing property: $property from $properties_json"
-
+            echo "$properties_json" | -r -arg prop "$property" '.[prop]'
+            echo "$properties_json" | -r -arg prop "$property" '.[prop].description'
+            echo "$properties_json" | -r -arg prop "$property" '.'
+              
+             
             description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
             echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
             echo "Description: description"
@@ -35,14 +39,14 @@ create_deploy_script_resource_code() {
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
 
-                echo "Processing complex type: $property"
+                echo "Processing complex type"
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 object_schema_b64=$(echo "$object_schema" | base64)
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
                 
             else
 
-                echo "Processing non-complex type: $property"
+                echo "Processing non-complex type"
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 
