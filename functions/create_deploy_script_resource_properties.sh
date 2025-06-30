@@ -49,7 +49,7 @@ create_deploy_script_resource_properties() {
                 #echo "Processing complex type: $ref"
                 local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 local object_schema_b64=$(echo "$object_schema" | base64)
-                create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+                create_deploy_script_resource_properties "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
             else
 
                 #echo "Processing non-complex type"
