@@ -30,11 +30,10 @@ create_cloudformation_template_resource_code(){
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
             
-            local indent="$indent      "
             echo "Processing complex type: $ref"
             local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
             local object_schema_b64=$(echo "$object_schema" | base64)
-            create_cloudformation_template_resource_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH" "$indent"
+            create_cloudformation_template_resource_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH" "$indent      "
             
         else
             local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
