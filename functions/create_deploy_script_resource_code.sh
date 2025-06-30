@@ -6,13 +6,15 @@ create_deploy_script_resource_code() {
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
 
-    echo "***SCHEMA***"
+    echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
-    echo "****DEFINITIONS***" 
+    
     definitions_json=$(jq -r 'fromjson | .definitions' <<< "$SCHEMA")
+    echo "****DEFINITIONS for $RESOURCE_TYPE***" 
     echo $definitions_json
-    echo "****PROPERTIES***" 
+    
     properties_json=$(jq -r 'fromjson | .properties' <<< "$SCHEMA")
+    echo "****PROPERTIES***" 
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
     while read -r property; do
