@@ -18,14 +18,16 @@ create_deploy_script_resource_code() {
      echo "echo ''" >>  "$SCRIPT_FILE_PATH"
      echo "echo \"Enter property values for $RESOURCE_TYPE:\""  >> "$SCRIPT_FILE_PATH"
      while read -r property; do
-
-            #echo "Processing property: $property in script resource code"
         
+            #echo "Processing property: $property in script resource code"
+    
             # Check if property is in the read-only list
             if echo "$readOnlyProps" | grep -q "^$property$"; then
                 #echo "# Skipping read-only property: $property" >> "$SCRIPT_FILE_PATH"
                 continue
             fi
+            
+            echo "echo ''" >>  "$SCRIPT_FILE_PATH"
             
             local object_schema=""
             local description=""
