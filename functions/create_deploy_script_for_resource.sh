@@ -22,7 +22,7 @@ create_deploy_script_for_resource() {
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
     
     # Generate the resource code
-    create_deploy_script_resource_code "$RESOURCE_TYPE" "$SCHEMA_B64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+    create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCHEMA_B64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
 
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  read -p \"No parameters provided. Continue? (y/n): \" -n 1 -r" >> "$SCRIPT_FILE_PATH"
