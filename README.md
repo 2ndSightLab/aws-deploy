@@ -1,4 +1,4 @@
-Deploy anything on AWS 
+# Deploy anything on AWS !
 
 1. Execute this in CloudShell or similar
 
