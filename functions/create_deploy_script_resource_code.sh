@@ -7,14 +7,13 @@ create_deploy_script_resource_code() {
     local TEMPLATE_FILE_PATH="$4"
     
     # Decode the base64 encoded schema
-    local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-
+   
     if [[ -z \"\$RESOURCE_TYPE\" ]]; then
        echo "Error: Resource type is not set."
-       ehco "Schema:"
-       echo $SCHEMA
        exit
     fi
+    
+    local SCHEMA=$(echo $SCHEMA_B64 | base64 -d)
        
     echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
