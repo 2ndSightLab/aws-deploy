@@ -37,24 +37,24 @@ create_cloudformation_template_condition_code(){
             if [[ "$required" == "false" || "$required" == "No" ]]; then
                 echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
-                    echo "TODO: Fix condition code for arrays in create_cloudforamtion_temlpate_condition_code.sh":wq!
-                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
-                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - true" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - false" >> "$TEMPLATE_FILE_PATH"
-                    
-                    # For array types, check if the array is empty using Fn::Join
+                    #echo "TODO: Fix condition code for arrays in create_cloudforamtion_temlpate_condition_code.sh":wq!
                     #echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     #echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    #echo "          - Fn::Length:" >> "$TEMPLATE_FILE_PATH"
-                    #echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
-                    #echo "          - 0" >> "$TEMPLATE_FILE_PATH"
+                    #echo "          - true" >> "$TEMPLATE_FILE_PATH"
+                    #echo "          - false" >> "$TEMPLATE_FILE_PATH"
+                    
+                    # For array types, check if the array is empty using Fn::Join
+                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
+                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
+                    echo "          - Fn::Length:" >> "$TEMPLATE_FILE_PATH"
+                    echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
+                    echo "          - 0" >> "$TEMPLATE_FILE_PATH"
                 else
                     # For non-array types, check if the value is not empty
                     echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+                    echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                     echo "          - ''" >> "$TEMPLATE_FILE_PATH"
                 fi
             fi
