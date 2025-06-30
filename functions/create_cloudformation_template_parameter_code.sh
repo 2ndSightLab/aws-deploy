@@ -15,7 +15,7 @@ create_cloudformation_template_parameter_code(){
     
      while read -r property; do
 
-        echo "Processing property: $property in parameters"
+        #echo "Processing property: $property in parameters"
         
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             echo "Skipping read-only property: $property" 
@@ -25,7 +25,7 @@ create_cloudformation_template_parameter_code(){
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
-            echo "Processing complex type: $ref"
+            #echo "Processing complex type: $ref"
             local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
             local object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
