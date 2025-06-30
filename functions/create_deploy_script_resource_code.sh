@@ -6,6 +6,13 @@ create_deploy_script_resource_code() {
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
 
+    if [[ -z \"\$RESOURCE_TYPE\" ]]; then
+       echo "Error: Resource type is not set."
+       ehco "Schema:"
+       echo $SCHEMA
+       exit
+    fi
+       
     echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
     
