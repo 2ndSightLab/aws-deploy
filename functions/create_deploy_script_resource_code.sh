@@ -48,7 +48,7 @@ create_deploy_script_resource_code() {
                 #echo "Processing non-complex type"
                 local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
-                echo "Type: $type"
+                #echo "Type: $type"
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
                 if [[ "$required" == "true" ]]; then
@@ -56,14 +56,14 @@ create_deploy_script_resource_code() {
                 else
                     echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
-                echo "Required: $required"
+                #echo "Required: $required"
                 
                 local enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
                 if [[ -n "$enum_values" && "$enum_values" != "" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-                    echo "Enum: $enum_values"
-                else
-                    echo "No enum"
+                    #echo "Enum: $enum_values"
+                #else
+                #    echo "No enum"
                 fi
                 
                 echo "echo \"Enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
@@ -84,7 +84,7 @@ create_deploy_script_resource_code() {
             
             echo "" >> "$SCRIPT_FILE_PATH"
 
-            echo "$property complete"
+            #echo "$property complete"
             
         done < <(echo "$properties_json" | jq -r 'keys[]')
     
