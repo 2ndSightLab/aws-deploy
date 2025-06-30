@@ -1,10 +1,13 @@
 #!/bin/bash -e
 # Function to generate resource code and write it to the script file
 create_deploy_script_resource_code() {
-    local RESOURCE_TYPE="$1"
-    local SCHEMA="$2"
+    local SCHEMA_B64="$1"
+    local RESOURCE_TYPE="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
+    
+    # Decode the base64 encoded schema
+    local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
 
     if [[ -z \"\$RESOURCE_TYPE\" ]]; then
        echo "Error: Resource type is not set."
@@ -29,7 +32,7 @@ create_deploy_script_resource_code() {
             if [[ -n "$ref" && "$ref" != "null" ]]; then
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA")
                 
-                echo "create_deploy_script_resource_code $object_schema $property $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH"
+                object_schema_b64=$(echo "$object_schema" | base64)
                 
                 create_deploy_script_resource_code $object_schema $property $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
             else
