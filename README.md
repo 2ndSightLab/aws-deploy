@@ -93,6 +93,9 @@ git push private main
 # Push the local 'main' branch (containing the working private changes) to the public remote
 git push public main
 
+#if inadvertantly update public instead of private force an override
+git push --force public main
+
 # *** To switch back to making changes on the private repo (which is what you are already set up for in this workflow) ***
 
 # You are likely already on the local 'main' branch, which is synced with the private repo's 'main'.
