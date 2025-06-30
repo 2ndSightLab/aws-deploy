@@ -20,12 +20,12 @@ create_cloudformation_template_condition_code(){
             continue
         fi
 
-        echo "Processing property: $property in template conditions"
+        #echo "Processing property: $property in template conditions"
         
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
-            echo "Processing complex type: $ref"
+            #echo "Processing complex type: $ref"
             local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
             local object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_condition_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
@@ -35,7 +35,7 @@ create_cloudformation_template_condition_code(){
 
             # Only create conditions for optional properties
             if [[ "$required" == "false" || "$required" == "No" ]]; then
-                echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
+                #echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
                     # For array types, check if the array is empty using Fn::Join
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
