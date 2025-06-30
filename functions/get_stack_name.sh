@@ -1,4 +1,3 @@
-#!/bin/bash -e
 get_stack_name() {
     local ENV_NAME="$1"
     local IDENTITY_NAME="$2"
@@ -8,10 +7,31 @@ get_stack_name() {
 
     # Check if all parameters are provided
     if [ -z "$ENV_NAME" ] || [ -z "$IDENTITY_NAME" ] || [ -z "$SERVICE" ] || [ -z "$RESOURCE" ] ; then
-        echo "Error: All parameters (ENV_NAME, USERNAME, SERVICE, RESOURCE) must be provided." >&2
-        exit
+        echo "Error: All parameters (ENV_NAME, IDENTITY_NAME, SERVICE, RESOURCE) must be provided." >&2
+        return 1
     fi
 
-    # Return the concatenated string
-    echo "$ENV_NAME-$IDENTITY_NAME-$SERVICE-$RESOURCE-$NAME" | tr '[:upper:]' '[:lower:]'
+    # Concatenate the string
+    local FULL_NAME="${ENV_NAME}-${IDENTITY_NAME}-${SERVICE}-${RESOURCE}-${NAME}"
+
+    # Convert to lowercase
+    FULL_NAME=$(echo "$FULL_NAME" | tr '[:upper:]' '[:lower:]')
+
+    # Remove any characters that don't match the pattern
+    FULL_NAME=$(echo "$FULL_NAME" | sed -E 's/[^a-z0-9-]/-/g')
+
+    # If the name starts with a number, prefix it with "a-"
+    FULL_NAME=$(echo "$FULL_NAME" | sed -E 's/^([0-9])/a-\1/')
+
+    # Remove any trailing hyphens
+    FULL_NAME=$(echo "$FULL_NAME" | sed -E 's/-+$//g')
+
+    # If the name is empty after processing, return an error
+    if [ -z "$FULL_NAME" ]; then
+        echo "Error: Invalid stack name after processing." >&2
+        return 1
+    fi
+
+    # Return the processed string
+    echo "$FULL_NAME"
 }
