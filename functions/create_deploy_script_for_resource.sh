@@ -12,9 +12,15 @@ create_deploy_script_for_resource() {
     
     # Make the script executable
     chmod +x "$SCRIPT_FILE_PATH"
+
+    # Set resource type directly
+    RESOURCE_TYPE="AWS::$SERVICE_NAME::$RESOURCE_NAME"
+
+    # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
+    SCHEMA=$(get_resource_property_schema $resource_type)
     
     # Generate the resource code
-    create_deploy_script_resource_code "$SERVICE_NAME" "$RESOURCE_NAME" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+    create_deploy_script_resource_code "$RESOURCE_TYPE" "$SCHEMA" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
     
     echo "Created deployment script at $SCRIPT_FILE_PATH"
 }
