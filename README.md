@@ -32,10 +32,9 @@ chmod 700 deploy.sh
 
 # Known Issues:
 
-
-Policies Do not follow the formal model \
-Things with JSON like Step Function configurations - you're on your own. /
-^^^^ and this is why everything should be first class CLoudForamtion citizen rather than a blog of JSON in a property.  /
+Policies Do not follow the formal model.\
+Things with JSON like Step Function configurations - you're on your own.\
+^^^^ and this is why everything should be first class CLoudForamtion citizen rather than a blog of JSON in a property.\
 
 # FYI on GitHub Repos:
 
