@@ -15,6 +15,11 @@ create_cloudformation_template_condition_code(){
 
     while read -r property; do
 
+        if echo "$readOnlyProps" | grep -q "^$property$"; then
+            echo "Skipping read-only property: $property" 
+            continue
+        fi
+
         echo "Processing property: $property in template conditions"
         
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
