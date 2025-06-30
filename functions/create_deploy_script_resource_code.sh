@@ -32,8 +32,6 @@ create_deploy_script_resource_code() {
             local type=""
             local required=""
             local enum_values=""
-            
-            echo "Property: $property"
 
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
             echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
