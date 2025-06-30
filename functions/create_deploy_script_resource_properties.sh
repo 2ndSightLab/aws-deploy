@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-create_deploy_script_resource_code() {
+create_deploy_script_resource_properties() {
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
     local SCRIPT_FILE_PATH="$3"
