@@ -17,9 +17,14 @@ create_cloudformation_template_parameter_code(){
     echo $properties_json
     
      while read -r property; do
-
-        #echo "Processing property: $property in parameters"
         
+        local cf_type=""
+        local param_type=""
+        local required=""
+        local ref=""
+        local object_schema=""
+
+        echo "Processing property: $property in parameters"
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             continue
         fi
@@ -28,19 +33,20 @@ create_cloudformation_template_parameter_code(){
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
             #echo "Processing complex type: $ref"
-            local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
-            local object_schema_b64=$(echo "$object_schema" | base64)
+            object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
+            object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+            local param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
             local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
             
             # Map JSON Schema types to CloudFormation parameter types
-            case "$type" in
+            # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
+            case "$param_type" in
                 "integer"|"number") cf_type="Number" ;;
                 "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
                 "array") cf_type="CommaDelimitedList" ;;
-                *) cf_type="String" ;;
+                *) echo "Other type to String: $param_type"; cf_type="String" ;;
             esac
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
