@@ -15,15 +15,8 @@ create_deploy_script_resource_code() {
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
-    echo "SCRIPT SCHEMA: "
-    echo $SCHEMA
-    
-    echo "Script preoprties:"
-    echo "$properties_json"
-
-     echo "readOnlyProps"
-     echo $readOnlyProps
-     
+     echo ""
+     echo "echo \"Enter property values for $RESOURCE_TYPE:\"  >> "$SCRIPT_FILE_PATH"
      while read -r property; do
 
             echo "Processing property: $property in script resource code"
@@ -61,9 +54,9 @@ create_deploy_script_resource_code() {
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
                 if [[ "$required" == "true" ]]; then
-                    echo "echo \"Required: true\"" >> "$SCRIPT_FILE_PATH"
+                    echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
                 else
-                    echo "echo \"Required: false\"" >> "$SCRIPT_FILE_PATH"
+                    echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
                 echo "Required: $required"
                 
