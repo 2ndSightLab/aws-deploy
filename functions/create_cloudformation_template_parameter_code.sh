@@ -24,7 +24,7 @@ create_cloudformation_template_parameter_code(){
         local ref=""
         local object_schema=""
 
-        #echo "Processing property: $property in parameters"
+        echo "Processing property: $property in parameters"
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             continue
         fi
@@ -32,13 +32,13 @@ create_cloudformation_template_parameter_code(){
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
-            #echo "Processing complex type: $ref"
+            echo "Processing complex type: $ref"
             object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
             object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            local param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
-            local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+            param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+            required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
             
             # Map JSON Schema types to CloudFormation parameter types
             # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
@@ -62,6 +62,8 @@ create_cloudformation_template_parameter_code(){
                     ;;
             esac
 
+            echo "cf_type: $cf_type"
+            echo "param_type: $param_type"
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
