@@ -35,9 +35,13 @@ chmod 700 deploy.sh
 
 # Known Issues:
 
-Policies do not follow the formal model.\
-Things with JSON like Step Function configurations are huge blobs in a single property - you're on your own.\
-^^^^ and this is why everything should be first class CloudFormation citizen rather than a blob of JSON in a property!
+See issues list
+
+# Types Tested:
+These types have been tested though possbily not all variations and see known issues for workarounds to some issues.\
+> EC2 | EIP\
+> IAM | User\
+> Organizations | Account\
 
 # FYI on GitHub Repos:
 
