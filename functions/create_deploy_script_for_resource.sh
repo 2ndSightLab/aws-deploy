@@ -19,7 +19,7 @@ create_deploy_script_for_resource() {
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
     SCHEMA=$(get_resource_schema $resource_type)
 
-    SCHEMA_B64=$(echo "$SCHEMA_B64" | base64)
+    SCHEMA_B64=$(echo "$SCHEMA" | base64)
     
     # Generate the resource code
     create_deploy_script_resource_code "$RESOURCE_TYPE" "$SCHEMA_B64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
