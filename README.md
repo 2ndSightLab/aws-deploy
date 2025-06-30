@@ -25,6 +25,11 @@ chmod 700 deploy.sh
 
 8. The script executes and deploys the CloudForamtion stacks.
    
+# Revisions:
+
+6/29/25 - created new public repo for aws-deploy code
+6/30/25 - added support for sub resources
+
 # Known Issues:
 
 
