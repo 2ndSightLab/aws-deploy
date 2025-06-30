@@ -17,7 +17,7 @@ create_deploy_script_resource_code() {
        
     echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
-    
+
     properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     
     echo "****PROPERTIES***" 
@@ -43,7 +43,7 @@ create_deploy_script_resource_code() {
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 
-                required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$SCHEMA")
+                required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$properties_json")
                 if [[ "$required" == "true" ]]; then
                     echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
                 else
