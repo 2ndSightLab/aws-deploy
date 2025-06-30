@@ -10,8 +10,11 @@ create_cloudformation_template_parameter_code(){
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
-    local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
+    local properties_inf=$(get_resource_properties_json $SCHEMA)
+    local readOnlyProps=$(get_read_only_properties $SCHEMA)
+    
+    #local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    #local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
     for prop_info in $properties_info; do
     
