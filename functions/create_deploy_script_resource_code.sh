@@ -14,27 +14,19 @@ create_deploy_script_resource_code() {
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-       
-    echo "***SCHEMA for $RESOURCE_TYPE***"
-    echo $SCHEMA
 
     properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
-    
-    echo "****PROPERTIES***" 
-    echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
      while read -r property; do
             
-            echo "Processing property: $property from $properties_json"
+            echo "Processing property: $property"
             description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
-            echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
-            echo "Description: $description"
                 
             ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
 
-                echo "Processing complex type"
+                echo "Processing complex type: $ref"
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 object_schema_b64=$(echo "$object_schema" | base64)
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
@@ -67,6 +59,9 @@ create_deploy_script_resource_code() {
             fi
             
             echo "" >> "$SCRIPT_FILE_PATH"
+
+            echo "$property complete"
+            
         done < <(echo "$properties_json" | jq -r 'keys[]')
     
         # Create parameter overrides
