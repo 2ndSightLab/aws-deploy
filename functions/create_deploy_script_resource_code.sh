@@ -26,18 +26,9 @@ create_deploy_script_resource_code() {
      while read -r property; do
             
             echo "Processing property: $property from $properties_json"
-
-            echo "."
-            echo "$properties_json" | jq -r --arg prop "$property" '.'
-            echo ".[$prop]"
-            echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]'
-            echo ".[$prop].description"
-            echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description'
-              
-             
             description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
             echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
-            echo "Description: description"
+            echo "Description: $description"
                 
             ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
@@ -51,8 +42,9 @@ create_deploy_script_resource_code() {
             else
 
                 echo "Processing non-complex type"
-                type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+                type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type' / '')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
+                echo "Type: $type"
                 
                 required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$properties_json")
                 if [[ "$required" == "true" ]]; then
@@ -60,10 +52,14 @@ create_deploy_script_resource_code() {
                 else
                     echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
+                echo "Required: $required"
                 
                 enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
                 if [[ -n "$enum_values" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
+                    echo "Enum: $enum_values"
+                else
+                    echo "No enum"
                 fi
                 
                 echo "echo \"Please enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
