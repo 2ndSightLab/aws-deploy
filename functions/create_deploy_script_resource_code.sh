@@ -44,8 +44,15 @@ create_deploy_script_resource_code() {
         
         [ "$enum_values" != "[]" ] && echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
         
-        echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
+        # Check if property is an object type
+        if [[ "$type" == "object" ]]; then
+            echo "echo \"This property is a complex object type\"" >> "$SCRIPT_FILE_PATH"
+            echo "create_deploy_script_resource_code \"$SERVICE_NAME\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
+        else
+            echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
+        fi
         echo "" >> "$SCRIPT_FILE_PATH"
+        
     done
 
     # Add conditional logic to only include parameters with values
