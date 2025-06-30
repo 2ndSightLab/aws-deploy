@@ -16,9 +16,16 @@ create_deploy_script_resource_code() {
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
 
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
      while read -r property; do
 
+            # Check if property is in the read-only list
+            if echo "$readOnlyProps" | grep -q "^$property$"; then
+                echo "# Skipping read-only property: $property" >> "$SCRIPT_FILE_PATH"
+                continue
+            fi
+            
             object_schema=""
             description=""
             type=""
