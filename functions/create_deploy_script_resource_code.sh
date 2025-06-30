@@ -46,7 +46,7 @@ create_deploy_script_resource_code() {
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 echo "Type: $type"
                 
-                required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$properties_json")
+                required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
                 if [[ "$required" == "true" ]]; then
                     echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
                 else
