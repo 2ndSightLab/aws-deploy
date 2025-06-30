@@ -8,9 +8,10 @@ create_cloudformation_template() {
     resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Extract properties from the Schema, including minLength
-    schema=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema')
-    properties_info=$(echo "$schema" | jq -r '.properties | to_entries[] | "\(.key):\(.value.type // "String"):\(.value.required // false):\(.value.minLength // 0)"' || echo "$schema" | jq -r 'fromjson | .properties | to_entries[] | "\(.key):\(.value.type // "String"):\(.value.required // false):\(.value.minLength // 0)"')
-
+    local schema=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" | jq -r '.Schema')
+    local properties_info=$(echo "$schema" | jq -r '.properties | to_entries[] | "\(.key):\(.value.type // "String"):\(.value.required // false):\(.value.minLength // 0)"' || echo "$schema" | jq -r 'fromjson | .properties | to_entries[] | "\(.key):\(.value.type // "String"):\(.value.required // false):\(.value.minLength // 0)"')
+    local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
+    
     # Start the template
     echo "AWSTemplateFormatVersion: '2010-09-09'" > "$TEMPLATE_FILE_PATH"
     echo "Description: CloudFormation template for $SERVICE_NAME $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
@@ -19,6 +20,13 @@ create_cloudformation_template() {
     # Add Parameters
     echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
     for prop_info in $properties_info; do
+    
+        # Check if property is in the read-only list
+        if echo "$readOnlyProps" | grep -q "^$property$"; then
+            echo "# Skipping read-only property: $property" >> "$SCRIPT_FILE_PATH"
+            continue
+        fi
+
         IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
         
         # Consider property required if is_required is true or min_length is 1 or more
