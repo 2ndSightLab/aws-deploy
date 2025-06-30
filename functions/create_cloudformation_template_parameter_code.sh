@@ -10,13 +10,13 @@ create_cloudformation_template_parameter_code(){
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    local properties_inf=$(get_resource_properties_json $SCHEMA)
+    local properties_json=$(get_resource_properties_json $SCHEMA)
     local readOnlyProps=$(get_read_only_properties $SCHEMA)
     
     #local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     #local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
-    for prop_info in $properties_info; do
+     while read -r property; do
     
         # Check if property is in the read-only list
         if echo "$readOnlyProps" | grep -q "^$property$"; then
@@ -24,32 +24,37 @@ create_cloudformation_template_parameter_code(){
             continue
         fi
 
-        IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
-        
-        # Consider property required if is_required is true or min_length is 1 or more
-        if [ "$is_required" = "true" ] || [ "$min_length" -ge 1 ]; then
-            is_effectively_required="true"
+        local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
+ 
+        if [[ -n "$ref" && "$ref" != "null" ]]; then
+            echo "Processing complex type: $ref"
+            local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
+            local object_schema_b64=$(echo "$object_schema" | base64)
+            create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            is_effectively_required="false"
+            local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+            local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+            
+            # Map JSON Schema types to CloudFormation parameter types
+            case "$type" in
+                "integer"|"number") cf_type="Number" ;;
+                "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
+                "array") cf_type="CommaDelimitedList" ;;
+                *) cf_type="String" ;;
+            esac
+            
+            echo "  $property:" >> "$TEMPLATE_FILE_PATH"
+            echo "  Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
+            
+            if [[ "$required" == "true" ]]; then
+                echo "    Description: Required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
+            else
+                echo "    Description: Optional - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
+                echo "    Default: ''" >> "$TEMPLATE_FILE_PATH"
+            fi
         fi
         
-        # Map JSON Schema types to CloudFormation parameter types
-        case "$prop_type" in
-            "integer"|"number") cf_type="Number" ;;
-            "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
-            "array") cf_type="CommaDelimitedList" ;;
-            *) cf_type="String" ;;
-        esac
-        
-        echo "  $prop_name:" >> "$TEMPLATE_FILE_PATH"
-        echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
-        if [ "$is_effectively_required" = "true" ]; then
-            echo "    Description: Required - Enter value for ${prop_name}" >> "$TEMPLATE_FILE_PATH"
-        else
-            echo "    Description: Optional - Enter value for ${prop_name}" >> "$TEMPLATE_FILE_PATH"
-            echo "    Default: ''" >> "$TEMPLATE_FILE_PATH"
-        fi
-    done
+    done < <(echo "$properties_json" | jq -r 'keys[]')
     echo "" >> "$TEMPLATE_FILE_PATH"
     
 }
