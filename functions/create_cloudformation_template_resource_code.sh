@@ -14,6 +14,13 @@ create_cloudformation_template_resource_code(){
     local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
+    echo "SCHEMA:"
+    echo $SCHEMA
+    echo "prop info"
+    echo $pproperties_info
+    echo "readonly"
+    echo $redonlyprops
+    
     for prop_info in $properties_info; do
         IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
         if [ "$is_required" = "true" ] || [ "$min_length" -ge 1 ]; then
