@@ -13,7 +13,7 @@ create_deploy_script_resource_code() {
        exit
     fi
     
-    local SCHEMA=$(echo $SCHEMA_B64 | base64 -d)
+    local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
        
     echo "***SCHEMA for $RESOURCE_TYPE***"
     echo $SCHEMA
