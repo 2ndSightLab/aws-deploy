@@ -11,10 +11,10 @@ create_cloudformation_template_resource_code(){
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
-    for prop_info in $properties_info; do
+    while read -r property; do
 
       local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
@@ -29,18 +29,18 @@ create_cloudformation_template_resource_code(){
             if [[ "$required" == "true" ]]; then   
     
                 # Required properties are always included
-                echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
-                echo "        Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+                echo "      $property:" >> "$TEMPLATE_FILE_PATH"
+                echo "        Ref: $property" >> "$TEMPLATE_FILE_PATH"
             else
                 # Optional properties are conditionally included
-                echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
+                echo "      $property:" >> "$TEMPLATE_FILE_PATH"
                 echo "        Fn::If:" >> "$TEMPLATE_FILE_PATH"
-                echo "          - ${prop_name}Condition" >> "$TEMPLATE_FILE_PATH"
-                echo "          - Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+                echo "          - ${property}Condition" >> "$TEMPLATE_FILE_PATH"
+                echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                 echo "          - Ref: AWS::NoValue" >> "$TEMPLATE_FILE_PATH"
             fi
         fi
-    done
+    done < <(echo "$properties_json" | jq -r 'keys[]')
     echo "" >> "$TEMPLATE_FILE_PATH"
 
 }
