@@ -15,7 +15,7 @@ create_deploy_script_resource_code() {
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
 
-    properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
 
      while read -r property; do
             
