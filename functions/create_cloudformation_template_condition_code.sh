@@ -10,10 +10,10 @@ create_cloudformation_template_condition_code(){
     fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
-    for prop_info in $properties_info; do
+    while read -r property; do
 
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
@@ -26,17 +26,16 @@ create_cloudformation_template_condition_code(){
             local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
             local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
-            IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
             # Only create conditions for optional properties
             if [[ "$required" == "true" ]]; then
-                echo "  ${prop_name}Condition:" >> "$TEMPLATE_FILE_PATH"
+                echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
                 if [ "$type" == "array" ]; then
                     # For array types, check if the array is empty using Fn::Join
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
                     echo "          - Fn::Join:" >> "$TEMPLATE_FILE_PATH"
                     echo "              - ''" >> "$TEMPLATE_FILE_PATH"
-                    echo "              - Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+                    echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                     echo "          - ''" >> "$TEMPLATE_FILE_PATH"
                 else
                     # For non-array types, check if the value is not empty
@@ -47,7 +46,7 @@ create_cloudformation_template_condition_code(){
                 fi
             fi
        fi
-    done
+    done < <(echo "$properties_json" | jq -r 'keys[]')
     echo "" >> "$TEMPLATE_FILE_PATH"
 
 }
