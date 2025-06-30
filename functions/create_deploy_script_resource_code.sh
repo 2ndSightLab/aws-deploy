@@ -12,7 +12,7 @@ create_deploy_script_resource_code() {
         description=$(jq -r "fromjson | .properties[\"$property\"].description // \"No description available\"" <<< "$SCHEMA")
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
         
-        ref=$(jq -r "fromjson | .properties[\"$property\"].\$ref // \"\"" <<< "$SCHEMA")
+        ref=$(jq -r "fromjson | .properties[\"$property\"][\"\\$ref\"] // \"\"" <<< "$SCHEMA")
         
         if [[ -n "$ref" ]]; then
             echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
