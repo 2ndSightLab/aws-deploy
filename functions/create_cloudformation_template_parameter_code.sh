@@ -28,6 +28,7 @@ create_cloudformation_template_parameter_code(){
         local required=""
         local ref=""
         local object_schema=""
+        local allowed_values=""
 
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
