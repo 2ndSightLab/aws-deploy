@@ -33,6 +33,7 @@ create_deploy_script_resource_code() {
             else
 
                 echo "Processing non-complex type"
+                echo $properties_json
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 echo "Type: $type"
