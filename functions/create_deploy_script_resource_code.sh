@@ -18,27 +18,33 @@ create_deploy_script_resource_code() {
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
 
      while read -r property; do
+
+            object_schema=""
+            description=""
+            type=""
+            required=""
+            enum_values=""
             
             echo "Processing property: $property"
-            description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
+            local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
                 
-            ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
+            local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
 
                 echo "Processing complex type: $ref"
-                object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
-                object_schema_b64=$(echo "$object_schema" | base64)
+                local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
+                local object_schema_b64=$(echo "$object_schema" | base64)
                 create_deploy_script_resource_code "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
             else
 
                 echo "Processing non-complex type"
                 echo $properties_json
-                type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+                local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
                 echo "Type: $type"
                 
-                required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+                local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
                 if [[ "$required" == "true" ]]; then
                     echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
                 else
@@ -46,7 +52,7 @@ create_deploy_script_resource_code() {
                 fi
                 echo "Required: $required"
                 
-                enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
+                local enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
                 if [[ -n "$enum_values" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
                     echo "Enum: $enum_values"
@@ -67,6 +73,7 @@ create_deploy_script_resource_code() {
                 echo "    PARAMETER_OVERRIDES=\"\$PARAMETER_OVERRIDES $property=\$SAFE_VALUE\"" >> "$SCRIPT_FILE_PATH"
                 echo "  fi" >> "$SCRIPT_FILE_PATH"
                 echo "fi" >> "$SCRIPT_FILE_PATH"
+                
             fi
             
             echo "" >> "$SCRIPT_FILE_PATH"
