@@ -2,12 +2,18 @@
 create_cloudformation_template_parameter_code(){
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
-    local SCRIPT_FILE_PATH="$3"
-    local TEMPLATE_FILE_PATH="$4"
+    local TEMPLATE_FILE_PATH="$3"
     
    # Add Parameters
     echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
-
+    if [[ -z \"\$RESOURCE_TYPE\" ]]; then
+       echo "Error: Resource type is not set."
+       exit
+    fi
+    
+    local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
+    local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
+    local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
     for prop_info in $properties_info; do
     
