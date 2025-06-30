@@ -13,27 +13,32 @@ create_cloudformation_template_resource_code(){
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_info=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
-
-    echo "SCHEMA:"
-    echo $SCHEMA
-    echo "prop info"
-    echo $pproperties_info
-    echo "readonly"
-    echo $redonlyprops
     
     for prop_info in $properties_info; do
-        IFS=':' read -r prop_name prop_type is_required min_length <<< "$prop_info"
-        if [ "$is_required" = "true" ] || [ "$min_length" -ge 1 ]; then
-            # Required properties are always included
-            echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
-            echo "        Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+
+      local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
+ 
+        if [[ -n "$ref" && "$ref" != "null" ]]; then
+            echo "Processing complex type: $ref"
+            local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
+            local object_schema_b64=$(echo "$object_schema" | base64)
+            create_cloudformation_template_resource_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            # Optional properties are conditionally included
-            echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
-            echo "        Fn::If:" >> "$TEMPLATE_FILE_PATH"
-            echo "          - ${prop_name}Condition" >> "$TEMPLATE_FILE_PATH"
-            echo "          - Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
-            echo "          - Ref: AWS::NoValue" >> "$TEMPLATE_FILE_PATH"
+            local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+            local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+            if [[ "$required" == "true" ]]; then   
+    
+                # Required properties are always included
+                echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
+                echo "        Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+            else
+                # Optional properties are conditionally included
+                echo "      $prop_name:" >> "$TEMPLATE_FILE_PATH"
+                echo "        Fn::If:" >> "$TEMPLATE_FILE_PATH"
+                echo "          - ${prop_name}Condition" >> "$TEMPLATE_FILE_PATH"
+                echo "          - Ref: $prop_name" >> "$TEMPLATE_FILE_PATH"
+                echo "          - Ref: AWS::NoValue" >> "$TEMPLATE_FILE_PATH"
+            fi
         fi
     done
     echo "" >> "$TEMPLATE_FILE_PATH"
