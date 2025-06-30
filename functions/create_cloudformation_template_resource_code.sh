@@ -4,7 +4,7 @@ create_cloudformation_template_resource_code(){
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
     local TEMPLATE_FILE_PATH="$3"
-    local indent=""
+    local indent="$4"
     
     if [[ -z \"\$RESOURCE_TYPE\" ]]; then
        echo "Error: Resource type is not set."
