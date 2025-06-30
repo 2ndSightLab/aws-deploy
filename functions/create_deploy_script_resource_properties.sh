@@ -34,7 +34,12 @@ create_deploy_script_resource_properties() {
             local type=""
             local required=""
             local enum_values=""
-
+            
+            echo "echo \"Property: $property\"" >> "$SCRIPT_FILE_PATH"
+            
+            #DEBUG:
+            echo "Property: $property"
+            
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
             echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
             
@@ -50,22 +55,21 @@ create_deploy_script_resource_properties() {
                 #echo "Processing non-complex type"
                 local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
                 echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
-                #echo "Type: $type"
+                echo "Type: $type"
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
+
                 if [[ "$required" == "true" ]]; then
                     echo "echo \"Required: Yes\"" >> "$SCRIPT_FILE_PATH"
                 else
                     echo "echo \"Required: No\"" >> "$SCRIPT_FILE_PATH"
                 fi
-                #echo "Required: $required"
+                echo "Required: $required"
                 
-                local enum_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if .[$prop].enum | type == "array" then .[$prop].enum | join(";") else null end' 2>/dev/null || echo "")
+                local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
                 if [[ -n "$enum_values" && "$enum_values" != "" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-                    #echo "Enum: $enum_values"
-                #else
-                #    echo "No enum"
+                    echo "Enum: $enum_values"
                 fi
                 
                 echo "echo \"Enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
