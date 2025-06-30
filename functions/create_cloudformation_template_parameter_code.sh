@@ -13,8 +13,8 @@ create_cloudformation_template_parameter_code(){
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
-    echo "Properties json:"
-    echo $properties_json | jq '.'
+    #echo "Properties json:"
+    #echo $properties_json | jq '.'
     
      while read -r property; do
         
@@ -32,12 +32,12 @@ create_cloudformation_template_parameter_code(){
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
-            echo "Processing complex type: $ref"
+            #echo "Processing complex type: $ref"
             object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
             object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_parameter_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-           echo "processing simple type"
+           #echo "processing simple type"
            param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
            required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
             
