@@ -38,7 +38,7 @@ Things with JSON like Step Function configurations - you're on your own \
 \
 ^^^^ and this is why everything should be first class CLoudForamtion citizen rather than a blog of JSON in a property.  \
 
-# FYI ON GITHUB REPOS:
+# FYI on GitHub Repos:
 
 I do not like that AWS CloudShell has a github credential helper that wants you to store your credentials. To prompt for credentials instead run this:
 
