@@ -18,19 +18,20 @@ create_deploy_script_resource_code() {
     echo "Properties JSON for $RESOURCE_TYPE: $properties_json"
 
     while read -r property; do
-        description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description // "No description available"')
+        description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
         echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
         
-        ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"] // ""')
+        ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
         
         if [[ -n "$ref" && "$ref" != "null" ]]; then
             echo "echo \"This property is a complex object type with reference: $ref\"" >> "$SCRIPT_FILE_PATH"
             
-            object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname] // {}' <<< "$SCHEMA")
+            object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA")
             
-            echo "create_deploy_script_resource_code \"$object_schema\" \"$property\" \"$SCRIPT_FILE_PATH\" \"$TEMPLATE_FILE_PATH\"" >> "$SCRIPT_FILE_PATH"
+            create_deploy_script_resource_code $object_schema $property $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
+            
         else
-            type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type // ""')
+            type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
             echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
             
             required=$(jq -r --arg prop "$property" 'fromjson | if has("required") then .required | contains([$prop]) else false end | tostring' <<< "$SCHEMA")
