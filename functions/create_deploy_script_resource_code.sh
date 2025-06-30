@@ -29,6 +29,8 @@ create_deploy_script_resource_code() {
             if [[ -n "$ref" && "$ref" != "null" ]]; then
                 object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA")
                 
+                echo "create_deploy_script_resource_code $object_schema $property $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH"
+                
                 create_deploy_script_resource_code $object_schema $property $SCRIPT_FILE_PATH $TEMPLATE_FILE_PATH
             else
                 type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
