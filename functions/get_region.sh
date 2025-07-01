@@ -3,7 +3,7 @@ get_region() {
     local region=""
     
     # Try to get region from AWS CLI configuration
-    region=$(aws configure get region 2>/dev/null)
+    region=$(aws configure get region --profile $ENV_PROFILE)
     
     # If still not found, try to get it from ECS task metadata
     if [ -z "$region" ] && [ ! -z "$ECS_CONTAINER_METADATA_URI_V4" ]; then
