@@ -3,7 +3,12 @@
 create_deploy_script_for_resource() {
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
-  
+    local ENV_PROFILE="$3"
+    local REGION="$4"
+    
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    
     local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
     
