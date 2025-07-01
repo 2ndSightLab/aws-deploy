@@ -5,14 +5,12 @@ get_stack_resource_name() {
     local RESOURCE="$3"
     local NAME="$4"
     local REGION="$5"
-    
-    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
-  
-    # Check if all parameters are provided
-    if [ -z "$ENV_NAME" ] || [ -z "$SERVICE" ] || [ -z "$RESOURCE" ] ; then
-        echo "Error: All parameters (ENV_NAME, SERVICE, RESOURCE) must be provided." >&2
-        exit
-    fi
+
+    if [ -z "$ENV_NAME" ]; then echo "$ENV_NAME not set in get_stack_resource_name" >&2; exit 1; fi
+    if [ -z "$SERVICE" ]; then echo "$SERVICE not set in get_stack_resource_name" >&2; exit 1; fi
+    if [ -z "$RESOURCE" ]; then echo "$RESOURCE not set in get_stack_resource_name" >&2; exit 1; fi
+    if [ -z "$NAME" ]; then echo "$NAME not set in get_stack_resource_name" >&2; exit 1; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in get_stack_resource_name" >&2; exit 1; fi
 
     # Return the concatenated string
     resource_name="$ENV_NAME-$SERVICE-$RESOURCE"
