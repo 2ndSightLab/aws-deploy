@@ -30,7 +30,7 @@ done
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
-# get or define the repository to store the output of commands for this environment
+echo "Get or define the git repository to store the output of commands for environment: $ENV_NAME"
 GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ "$GIT_REPO" == "" ]; then
   echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output."
