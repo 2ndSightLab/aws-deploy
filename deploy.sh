@@ -58,6 +58,14 @@ else
   echo "ENV_PROFILE is set in $ENV_FILE_PATH"
 fi
 
+echo "Enviroment $ENV_NAME configuration:"
+cat $ENV_FILE_PATH
+msg="If you want to change the configuration for evironment $ENV_NAME
+     then modify the file $ENV_FILE_PATH or delete it to reconfigure it.
+     Ctrl-c to exit or enter to continue"
+echo $msg
+read ok
+
 #see if the user wants to override the region for this deployment
 REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
@@ -67,19 +75,6 @@ if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 # do not override: use correct identity who deployed the resource
 IDENTITY_ARN=$(get_current_identity_arn)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
-
-echo "Enviroment configuration:"
-cat $ENV_FILE_PATH
-echo "OK? Enter to continue or n to change the configuration"
-read change
-if [ "$change" == "n" ]; then
-  echo "GIT_REPO: $GIT_REPO"
-  echo "Enter the new value if you want to change it:"
-  read new_git_repo
-  if [ "$new_git_repo" != "GIT_REPO" ]; then
-     #set the new parameter value
-  fi
-fi
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
