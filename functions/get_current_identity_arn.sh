@@ -3,8 +3,8 @@ get_current_identity_arn() {
     local ENV_PROFILE="$1"
     local REGION="$2"
     
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in get_current_identity_arn" >&2; exit 1; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in get_current_identity_arn" >&2; exit 1; fi
     
     local arn
     arn=$(aws sts get-caller-identity --query 'Arn' --profile $ENV_PROFILE --region $REGION --output text)
