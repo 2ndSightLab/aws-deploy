@@ -15,12 +15,13 @@ while [ "$ENV_NAME" == "" ]; do
     echo "Enter environment name. (To learn more about environments, enter help):"
     read e
     if [ "$e" == "help" ]; then
-        echo "The environment name used to create a file that stores configuration information. \
-              This approach allows you to create configurations for different environments such as Dev, QA, Prod \
-              or even more granular environments such as for teams, projects, or applications. \
-              The configuration file includes things like which AWS profile(s) to use to deploy resources \
-              for that environment and the github repository to use to store the output files. \
+        help="The environment name used to create a file that stores configuration information. 
+              This approach allows you to create configurations for different environments such as Dev, QA, Prod 
+              or even more granular environments such as for teams, projects, or applications. 
+              The configuration file includes things like which AWS profile(s) to use to deploy resources 
+              for that environment and the github repository to use to store the output files. 
               The environment name is also used in CloudFormation stack names and resource names."
+        echo $help
     else
       ENV_NAME="$e"
       ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"      
