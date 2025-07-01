@@ -4,7 +4,9 @@ create_deploy_script_for_resource() {
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
     local ENV_PROFILE="$3"
-    
+
+    if [ -z "$ENV_PROFILE" ]; then echo "ENV_PROFILE not set in create_deploy_script_for_resource"; exit; fi
+  
     local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
     
