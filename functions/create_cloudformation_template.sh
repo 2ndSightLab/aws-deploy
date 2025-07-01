@@ -5,8 +5,8 @@ create_cloudformation_template() {
     local ENV_PROFILE="$3"
     local REGION="$4"
     
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in create_cloudformation_template"; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in create_cloudformation_template"; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "ENV_PROFILE not set in create_cloudformation_template"; fi
+    if [ -z "$REGION" ]; then echo "REGION not set in create_cloudformation_template"; fi
     
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
   
