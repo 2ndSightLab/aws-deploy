@@ -38,10 +38,12 @@ if [ -z "$GIT_REPO" ]; then
   read GIT_REPO
 
   echo "GIT_REPO: $GIT_REPO" >> $ENV_FILE_PATH
+
+else
+  echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
 
 echo "GIT_REPO: $GIT_REPO"
-echo "OK? enter to continue"
 read ok
 
 # get or define the AWS CLI profile to use to deploy to this environment
