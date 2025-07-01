@@ -5,8 +5,9 @@ is_valid_aws_service() {
     local ENV_PROFILE=$2
     local REGION=$3
 
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    if [ -z "$service_name" ]; then echo "$service_name not set in is_valid_aws_service" >&2; exit 1; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_aws_service" >&2; exit 1; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in is_valid_aws_service" >&2; exit 1; fi
     
     # Check if service name is provided
     if [ -z "$service_name" ]; then
