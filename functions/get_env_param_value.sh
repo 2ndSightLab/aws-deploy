@@ -4,7 +4,7 @@ get_env_param_value(){
   param_name="$2"
 
   if [ "$env_file_path" == "" ] || [ "$param" == "" ]; then
-     echo "Error: env_file_path and param_name must be set."
+     echo "Error: env_file_path and param_name must be set." >&2
      exit 1
   fi
   
