@@ -1,34 +1,74 @@
 #!/bin/bash -e
 
-ENV_NAME=""
-
-while [ "$ENV_NAME" == "" ]; do
-    echo "Enter environment name. (To learn more about environment names, enter help:"
-    read e
-    if [ "e" == "help" ]; then
-        echo "The environment name used to create a file that stores configuration information. \
-              This approach allows you to create configurations for different environments such as Dev, QA, Prod \
-              or even more granular environments such as for projects, teams, or applications. \
-              The configuration file includes things like which AWS profile to use to deploy resources \
-              for that environment and the github repository to use to store the output files. \
-              The environment name is also used in CloudFormation stack names and resource names."
-    else
-        ENV_NAME="$e"
-    fi
-done
-
-read ok
-
-
-# check to see if the profile config file exists. If not create it.
-
-
 echo "source all the files in the functions directory"
 for file in functions/*; do [ -f "$file" ] && source "$file"; done
 
+ENV_NAME=""
+ENV_DIR="$HOME/.aws-deploy"
+ENV_FILE_PATH=""
+GIT_REPO=""
+ENV_PROFILE=""
+
+if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
+
+while [ "$ENV_NAME" == "" ]; do
+    echo "Enter environment name. (To learn more about environments, enter help):"
+    read e
+    if [ "$e" == "help" ]; then
+        echo "The environment name used to create a file that stores configuration information. \
+              This approach allows you to create configurations for different environments such as Dev, QA, Prod \
+              or even more granular environments such as for teams, projects, or applications. \
+              The configuration file includes things like which AWS profile(s) to use to deploy resources \
+              for that environment and the github repository to use to store the output files. \
+              The environment name is also used in CloudFormation stack names and resource names."
+    else
+      ENV_NAME="$e"
+      ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"      
+    fi
+    
+done
+
+echo "ENV_FILE_PATH: $ENV_FILE_PATH"
+read ok
+
+# get or define the repository to store the output of commands for this environment
+GIT_REPO=$(get_env_param_value "GIT_REPO")
+if [ "$GIT_REPO" == "" ]; then
+  echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output."
+  read GIT_REPO
+
+  echo "GIT_REPO: $GIT_REPO" >> $ENV_FILE_PATH
+fi
+
+# get or define the AWS CLI profile to use to deploy to this environment
+ENV_PROFILE=$(get_env_param_value "ENV_PROFILE")
+if [ "$ENV_PROFILE" == "" ]; then
+  echo "Enter the profile name you want to use to deploy resources or enter for the default profile."
+  read ENV_PROFILE
+
+  if [ "$ENV_PROFILE" == ""; then ENV_PROFILE="default"; fi
+
+  echo "ENV_PROFILE: $ENV_PROFILE" >> $ENV_FILE_PATH
+fi
+
+#see if the user wants to override the region for this deployment
 REGION=$(get_region)
+echo "The current region is $REGION. If you want to change the region enter it now"
+read CHANGE_REGION
+if [ "$CHANGE_REGION" != "" ]; then
+  #check if the region is valid
+  REGION=$CHANGE_REGION
+fi
+
+# do not override: use correct identity who deployed the resource
 IDENTITY_ARN=$(get_current_identity_arn)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
+
+echo "Enviroment configuration:"
+cat $ENV_FILE_PATH
+
+read ok
+
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
