@@ -1,11 +1,7 @@
 get_identity_name_from_arn() {
     local arn=$1
 
-    # Check if ARN is provided
-    if [ -z "$arn" ]; then
-        echo "Error: ARN must be provided." >&2
-        return 1
-    fi
+    if [ -z "$arn" ]; then echo "$arn not set in get_identity_name_from_arn" >&2; exit 1; fi
 
     # Split the ARN into parts
     local arn_parts=(${arn//:/ })
