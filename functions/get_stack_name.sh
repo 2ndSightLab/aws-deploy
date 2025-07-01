@@ -5,11 +5,11 @@ get_stack_name() {
     local RESOURCE="$4"
     local NAME="$5"
 
-    # Check if all parameters are provided
-    if [ -z "$ENV_NAME" ] || [ -z "$IDENTITY_NAME" ] || [ -z "$SERVICE" ] || [ -z "$RESOURCE" ] ; then
-        echo "Error: All parameters (ENV_NAME, IDENTITY_NAME, SERVICE, RESOURCE) must be provided." >&2
-        return 1
-    fi
+    if [ -z "$ENV_NAME" ]; then echo "$ENV_NAME not set in get_stack_name" >&2; exit 1; fi
+    if [ -z "$IDENTITY_NAME" ]; then echo "$IDENTITY_NAME not set in get_stack_name" >&2; exit 1; fi
+    if [ -z "$SERVICE" ]; then echo "$SERVICE not set in get_stack_name" >&2; exit 1; fi
+    if [ -z "$RESOURCE" ]; then echo "$RESOURCE not set in get_stack_name" >&2; exit 1; fi
+    if [ -z "$NAME" ]; then echo "$NAME not set in get_stack_name" >&2; exit 1; fi
 
     # Concatenate the string
     local FULL_NAME="${ENV_NAME}-${IDENTITY_NAME}-${SERVICE}-${RESOURCE}-${NAME}"
