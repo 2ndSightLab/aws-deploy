@@ -2,6 +2,9 @@
 
 is_valid_aws_service() {
     local service_name="$1"
+    local ENV_PROFILE=$2
+
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_aws_service"; fi
     
     # Check if service name is provided
     if [ -z "$service_name" ]; then
