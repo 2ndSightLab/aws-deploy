@@ -3,9 +3,11 @@ deploy_cloudformation_stack() {
     local STACK_NAME=$1
     local TEMPLATE_FILE_PATH=$2
     local ENCODED_PARAMETER_LIST=$3
-    local IAM=${4:-false}
-    local ENV_PROFILE="$4"
+    local ENV_PROFILE=$4
+    local IAM=${5:-false}
 
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack"; fi
+    
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
         echo "Stack $STACK_NAME exists in a failed state. Deleting..."
