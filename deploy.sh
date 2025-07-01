@@ -29,6 +29,7 @@ while [ "$ENV_NAME" == "" ]; do
 done
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
+echo "OK? Enter to continue"
 read ok
 
 # get or define the repository to store the output of commands for this environment
@@ -66,9 +67,8 @@ IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
 
 echo "Enviroment configuration:"
 cat $ENV_FILE_PATH
-
+echo "OK? Enter to continue"
 read ok
-
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
