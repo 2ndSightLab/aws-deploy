@@ -29,8 +29,6 @@ while [ "$ENV_NAME" == "" ]; do
 done
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
-echo "OK? Enter to continue"
-read ok
 
 # get or define the repository to store the output of commands for this environment
 GIT_REPO=$(get_env_param_value "GIT_REPO")
@@ -40,6 +38,10 @@ if [ "$GIT_REPO" == "" ]; then
 
   echo "GIT_REPO: $GIT_REPO" >> $ENV_FILE_PATH
 fi
+
+echo "GIT_REPO: $GIT_REPO"
+echo "OK? enter to continue"
+read ok
 
 # get or define the AWS CLI profile to use to deploy to this environment
 ENV_PROFILE=$(get_env_param_value "ENV_PROFILE")
