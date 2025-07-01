@@ -5,8 +5,9 @@ get_resource_schema(){
   local ENV_PROFILE=$2
   local REGION=$3
 
-  if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
-  if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
+  if [ -z "$resource_type" ]; then echo "$resource_type not set in get_resource_schema" >&2; exit 1; fi
+  if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in get_resource_schema" >&2; exit 1; fi
+  if [ -z "$REGION" ]; then echo "$REGION not set in get_resource_schema" >&2; exit 1; fi
 
   schema=$(aws cloudformation describe-type --type RESOURCE --type-name "$resource_type" --query 'Schema' --profile $ENV_PROFILE --region $REGION --output json)
   echo $schema
