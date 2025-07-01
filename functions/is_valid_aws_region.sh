@@ -2,10 +2,9 @@
 is_valid_aws_region() {
     local region_name=$1
     local ENV_PROFILE=$2
-    local REGION=$3
     
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_aws_region"; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in is_valid_aws_region"; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "ENV_PROFILE not set in is_valid_aws_region"; fi
+    if [ -z "$region_name" ]; then echo "region_name not set in is_valid_aws_region"; fi
     
     # Check if region name is provided
     if [ -z "$region_name" ]; then
@@ -15,7 +14,7 @@ is_valid_aws_region() {
     
     # Fetch the list of valid AWS regions using us-east-1 so we know we're starting with a valid region
     # Presuming here the user has access to us-east-1. If you change this it should be hard-coded to a valid region.
-    local aws_regions=$(aws ec2 describe-regions --query 'Regions[].RegionName' --region us-east-1 --output text 2>/dev/null)
+    local aws_regions=$(aws ec2 describe-regions --query 'Regions[].RegionName' --profile $ENV_PROFILE --region us-east-1 --output text 2>/dev/null)
     
     # Check if aws command failed
     if [ $? -ne 0 ]; then
