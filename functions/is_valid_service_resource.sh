@@ -3,6 +3,8 @@
 is_valid_service_resource() {
   SERVICE_NAME="$1"
   RESOURCE_NAME="$2"
+  ENV_PROFILE=$3
+
 
   # Check if all parameters are provided
   if [ -z "$SERVICE_NAME" ] || [ -z "$RESOURCE_NAME" ] ; then
@@ -13,6 +15,7 @@ is_valid_service_resource() {
   RESOURCE_EXISTS=$(aws cloudformation list-types --visibility PUBLIC --type RESOURCE \
   --filters TypeNamePrefix="AWS::${SERVICE_NAME}::${RESOURCE_NAME}" \
   --query "TypeSummaries[?TypeName=='AWS::${SERVICE_NAME}::${RESOURCE_NAME}'].TypeName" \
+  --profile $ENV_PROFILE \
   --output text)
   
   if [ -z "$RESOURCE_EXISTS" ]; then
