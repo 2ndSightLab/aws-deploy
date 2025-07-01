@@ -7,6 +7,9 @@ deploy_cloudformation_stack() {
     local REGION=$5
     local IAM=${6:-false}
 
+    if [ -z "$STACK_NAME" ]; then echo "$STACK_NAME not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    if [ -z "$TEMPLATE_FILE_PATH" ]; then echo "$TEMPLATE_FILE_PATH not set in deploy_cloudformation_stack" >&2; exit 1; fi    
+    if [ -z "$ENCODED_PARAMETER_LIST" ]; then echo "$ENCODED_PARAMETER_LIST not set in deploy_cloudformation_stack" >&2; exit 1; fi
     if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
     if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
     
