@@ -19,8 +19,6 @@ create_cloudformation_template_condition_code(){
             continue
         fi
 
-        #echo "Processing property: $property in template conditions"
-        
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
         if [[ -n "$ref" && "$ref" != "null" ]]; then
