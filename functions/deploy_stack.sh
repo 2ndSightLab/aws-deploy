@@ -4,16 +4,17 @@ deploy_cloudformation_stack() {
     local TEMPLATE_FILE_PATH=$2
     local ENCODED_PARAMETER_LIST=$3
     local IAM=${4:-false}
+    local ENV_PROFILE="$4"
 
     # Check if the stack exists in a failed state
-    if aws cloudformation describe-stacks --stack-name "$STACK_NAME" 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
+    if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
         echo "Stack $STACK_NAME exists in a failed state. Deleting..."
-        aws cloudformation delete-stack --stack-name "$STACK_NAME"
-        aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME"
+        aws cloudformation delete-stack --stack-name "$STACK_NAME" --profile $ENV_PROFILE 
+        aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME" --profile $ENV_PROFILE 
     fi
 
     # Prepare the deploy command
-    local deploy_cmd="aws cloudformation deploy --stack-name $STACK_NAME --template-file $TEMPLATE_FILE_PATH"
+    local deploy_cmd="aws cloudformation deploy --stack-name $STACK_NAME --template-file $TEMPLATE_FILE_PATH --profile $ENV_PROFILE"
 
     # Handle parameter list if provided
     # Apparently all these formats are supported:
