@@ -7,8 +7,8 @@ deploy_cloudformation_stack() {
     local REGION=$5
     local IAM=${6:-false}
 
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack"; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack"; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack" >&2; exit 1; fi
     
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
