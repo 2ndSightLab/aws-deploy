@@ -1,7 +1,7 @@
 #!/bin/bash
 list_service_names(){
-  ENV_PROFILE=$1
-  REGION=$2
+  local ENV_PROFILE=$1
+  local REGION=$2
   
   if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_service_resource" >&2; exit 1; fi
   if [ -z "$REGION" ]; then echo "$REGION not set in is_valid_service_resource" >&2; exit 1; fi
