@@ -1,6 +1,9 @@
 #!/bin/bash
 is_valid_aws_region() {
     local region_name=$1
+    local ENV_PROFILE=$2
+    
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack"; fi
     
     # Check if region name is provided
     if [ -z "$region_name" ]; then
