@@ -1,14 +1,34 @@
 #!/bin/bash -e
 
+ENV_NAME=""
+
+while [ "$ENV_NAME" == "" ]; do
+    echo "Enter environment name. (To learn more about environment names, enter help:"
+    read e
+    if [ "e" == "help" ]; then
+        echo "The environment name used to create a file that stores configuration information. \
+              This approach allows you to create configurations for different environments such as Dev, QA, Prod \
+              or even more granular environments such as for projects, teams, or applications. \
+              The configuration file includes things like which AWS profile to use to deploy resources \
+              for that environment and the github repository to use to store the output files. \
+              The environment name is also used in CloudFormation stack names and resource names."
+    else
+        ENV_NAME="$e"
+    fi
+done
+
+read ok
+
+
+# check to see if the profile config file exists. If not create it.
+
+
 echo "source all the files in the functions directory"
 for file in functions/*; do [ -f "$file" ] && source "$file"; done
 
 REGION=$(get_region)
 IDENTITY_ARN=$(get_current_identity_arn)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
-
-echo "Enter environment name (prod, dev, test):"
-read ENV_NAME 
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
