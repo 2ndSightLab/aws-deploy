@@ -1,8 +1,8 @@
 #!/bin/bash
 get_region() {
-    ENV_PROFILE="$1"
+    local ENV_PROFILE="$3"
     
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in get_region"; fi
+    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack" >&2; exit 1; fi
  
     local region=""
     
