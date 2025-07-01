@@ -4,19 +4,21 @@ deploy_cloudformation_stack() {
     local TEMPLATE_FILE_PATH=$2
     local ENCODED_PARAMETER_LIST=$3
     local ENV_PROFILE=$4
-    local IAM=${5:-false}
+    local REGION=$5
+    local IAM=${6:-false}
 
     if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in deploy_cloudformation_stack"; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in deploy_cloudformation_stack"; fi
     
     # Check if the stack exists in a failed state
-    if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
+    if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
         echo "Stack $STACK_NAME exists in a failed state. Deleting..."
-        aws cloudformation delete-stack --stack-name "$STACK_NAME" --profile $ENV_PROFILE 
-        aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME" --profile $ENV_PROFILE 
+        aws cloudformation delete-stack --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION
+        aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION
     fi
 
     # Prepare the deploy command
-    local deploy_cmd="aws cloudformation deploy --stack-name $STACK_NAME --template-file $TEMPLATE_FILE_PATH --profile $ENV_PROFILE"
+    local deploy_cmd="aws cloudformation deploy --stack-name $STACK_NAME --template-file $TEMPLATE_FILE_PATH --profile $ENV_PROFILE --region $REGION"
 
     # Handle parameter list if provided
     # Apparently all these formats are supported:
