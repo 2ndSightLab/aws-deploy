@@ -5,6 +5,7 @@ is_valid_service_resource() {
   RESOURCE_NAME="$2"
   ENV_PROFILE=$3
 
+  if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_service_resource"; fi
 
   # Check if all parameters are provided
   if [ -z "$SERVICE_NAME" ] || [ -z "$RESOURCE_NAME" ] ; then
