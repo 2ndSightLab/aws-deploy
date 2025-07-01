@@ -34,37 +34,35 @@ echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 echo "Get or define the git repository to store the output of commands for environment: $ENV_NAME"
 GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ -z "$GIT_REPO" ]; then
-  echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output."
+  echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output for this environment."
   read GIT_REPO
-
-  echo "GIT_REPO: $GIT_REPO" >> $ENV_FILE_PATH
-
+  
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO" "$GIT_REPO"
+  GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
+  
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
 
-echo "GIT_REPO: $GIT_REPO"
-read ok
-
 # get or define the AWS CLI profile to use to deploy to this environment
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
-  echo "Enter the profile name you want to use to deploy resources or enter for the default profile."
+
+  echo "Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile."
   read ENV_PROFILE
+  
+  set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
+  ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
-  if [ "$ENV_PROFILE" == ""; then ENV_PROFILE="default"; fi
-
-  echo "ENV_PROFILE: $ENV_PROFILE" >> $ENV_FILE_PATH
+else
+  echo "ENV_PROFILE is set in $ENV_FILE_PATH"
 fi
 
 #see if the user wants to override the region for this deployment
 REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
 read CHANGE_REGION
-if [ "$CHANGE_REGION" != "" ]; then
-  #check if the region is valid
-  REGION=$CHANGE_REGION
-fi
+if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 
 # do not override: use correct identity who deployed the resource
 IDENTITY_ARN=$(get_current_identity_arn)
@@ -72,8 +70,16 @@ IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
 
 echo "Enviroment configuration:"
 cat $ENV_FILE_PATH
-echo "OK? Enter to continue"
-read ok
+echo "OK? Enter to continue or n to change the configuration"
+read change
+if [ "$change" == "n" ]; then
+  echo "GIT_REPO: $GIT_REPO"
+  echo "Enter the new value if you want to change it:"
+  read new_git_repo
+  if [ "$new_git_repo" != "GIT_REPO" ]; then
+     #set the new parameter value
+  fi
+fi
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
