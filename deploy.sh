@@ -11,46 +11,68 @@ ENV_PROFILE=""
 
 if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
+#set environment
+help="The environment name used to create a file that stores configuration information. 
+      This approach allows you to create configurations for different environments such as Dev, QA, Prod 
+      or even more granular environments such as for teams, projects, or applications. 
+      The configuration file includes things like which AWS profile(s) to use to deploy resources 
+      for that environment and the github repository to use to store the output files. 
+      The environment name is also used in CloudFormation stack names and resource names."
+      
 while [ "$ENV_NAME" == "" ]; do
     echo "Enter environment name. (To learn more about environments, enter help):"
     read e
     if [ "$e" == "help" ]; then
-        help="The environment name used to create a file that stores configuration information. 
-              This approach allows you to create configurations for different environments such as Dev, QA, Prod 
-              or even more granular environments such as for teams, projects, or applications. 
-              The configuration file includes things like which AWS profile(s) to use to deploy resources 
-              for that environment and the github repository to use to store the output files. 
-              The environment name is also used in CloudFormation stack names and resource names."
-        echo $help
+      echo $help
     else
       ENV_NAME="$e"
       ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"      
     fi
-    
 done
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
-echo "Get or define the git repository to store the output of commands for environment: $ENV_NAME"
+#set github repository
+help="The github repository URL is used to clone the git repo if it is not already cloned in the same directory
+      where the aws-deploy repository exists. Then as configuration files are generated, they are stored
+      to the specified repository directory. Otherwise, they are stored the /resources directory of the aws-deploy
+      directory."
+prompt="Enter the git repository URL where configuration files are stored or enter if you don't want to save the output. (Type help for more information.)"
+
 GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ -z "$GIT_REPO" ]; then
-  echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output for this environment."
-  read GIT_REPO
+  read -p "$prompt_message " g
   
+  while [ "$g" == "help" ]; do
+     echo $help; read -p "$prompt_message " g
+  else
+  
+  GIT_REPO="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO" "$GIT_REPO"
   GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
-  
+fi
+
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
 
-# get or define the AWS CLI profile to use to deploy to this environment
+#set AWS CLI profile
+help="The AWS CLI profile is used with the commands that look up and deploy resources. 
+      To view a list of profiles run this command: aws configure list-profiles
+      If no profiles are configured either your system is not configured with AWS credentials,
+      or you're using the default profile for the environment. If do not
+      enter a profile name, then the default profile will be used to run aws commands."
+      
+prompt="Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile. (Type help for more information.)"
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
-
-  echo "Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile."
-  read ENV_PROFILE
+  read -p "$prompt_message " p
   
+  while [ "$p" == "help" ]; do
+     echo $help; read -p "$prompt_message " p
+  else
+  
+  ENV_PROFILE="$p"
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
   ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
@@ -58,6 +80,7 @@ else
   echo "ENV_PROFILE is set in $ENV_FILE_PATH"
 fi
 
+#confirm the environment configuration is correct
 echo "Enviroment $ENV_NAME configuration:"
 cat $ENV_FILE_PATH
 msg="If you want to change the configuration for evironment $ENV_NAME
@@ -66,39 +89,39 @@ msg="If you want to change the configuration for evironment $ENV_NAME
 echo $msg
 read ok
 
-#see if the user wants to override the region for this deployment
+#set the region
 REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
 read CHANGE_REGION
 if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 
-# do not override: use correct identity who deployed the resource
-IDENTITY_ARN=$(get_current_identity_arn)
-IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN)
+# get the identity running the commands
+IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE)
+IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
     echo "Enter the service from which you want to deploy a resource (type help for a list of services):"
     read SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
-      list_service_names
+      list_service_names $ENV_PROFILE
       SERVICE_NAME=""
     fi
 done
 
-is_valid_aws_service $SERVICE_NAME
+is_valid_aws_service $SERVICE_NAME $ENV_PROFILE
 
 RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
     echo "Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):"
     read RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
-       list_service_resource_names $SERVICE_NAME
+       list_service_resource_names $SERVICE_NAME $ENV_PROFILE
        RESOURCE_NAME=""
     fi
 done
 
-is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME
+is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE
 
 NAME=""
 echo "Is this resource a user, for a specific user, or associated with an application? [y]"
@@ -129,8 +152,10 @@ echo "STACK_NAME: $STACK_NAME"
 echo "STACK_RESOURCE_NAME: $STACK_RESOURCE_NAME"
 echo "TEMPLATE FILE: $TEMPLATE_FILE_PATH"
 echo "SCRIPT: $SCRIPT_FILE_PATH"
+echo "AWS CLI PROFILE: $ENV_PROFILE"
 echo ""
 
+#the deploy script assumes the above values have been set prior to sourcing it
 echo "Do you want to deploy the resource now (y)?"
 read ok
 if [ "$ok" == "y" ]; then
