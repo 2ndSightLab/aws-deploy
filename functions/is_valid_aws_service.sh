@@ -3,8 +3,10 @@
 is_valid_aws_service() {
     local service_name="$1"
     local ENV_PROFILE=$2
+    local REGION=$3
 
     if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_aws_service"; fi
+    if [ -z "$REGION" ]; then echo "$REGION not set in is_valid_aws_region"; fi
     
     # Check if service name is provided
     if [ -z "$service_name" ]; then
@@ -12,7 +14,7 @@ is_valid_aws_service() {
         exit
     fi
     
-    if aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --output text | grep -q -v ^0$; then
+    if aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --profile $ENV_PROFILE --region $REGION --output text | grep -q -v ^0$; then
         echo "${SERVICE_NAME} service exists"
     else
         echo "${SERVICE_NAME} service does not exist"
