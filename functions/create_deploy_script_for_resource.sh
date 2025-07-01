@@ -61,9 +61,9 @@ create_deploy_script_for_resource() {
     # Deploy CloudFormation stack
     echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
-    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \"\" \$IAM_CAPABILITY \$ENV_PROFILE" >> "$SCRIPT_FILE_PATH"
+    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \"\" \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
     echo "else" >> "$SCRIPT_FILE_PATH"
-    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENCODED_PARAMETERS \$IAM_CAPABILITY \$ENV_PROFILE" >> "$SCRIPT_FILE_PATH"
+    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENCODED_PARAMETERS \$ENV_PROFILE \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
    
     echo "Created deployment script at $SCRIPT_FILE_PATH"
