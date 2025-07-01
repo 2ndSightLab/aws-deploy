@@ -3,6 +3,7 @@
 create_deploy_script_for_resource() {
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
+    local ENV_PROFILE="$3"
     
     local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
@@ -17,7 +18,7 @@ create_deploy_script_for_resource() {
     local RESOURCE_TYPE="AWS::$SERVICE_NAME::$RESOURCE_NAME"
 
     # Get properties, types, descriptions, enum values, and minimum lengths for the resource type
-    local SCHEMA=$(get_resource_schema $RESOURCE_TYPE)
+    local SCHEMA=$(get_resource_schema $RESOURCE_TYPE $ENV_PROFILE)
 
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
     
@@ -60,9 +61,9 @@ create_deploy_script_for_resource() {
     # Deploy CloudFormation stack
     echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
-    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \"\" \$IAM_CAPABILITY" >> "$SCRIPT_FILE_PATH"
+    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \"\" \$IAM_CAPABILITY \$ENV_PROFILE" >> "$SCRIPT_FILE_PATH"
     echo "else" >> "$SCRIPT_FILE_PATH"
-    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENCODED_PARAMETERS \$IAM_CAPABILITY" >> "$SCRIPT_FILE_PATH"
+    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENCODED_PARAMETERS \$IAM_CAPABILITY \$ENV_PROFILE" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
    
     echo "Created deployment script at $SCRIPT_FILE_PATH"
