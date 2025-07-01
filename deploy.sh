@@ -31,7 +31,7 @@ done
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
 # get or define the repository to store the output of commands for this environment
-GIT_REPO=$(get_env_param_value "GIT_REPO")
+GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ "$GIT_REPO" == "" ]; then
   echo "Enter the git repository name where you want to store the generated files or enter if you don't want to save the output."
   read GIT_REPO
@@ -44,7 +44,7 @@ echo "OK? enter to continue"
 read ok
 
 # get or define the AWS CLI profile to use to deploy to this environment
-ENV_PROFILE=$(get_env_param_value "ENV_PROFILE")
+ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ "$ENV_PROFILE" == "" ]; then
   echo "Enter the profile name you want to use to deploy resources or enter for the default profile."
   read ENV_PROFILE
