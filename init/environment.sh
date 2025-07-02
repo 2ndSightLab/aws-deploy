@@ -1,4 +1,10 @@
+#!/bin/bash
 
+ENV_DIR="$HOME/.aws-deploy"
+
+if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
+
+#set environment
 help="
 ~~~
 The environment name used to create a file that stores configuration information. 
