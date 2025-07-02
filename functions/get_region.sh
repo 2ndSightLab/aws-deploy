@@ -1,7 +1,7 @@
 #!/bin/bash
 get_region() {
 
-    validate_fist_n_args_set 1
+    validate_first_n_args_set 1  "$@"
     
     local ENV_PROFILE="$1"
     
