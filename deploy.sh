@@ -18,16 +18,18 @@ if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
 #set environment
 help="
-      The environment name used to create a file that stores configuration information. 
-      This approach allows you to create configurations for different environments such as Dev, QA, Prod 
-      or even more granular environments such as for teams, projects, or applications. 
-      The configuration file includes things like which AWS profile(s) to use to deploy resources 
-      for that environment and the github repository to use to store the output files. 
-      The environment name is also used in CloudFormation stack names and resource names.
-      "
+The environment name used to create a file that stores configuration information. 
+This approach allows you to create configurations for different environments such as Dev, QA, Prod 
+or even more granular environments such as for teams, projects, or applications. 
+The configuration file includes things like which AWS profile(s) to use to deploy resources 
+for that environment and the github repository to use to store the output files. 
+The environment name is also used in CloudFormation stack names and resource names.
+"
       
 while [ "$ENV_NAME" == "" ]; do
-    echo "Enter environment name. (To learn more about environments, enter help):"
+    echo "
+    Enter environment name. (To learn more about environments, enter help):
+    "
     read e
     if [ "$e" == "help" ]; then
       echo $help
@@ -41,15 +43,17 @@ echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
 echo "Configure git repository"
 help="
-      The github repository URL is used to clone the git repo where the output files will be stored that are generated
-      by aws-deploy. You will be asked for a directory where the repository should be cloned. 
-      Each stack will have it's own directory /account/region/stackname/.
-      The deploy script, cloudformation template, and parameters will be stored to the directory.
-      "
+The github repository URL is used to clone the git repo where the output files will be stored that are generated
+by aws-deploy. You will be asked for a directory where the repository should be cloned. 
+Each stack will have it's own directory /account/region/stackname/.
+The deploy script, cloudformation template, and parameters will be stored to the directory.
+"
+      
 prompt="
 Enter the git repository URL where configuration files are stored.
 Enter if you don't want to save the output. 
-(To learn how the repository is used, enter help):"
+(To learn how the repository is used, enter help):
+"
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ -z "$GIT_REPO_URL" ]; then
@@ -96,19 +100,22 @@ fi
 
 echo "Configure AWS CLI profile"
 help="
-      The AWS CLI profile is used with the commands that look up and deploy resources. 
-      To view a list of profiles run this command: 
-         aws configure list-profiles
-      If no profiles are configured either your system is not configured with AWS credentials,
-      or you're using the default profile for the environment (e.g. CloudShell). 
-      If do not enter a profile name, then the default profile will be used to run aws commands.
-      "
+The AWS CLI profile is used with the commands that look up and deploy resources. 
+To view a list of profiles run this command: 
+   aws configure list-profiles
+If no profiles are configured either your system is not configured with AWS credentials,
+or you're using the default profile for the environment (e.g. CloudShell). 
+If do not enter a profile name, then the default profile will be used to run aws commands.
+"
       
-prompt="Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile. (Type help for more information.)"
+prompt="
+Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile. 
+(Type help for more information.)
+"
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
   read -p "$prompt_message " p
-  
+
   while [ "$p" == "help" ]; do
      echo $help; read -p "$prompt_message " p
   else
@@ -121,12 +128,13 @@ else
   echo "ENV_PROFILE is set in $ENV_FILE_PATH"
 fi
 
-#confirm the environment configuration is correct
 echo "Enviroment $ENV_NAME configuration:"
 cat $ENV_FILE_PATH
-msg="If you want to change the configuration for evironment $ENV_NAME
-     then modify the file $ENV_FILE_PATH or delete it to reconfigure it.
-     Ctrl-c to exit or enter to continue"
+msg="
+If you want to change the configuration for evironment $ENV_NAME
+then modify the file $ENV_FILE_PATH or delete it to reconfigure it.
+Enter to continue. Ctrl-c to exit.
+"
 echo $msg
 read ok
 
@@ -142,7 +150,9 @@ IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
 
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
-    echo "Enter the service from which you want to deploy a resource (type help for a list of services):"
+    prompt = "
+    Enter the service from which you want to deploy a resource (type help for a list of services):
+    "
     read SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
       list_service_names $ENV_PROFILE
@@ -154,8 +164,10 @@ is_valid_aws_service $SERVICE_NAME $ENV_PROFILE
 
 RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
-    echo "Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):"
-    read RESOURCE_NAME
+    prompt "
+    Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
+    "
+    read -p "$prompt" RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
        list_service_resource_names $SERVICE_NAME $ENV_PROFILE
        RESOURCE_NAME=""
@@ -165,7 +177,9 @@ done
 is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE
 
 NAME=""
-echo "Is this resource a user, for a specific user, or associated with an application? [y]"
+prompt = "
+Is this resource a user, for a specific user, or associated with an application? (y)
+"
 read hasname
 if [ "$hasname" == "y" ]; then 
   echo "Enter the name: "
