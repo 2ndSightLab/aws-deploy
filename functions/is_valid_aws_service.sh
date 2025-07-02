@@ -15,8 +15,10 @@ is_valid_aws_service() {
         echo "Error: Service name must be provided." >&2
         exit
     fi
-    
-    if aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --profile $ENV_PROFILE --region $REGION --output text | grep -q -v ^0$; then
+
+    SERVICE_COUNT=$(run_aws_cmd_with_retry aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --profile $ENV_PROFILE --region $REGION --output text)
+
+    if [[ $? -eq 0 && "$SERVICE_COUNT" != "0" ]]; then
         echo "${SERVICE_NAME} service exists"
     else
         echo "${SERVICE_NAME} service does not exist"
