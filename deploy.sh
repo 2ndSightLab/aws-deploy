@@ -37,7 +37,7 @@ done
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
-#set github repository
+echo "Configure git repository"
 help="The github repository URL is used to clone the git repo if it is not already cloned in the same directory
       where the aws-deploy repository exists. Then as configuration files are generated, they are stored
       to the specified repository directory. Otherwise, they are stored the /resources directory of the aws-deploy
@@ -46,6 +46,9 @@ prompt="Enter the git repository URL where configuration files are stored or ent
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ -z "$GIT_REPO_URL" ]; then
+
+  echo "git repo not found in $ENV_FILE_PATH"
+  
   read -p "$prompt_message " g
   
   while [ "$g" == "help" ]; do
