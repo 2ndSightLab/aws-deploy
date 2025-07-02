@@ -1,7 +1,7 @@
 #!/bin/bash
 create_cloudformation_template() {
 
-    validate_first_n_args_set 4
+     validate_first_n_args_set 4  "$@"
     
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
