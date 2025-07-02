@@ -7,5 +7,5 @@ echo "The current region is $REGION. If you want to change the region enter it n
 read CHANGE_REGION
 if [ -n "$CHANGE_REGION"]; then REGION=$CHANGE_REGION; fi
 
-echo "testing profile"
+echo "testing profile $ENV_PROFILE in region $REGION"
 aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
