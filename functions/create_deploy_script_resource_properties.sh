@@ -1,16 +1,14 @@
 #!/bin/bash -e
 
 create_deploy_script_resource_properties() {
+
+    validate_first_n_args_set 4
+    
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
     local SCRIPT_FILE_PATH="$3"
     local TEMPLATE_FILE_PATH="$4"
-    
-    if [ -z "$RESOURCE_TYPE" ]; then echo "$RESOURCE_TYPE not set in create_deploy_script_resource_properties" >&2; exit 1; fi
-    if [ -z "$SCHEMA_B64" ]; then echo "$SCHEMA_B64 not set in create_deploy_script_resource_properties" >&2; exit 1; fi
-    if [ -z "$SCRIPT_FILE_PATH" ]; then echo "$SCRIPT_FILE_PATH not set in create_deploy_script_resource_properties" >&2; exit 1; fi
-    if [ -z "$TEMPLATE_FILE_PATH" ]; then echo "$TEMPLATE_FILE_PATH not set in create_deploy_script_resource_properties" >&2; exit 1; fi
-    
+       
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
