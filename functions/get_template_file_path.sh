@@ -20,6 +20,6 @@ get_template_file_path(){
         mkdir -p "$DIR_PATH"
     fi
 
-    echo $DIR_PATH/$RESOURCE_NAME.yaml"
+    echo "$DIR_PATH/$RESOURCE_NAME.yaml"
     
 }
