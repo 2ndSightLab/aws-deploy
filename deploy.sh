@@ -78,14 +78,14 @@ if [ -z "$GIT_REPO_URL" ]; then
      echo $help; read -p "$prompt_git_url" g
   done
 
-  #set git repo url env parameter
+  #seet git repo url
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
   if [ -z $GIT_REPO_URL ]; then echo "Error setting GIT_REPO_URL"; exit 1; fi
   echo "GIT_REPO_URL: $GIT_REPO_URL"
   
-  #set git repo name env parameter
+  #set GIT_REPO_NAME in environment parameter
   REPO_NAME=$(basename "$url" .git)
   set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
   echo "REPO_NAME: $REPO_NAME"
