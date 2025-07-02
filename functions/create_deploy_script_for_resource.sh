@@ -22,10 +22,10 @@ create_deploy_script_for_resource() {
     echo "  # Add base64 encoding of parameter overrides with proper handling of special characters" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"# Base64 encode the parameter overrides\"" >> "$SCRIPT_FILE_PATH"
-    echo "  ENCODED_PARAMETERS=\$(echo -n \"\$PARAMETER_OVERRIDES\" | base64 -w 0)" >> "$SCRIPT_FILE_PATH"
+    echo "  PARAMETER_OVERRIDES_B64=\$(echo -n \"\$PARAMETER_OVERRIDES\" | base64 -w 0)" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"Base64 encoded parameters:\"" >> "$SCRIPT_FILE_PATH"
-    echo "  echo \"\$ENCODED_PARAMETERS\"" >> "$SCRIPT_FILE_PATH"
+    echo "  echo \"\$PARAMETER_OVERRIDES_B64\"" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
     
     # Set IAM_CAPABILITY variable based on resource type
@@ -47,13 +47,22 @@ create_deploy_script_for_resource() {
     echo "  exit 1" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
     echo "" >> "$SCRIPT_FILE_PATH"
-    
+
+    #create the stack file
+    create_stack_file \
+     $STACK_FILE_NAME \
+     $STACK_RESOURCE_NAME \
+     $RESOURCE_TYPE \
+     $TEMPLATE_FILE_PATH \
+     $SCRIPT_FILE_PATH \
+     $PARAMETER_OVERRIDES_B64 
+     
     # Deploy CloudFormation stack
     echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \"\" \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
     echo "else" >> "$SCRIPT_FILE_PATH"
-    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \$ENCODED_PARAMETERS \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
+    echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \$PARAMETER_OVERRIDES_B64 \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
    
     echo "Created deployment script at $SCRIPT_FILE_PATH"
