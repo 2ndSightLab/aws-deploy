@@ -8,6 +8,8 @@ is_valid_aws_service() {
     local ENV_PROFILE=$2
     local REGION=$3
 
+    echo "Checking to see if $service_name is a valid service in $REGION"
+
     # Check if service name is provided
     if [ -z "$service_name" ]; then
         echo "Error: Service name must be provided." >&2
