@@ -11,7 +11,7 @@ create_cloudformation_template() {
     local SCHEMA_B64=$6
     
     echo "TEMPLATE:"
-    echo "$TEMPPLATE_FILE_PATH"
+    echo "$TEMPLATE_FILE_PATH"
     echo "ok?"
     read ok
     
