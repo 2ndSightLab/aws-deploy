@@ -5,7 +5,5 @@ if [ -z $TEMPLATE_FILE_PATH ]; then echo "$TEMPLATE_FILE_PATH is empty. Exiting.
 echo "TEMPLATE_FILE_PATH: $TEMPLATE_FILE_PATH"
 
 echo "Creating template"
-echo "create_cloudformation_template RESOURCE_NAME RESOURCE_TYPE SCHEMA_B64 TEMPLATE_FILE_PATH ENV_PROFILE REGION"
-echo "create_cloudformation_template $RESOURCE_NAME $RESOURCE_TYPE $SCHEMA_B64 $TEMPLATE_FILE_PATH $ENV_PROFILE $REGION"
-create_cloudformation_template "$RESOURCE_NAME" "$RESOURCE_TYPE" "$SCHEMA_B64" "$TEMPLATE_FILE_PATH" "$ENV_PROFILE $REGION"
+create_cloudformation_template $RESOURCE_NAME $RESOURCE_TYPE $TEMPLATE_FILE_PATH $ENV_PROFILE $REGION $SCHEMA_B64
 if [ ! -f $TEMPLATE_FILE_PATH ]; then echo "$TEMPLATE_FILE_PATH does not exist. Exiting."; exit; fi
