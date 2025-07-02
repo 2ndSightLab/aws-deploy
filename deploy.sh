@@ -33,14 +33,12 @@ Enter environment name. (To learn more about environments, enter help):
 "
 while [ "$ENV_NAME" == "" ]; do
     read -p "$prompt" e    
-    if [ "$e" == "help" ]; then
-      echo $help
-    else
-      ENV_NAME="$e"
-      ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
-      if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi
-    fi
+    if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
+    
+ENV_NAME="$e"
+ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
+if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi    
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
@@ -72,10 +70,9 @@ GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 clone="n"
 if [ -z "$GIT_REPO_URL" ]; then
   clone="y"
-  read -p "$prompt_git_url" g
-  
-  while [ "$g" == "help" ]; do
-     echo $help; read -p "$prompt_git_url" g
+  while [ "$g" == "" ]; do
+    read -p "$prompt_git_url" g
+    if [ "$g" == "help" ]; then echo $help; g=""; fi
   done
 
   #seet git repo url
@@ -149,11 +146,11 @@ Enter the AWS CLI profile name you want to use to deploy resources or enter for 
 "
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
-  read -p "$prompt_message " p
 
-  while [ "$p" == "help" ]; do
-     echo $help; read -p "$prompt_message " p
-  else
+  while [ "$g" == "" ]; do
+    read -p "$prompt_git_url" p
+    if [ "$p" == "help" ]; then echo $help; p=""; fi
+  done
   
   ENV_PROFILE="$p"
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
