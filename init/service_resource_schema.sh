@@ -11,7 +11,7 @@ if [ -z "$SCHEMA" ]; then echo "Error: No schmea returned for resource type: $RE
 echo "SCHEMA:"
 echo "$SCHEMA" | jq .
 
-SCHEMA_B64=$(echo $SCHEMA | base64)
+SCHEMA_B64=$(echo $SCHEMA | base64 -w 0)
 
 echo "Base64 encoded:"
 echo "$SCHEMA_B64"
