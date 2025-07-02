@@ -27,10 +27,12 @@ chmod 700 deploy.sh
    
 # Revisions:
 
-7/2/25 - Added the ability to set AWS CLI profile and region. Ability to specify GitHub repo where
-         to save the output. Moved init scripts in main into init folder. Added additional
-         functions to validate data. Save templates by /account/region/(template, script, stack-name files).
-         Stack-name file has the parameters, template, and script used deploy the stack.
+7/2/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
+         to save output. Broke main into init scripts in init folder. Added additional
+         functions to validate data. Save save files by resources/account/region/ in git repo 
+         if specified otherwise this repo folder. Loop to deploy additional resources
+         without exiting. Configuration file to store environment configuration
+         to avoid repeatedly re-entering it.
 6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,\
           ask the user if they want to deploy now, print property name and allowed values to screen,\
           clean up output\
