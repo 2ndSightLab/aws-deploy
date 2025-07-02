@@ -78,7 +78,7 @@ if [ -z "$GIT_REPO_URL" ]; then
   
 fi
 
-GIT_REPO_NAME=$(basename "$GIT_REPO_URL" .git)
+GIT_REPO_NAME=$(basename "$GIT_REPO_URL" | sed 's/\.git$//')
 echo "REPO_NAME: $GIT_REPO_NAME"
 if [ -z $GIT_REPO_NAME ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
 
@@ -103,8 +103,6 @@ $GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
 if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
     read -p "$pompt_repo_overwrite " clone
     if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
-else
-    clone="n"
 fi
 
 msg ="
