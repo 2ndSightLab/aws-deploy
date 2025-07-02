@@ -1,13 +1,14 @@
 #!/bin/bash -e
 get_stack_resource_name() {
 
-    validate_first_n_args_set 5  "$@"
+    validate_first_n_args_set 4  "$@"
     
     local ENV_NAME="$1" 
     local SERVICE="$2" 
     local RESOURCE="$3"
-    local NAME="$4"
-    local REGION="$5"
+    local REGION="$4"
+    local NAME="$5" #optional
+    
 
     # Return the concatenated string
     resource_name="$ENV_NAME-$SERVICE-$RESOURCE"
