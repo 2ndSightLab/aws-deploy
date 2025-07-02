@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 create_cloudformation_template_condition_code(){
     
     validate_first_n_args_set 3  "$@"
