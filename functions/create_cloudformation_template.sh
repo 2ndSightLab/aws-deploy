@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 create_cloudformation_template() {
 
      validate_first_n_args_set 4  "$@"
@@ -6,9 +6,8 @@ create_cloudformation_template() {
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
     local ENV_PROFILE="$3"
-    local REGION="$4"
+    local TEMPLATE_FILE_PATH="$4"
     
-    local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
     local resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
     local SCHEMA=$(get_resource_schema $resource_type $ENV_PROFILE $REGION)
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
