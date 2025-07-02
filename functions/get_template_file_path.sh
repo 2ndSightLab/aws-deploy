@@ -14,12 +14,12 @@ get_template_file_path(){
     if [ -n "$GIT_REPO_DIR" ]; then 
         DIR_PATH="$GIT_REPO_DIR/$DIR_PATH"
     fi
-     
+    
     # Create the directory structure if it doesn't exist
     if [ ! -d "$DIR_PATH" ]; then
         mkdir -p "$DIR_PATH"
     fi
 
-    path="$DIR_PATH/$RESOURCE_NAME.yaml"
+    echo $DIR_PATH/$RESOURCE_NAME.yaml"
     
 }
