@@ -1,3 +1,14 @@
 #!/bin/bash -e
 
-echo "storing the stack information to: $STACK_FILE_PATH"
+echo "Generate stack file name"
+STACK_FILE_NAME=$(get_stack_file_path \
+    SERVICE_NAME \
+    RESOURCE_NAME \
+    STACK_NAME \
+    ACCOUNT \
+    REGION \
+    GIT_REPO_DIR)
+
+if [ -z "$STACK_FILE_NAME" ]; then echo "Error: STACK_FILE_NAME not set"; exit; fi
+
+echo "STACK_FILE_NAME: $STACK_FILE_NAME"
