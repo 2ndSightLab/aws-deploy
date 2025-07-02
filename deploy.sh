@@ -107,18 +107,18 @@ if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
     if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
 fi
 
-msg="
+info="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR"
 "
-
 if [ "$clone" == "y" ]; then
-    echo "$msg"
+    echo "$info"
     mkdir -p $GIT_REPO_PARENT_DIR
     git clone $REPO_URL $GIT_REPO_PARENT_DIR
 fi 
 
 echo "Configure AWS CLI profile"
+
 help="
 ~~~
 The AWS CLI profile is used with the commands that look up and deploy resources. 
