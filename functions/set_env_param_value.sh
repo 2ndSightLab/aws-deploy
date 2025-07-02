@@ -1,7 +1,7 @@
 #!/bin/bash -e
 set_env_param_value() {
 
-  validate_fist_n_args_set 3  "$@"
+  validate_first_n_args_set 3  "$@"
 
   env_file_path="$1"
   param_name="$2"
