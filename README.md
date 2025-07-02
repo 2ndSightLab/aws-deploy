@@ -1,5 +1,7 @@
 # Deploy anything on AWS !
 
+This code was tested on Amazon Linux and specifically CloucShell. It is meant to run on an AWS compute resource.
+
 1. Execute this in CloudShell or similar. You can save this to a file in your home directory.
 
 ```
