@@ -8,7 +8,7 @@ create_cloudformation_template_condition_code(){
     local SCHEMA_B64=$3
 
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    if [ -z $SCHEMA ]; then echo "Error: Schma is empty generating template conditions."; fi
+    if [ -z $SCHEMA ]; then echo "Error: Schema is empty generating template conditions."; exit; fi
     
     echo "Create CloudFormation template condition code"
     
