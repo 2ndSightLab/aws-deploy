@@ -1,14 +1,12 @@
 #!/bin/bash
 create_cloudformation_template() {
+
+    validate_fist_n_args_set 4
+    
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
     local ENV_PROFILE="$3"
     local REGION="$4"
-    
-    if [ -z "$SERVICE_NAME" ]; then echo "$SERVICE_NAME not set in create_cloudformation_template" >&2; exit 1; fi
-    if [ -z "$RESOURCE_NAME" ]; then echo "$RESOURCE_NAME not set in create_cloudformation_template" >&2; exit 1; fi
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in create_cloudformation_template" >&2; exit 1; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in create_cloudformation_template" >&2; exit 1; fi
     
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
   
