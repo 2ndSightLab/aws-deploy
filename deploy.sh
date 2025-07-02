@@ -29,13 +29,13 @@ The environment name is also used in CloudFormation stack names and resource nam
 ~~~
 "
 
-prompt="
+prompt_environment="
 Enter environment name. (To learn more about environments, enter help):
 "
 
 while [ -z "$e" ]; do
 
-    read -p "$prompt" e    
+    read -p "$prompt_environment" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
     
@@ -195,7 +195,7 @@ Enter the service from which you want to deploy a resource (type help for a list
 "
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
-    read -p $prompt_service SERVICE_NAME
+    read -p "$prompt_service" SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
       list_service_names $ENV_PROFILE $REGION
       SERVICE_NAME=""
