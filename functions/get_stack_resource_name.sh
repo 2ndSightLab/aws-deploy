@@ -1,16 +1,13 @@
 #!/bin/bash -e
 get_stack_resource_name() {
+
+    validate_fist_n_args_set 5
+    
     local ENV_NAME="$1" 
     local SERVICE="$2" 
     local RESOURCE="$3"
     local NAME="$4"
     local REGION="$5"
-
-    if [ -z "$ENV_NAME" ]; then echo "$ENV_NAME not set in get_stack_resource_name" >&2; exit 1; fi
-    if [ -z "$SERVICE" ]; then echo "$SERVICE not set in get_stack_resource_name" >&2; exit 1; fi
-    if [ -z "$RESOURCE" ]; then echo "$RESOURCE not set in get_stack_resource_name" >&2; exit 1; fi
-    if [ -z "$NAME" ]; then echo "$NAME not set in get_stack_resource_name" >&2; exit 1; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in get_stack_resource_name" >&2; exit 1; fi
 
     # Return the concatenated string
     resource_name="$ENV_NAME-$SERVICE-$RESOURCE"
