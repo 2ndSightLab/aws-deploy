@@ -7,7 +7,7 @@ get_current_identity_arn() {
     local REGION="$2"
     
     local arn
-    arn=$(aws sts get-caller-identity --query 'Arn' --profile $ENV_PROFILE --region $REGION --output text)
+    arn=$(aws sts get-caller-identity --query 'Arn' --profile $ENV_PROFILE --output text)
     
     echo "$arn"
 }
