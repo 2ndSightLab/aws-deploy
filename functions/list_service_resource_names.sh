@@ -6,10 +6,13 @@ list_service_resource_names() {
   ENV_PROFILE="$2"
   REGION="$3"
   
-  aws cloudformation list-types \
+  cmd="aws cloudformation list-types \
     --visibility PUBLIC \
     --type RESOURCE \
     --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: \
     --query 'TypeSummaries[].TypeName' \
-    --output text | sed "s/AWS::${SERVICE_NAME}:://g"
+    --output text | sed \"s/AWS::${SERVICE_NAME}:://g\""
+    
+  run_aws_cmd_with_retry $cmd
+  
 }
