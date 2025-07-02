@@ -24,7 +24,7 @@ set_env_param_value() {
 
   if ! grep -q "^${param_name}=" "$env_file_path"; then 
     #doesn't exist, add
-    echo "${param_name}=\"${value}\"" >> "$env_file_path"
+    echo "${param_name}=\${value}\" >> "$env_file_path"
   else  
     #update
     sed -i "s|^${param_name}=.*|${param_name}=${value}|" "$env_file_path"
