@@ -21,13 +21,14 @@ Enter environment name. (To learn more about environments, enter help):
 "
 
 while [ -z "$e" ]; do
-
     read -p "$prompt_environment" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
     
 ENV_NAME="$e"
 ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
-if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi    
-
+if [ ! -f "$env_file_path" ]; then 
+  touch $ENV_FILE_PATH;  
+  echo "$ENV_NAME:" >> "$ENV_FILE_PATH"
+fi
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
