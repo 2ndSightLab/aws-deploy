@@ -9,6 +9,9 @@ create_deploy_script_for_resource() {
     local ENV_PROFILE="$3"
     local REGION="$4"
     local TEMPLATE_FILE_PATH="$5"
+    local RESOURCE_TYPE=""
+    local SCHEMA=""
+    local SCHEMA_B64=""
     
     local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
     
