@@ -1,14 +1,13 @@
 #!/bin/bash -e
 
 is_valid_aws_service() {
+
+    validate_fist_n_args_set 3
+
     local service_name="$1"
     local ENV_PROFILE=$2
     local REGION=$3
 
-    if [ -z "$service_name" ]; then echo "$service_name not set in is_valid_aws_service" >&2; exit 1; fi
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in is_valid_aws_service" >&2; exit 1; fi
-    if [ -z "$REGION" ]; then echo "$REGION not set in is_valid_aws_service" >&2; exit 1; fi
-    
     # Check if service name is provided
     if [ -z "$service_name" ]; then
         echo "Error: Service name must be provided." >&2
