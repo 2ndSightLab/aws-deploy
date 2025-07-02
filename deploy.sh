@@ -27,8 +27,7 @@ help="
       "
       
 while [ "$ENV_NAME" == "" ]; do
-    echo "Enter environment name. 
-         (To learn more about environments, enter help):"
+    echo "Enter environment name. (To learn more about environments, enter help):"
     read e
     if [ "$e" == "help" ]; then
       echo $help
