@@ -94,15 +94,15 @@ if [ "$clone" == "y" ]; then
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
   echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
  
-  #set git repo dire directory parameter
-  if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR=$HOME; fi
-     GIT_REPO_DIR="$HOME/$REPO_NAME"
-  fi
-  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_DIR" "$GIT_REPO_DIR"
-  echo "GIT_REPO_DIR: $GIT_REPO_DIR"
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
+
+#set GIT_REPO_NAME in environment parameter
+REPO_NAME=$(basename "$url" .git)
+set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
+echo "REPO_NAME: $REPO_NAME"
+if [ -z $REPO_NAME ]; then echo "REPO_NAME not set"; exit 1; fi
 
 #if the repo directory does not exist, then clone it
 if [ ! -d $GIT_REPO_DIR ]; then
