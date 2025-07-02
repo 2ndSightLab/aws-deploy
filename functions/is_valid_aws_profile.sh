@@ -14,7 +14,7 @@ is_valid_aws_profile() {
     # if profile doesn't match an existing profile
     if aws configure list-profiles 2>/dev/null | grep -q "^${profile}$"; then
 
-        if [ -n "$AWS_EXECUTION_ENV" ]; then
+        if [ -n "$AWS_EXECUTION_ENV" ] && [ "profile" == "default" ]; then
 
           #add default profile
           echo "[default]" >> ~/.aws/config
