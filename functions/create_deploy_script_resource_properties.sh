@@ -2,7 +2,7 @@
 
 create_deploy_script_resource_properties() {
 
-    validate_first_n_args_set 4
+    validate_first_n_args_set 4  "$@"
     
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
