@@ -80,6 +80,8 @@ run(){
     # this script depends on some of the variables set above
     source $SCRIPT_FILE_PATH
 
+    source init/stack_file.sh
+
     echo "Do you want to deploy another resource? Enter to continue. Ctrl-C to exit."
     read ok
     
