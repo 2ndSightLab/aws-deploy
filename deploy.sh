@@ -38,7 +38,7 @@ while [ "$ENV_NAME" == "" ]; do
     else
       ENV_NAME="$e"
       ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
-      if [ ! -f "$env_file_path" ]; then touch $env_file_path; fi
+      if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi
     fi
 done
 
