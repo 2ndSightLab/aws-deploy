@@ -16,6 +16,11 @@ run(){
   local GIT_REPO_NAME=""
   local ENV_PROFILE=""
   local ACCOUNT=""
+  local SERVICE_NAME=""
+  local RESOURCE_NAME=""
+  local RESOURCE_TYPE=""
+  local SCHEMA=""
+  local SCHEMA_B64=""
   
   source init/environment.sh
 
