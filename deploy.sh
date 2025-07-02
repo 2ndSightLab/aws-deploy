@@ -92,9 +92,11 @@ if [ "$clone" == "y" ]; then
   while [ -z "$GIT_REPO_PARENT_DIR" ]; do
     read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
     if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
-    echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
   done
 fi
+
+echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+if [ -z "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set."; exit 1; fi
 
 GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
 
