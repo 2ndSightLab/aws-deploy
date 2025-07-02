@@ -2,7 +2,7 @@
 #resource_type: "AWS::$SERVICE_NAME::$RESOURCE_NAME"
 get_resource_schema(){
 
-  validate_fist_n_args_set 3
+  validate_first_n_args_set 3  "$@"
 
   local resource_type="$1"
   local ENV_PROFILE=$2
