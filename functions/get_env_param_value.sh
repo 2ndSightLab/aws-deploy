@@ -8,7 +8,7 @@ get_env_param_value(){
 
   if [ -f "$env_file_path" ]; then echo ""; return; fi 
   
-  val=$(cat $env_file_path | grep $param_name | cut -d "=" -f2 | xargs)
+  val=$(grep "$param_name:" "$env_file_path" | sed -e 's/^.*://' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
   echo $val
 }
