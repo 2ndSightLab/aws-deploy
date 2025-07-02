@@ -46,9 +46,10 @@ help="
       Each stack will have it's own directory /account/region/stackname/.
       The deploy script, cloudformation template, and parameters will be stored to the directory.
       "
-prompt="Enter the git repository URL where configuration files are stored.
-        Enter if you don't want to save the output. 
-        (To learn how the repository is used, enter help):"
+prompt="
+Enter the git repository URL where configuration files are stored.
+Enter if you don't want to save the output. 
+(To learn how the repository is used, enter help):"
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 if [ -z "$GIT_REPO_URL" ]; then
@@ -66,8 +67,10 @@ if [ -z "$GIT_REPO_URL" ]; then
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 
   REPO_NAME=$(basename "$url" .git)
-  prompt="Enter the parent directory where you want to clone $GIT_REPO_URL. 
-          Enter for default directory: $HOME which clone the directory contents to $HOME/$REPO_NAME"
+  prompt="
+  Enter the parent directory where you want to clone $GIT_REPO_URL. 
+  Enter for default directory: $HOME which clone the directory contents to $HOME/$REPO_NAME"
+  
   read -p "$prompt_message " GIT_REPO_PARENT_DIR
   if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR=$HOME; fi
      GIT_REPO_DIR="$HOME/$REPO_NAME"
