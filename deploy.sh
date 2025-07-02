@@ -180,12 +180,16 @@ REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
 read CHANGE_REGION
 if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
-
+is_valid_aws_region $REGION
+    
+if [ $? -ne 0 ]; then
+    echo "Error: Not a valid region $REGION."
+    exit 1
+fi
 
 echo "testing profile"
-aws sts get-caller-identity --profile $ENV_PROFILE
+aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
 
-  
 # get the identity running the commands
 IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
