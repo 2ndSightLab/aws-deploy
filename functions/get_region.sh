@@ -17,7 +17,7 @@ get_region() {
     
     # If still not found, try to get it from AWS_REGION environment variable
     if [ -z "$REGION" ] && [ ! -z "$AWS_REGION" ]; then
-        region=$AWS_REGION
+        REGION=$AWS_REGION
     fi
     
     # If region is still empty, exit with an error
