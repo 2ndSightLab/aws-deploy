@@ -8,12 +8,11 @@ create_deploy_script_for_resource() {
     local RESOURCE_NAME="$2"
     local ENV_PROFILE="$3"
     local REGION="$4"
+    local SCRIPT_FILE_PATH="$5"
     local TEMPLATE_FILE_PATH="$5"
     local RESOURCE_TYPE=""
     local SCHEMA=""
     local SCHEMA_B64=""
-    
-    local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
     
     # Create the script file with shebang
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
