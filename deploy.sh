@@ -248,7 +248,7 @@ echo "AWS CLI PROFILE: $ENV_PROFILE"
 echo ""
 
 #the deploy script assumes the above values have been set prior to sourcing it
-echo "Enter to depoy the resource. Control-C to exit."
+echo "Enter to deploy the resource. Control-C to exit."
 read ok
 
 echo "Execute the deploy script $SCRIPT_FILE_PATH"
