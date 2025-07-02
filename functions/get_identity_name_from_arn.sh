@@ -1,7 +1,8 @@
 get_identity_name_from_arn() {
-    local arn=$1
 
-    if [ -z "$arn" ]; then echo "$arn not set in get_identity_name_from_arn" >&2; exit 1; fi
+    validate_fist_n_args_set 1
+    
+    local arn=$1
 
     # Split the ARN into parts
     local arn_parts=(${arn//:/ })
