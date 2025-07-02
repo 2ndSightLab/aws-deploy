@@ -120,8 +120,8 @@ Repo directory: $GIT_REPO_DIR? (y)
 if [ "$clone" == "y" ]; then
     read -p "$prompt_clone" clone
     if [ "$clone" = "y" ]; then
-        mkdir -p $GIT_REPO_PARENT_DIR
-        git clone $REPO_URL $GIT_REPO_PARENT_DIR
+        mkdir -p "$GIT_REPO_PARENT_DIR"
+        git clone "$GIT_REPO_URL" "$GIT_REPO_PARENT_DIR"
     fi
 fi 
 
