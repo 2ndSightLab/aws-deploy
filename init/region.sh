@@ -1,3 +1,5 @@
+#!/bin/bash -e
+
 #set the region
 echo "get profile region"
 REGION=$(get_region $ENV_PROFILE)
