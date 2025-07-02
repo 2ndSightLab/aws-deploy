@@ -1,9 +1,10 @@
 #!/bin/bash
 get_region() {
-    local ENV_PROFILE="$3"
+
+    validate_fist_n_args_set 1
     
-    if [ -z "$ENV_PROFILE" ]; then echo "$ENV_PROFILE not set in get_region" >&2; exit 1; fi
- 
+    local ENV_PROFILE="$1"
+    
     local region=""
     
     # Try to get region from AWS CLI configuration
