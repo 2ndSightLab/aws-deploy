@@ -7,7 +7,7 @@ create_cloudformation_template_resource_code(){
     local TEMPLATE_FILE_PATH=$2
     local SCHEMA_B64=$3
     local indent="$4"
-        
+
     local SCHEMA=$(echo $SCHEMA_B64 | base64 -d)
     if [ -z "$SCHEMA" ]; then echo "Error: $SCHEMA is empty generating template resource code"; exit; fi
 
