@@ -2,7 +2,7 @@
 
 is_valid_service_resource() {
 
-  validate_fist_n_args_set 4
+  validate_first_n_args_set 4  "$@"
 
   SERVICE_NAME="$1"
   RESOURCE_NAME="$2"
