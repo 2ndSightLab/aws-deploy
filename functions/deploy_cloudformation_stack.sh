@@ -1,7 +1,7 @@
 #/bin/bash -e
 deploy_cloudformation_stack() {
   
-    validate_fist_n_args_set 5
+    validate_first_n_args_set 5
     
     local STACK_NAME=$1
     local TEMPLATE_FILE_PATH=$2
