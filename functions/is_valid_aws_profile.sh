@@ -5,12 +5,6 @@ is_valid_aws_profile() {
      
     local profile="$1"
     
-    # Check if AWS CLI is installed
-    if ! command -v aws &> /dev/null; then
-        echo "AWS CLI is not installed or not in PATH"
-        return 2
-    fi
-    
     # if profile doesn't match an existing profile
     if aws configure list-profiles 2>/dev/null | grep -q "^${profile}$"; then
 
