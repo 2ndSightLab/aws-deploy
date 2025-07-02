@@ -32,7 +32,7 @@ chmod 700 deploy.sh
          functions to validate data. Save save files by resources/account/region/ in git repo 
          if specified otherwise this repo folder. Loop to deploy additional resources
          without exiting. Configuration file to store environment configuration
-         to avoid repeatedly re-entering it.
+         to avoid repeatedly re-entering it.\
 6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,\
           ask the user if they want to deploy now, print property name and allowed values to screen,\
           clean up output\
