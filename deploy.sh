@@ -91,8 +91,8 @@ if [ "$clone" == "y" ]; then
   #set git repo parent dir parameter
   while [ -z "$GIT_REPO_PARENT_DIR" ]; do
     read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
-    echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
     if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
+    echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
   done
 fi
 
@@ -107,7 +107,7 @@ if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
     if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
 fi
 
-msg ="
+msg="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR"
 "
