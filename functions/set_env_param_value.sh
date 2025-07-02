@@ -19,8 +19,13 @@ set_env_param_value() {
     exit 1
   fi
 
-  #set the parameter value
-  sed -i "s|^${param_name}=.*|${param_name}=\"${value}\"|" "$env_file_path"
+  if ! grep -q "^${param_name}=" "$env_file_path"; then 
+    #doesn't exist, add
+    echo "${param_name}=\"${value}\"" >> "$env_file_path"
+  else  
+    #update
+    sed -i "s|^${param_name}=.*|${param_name}=\"${value}\"|" "$env_file_path"
+  fi
 
   if [ $? -ne 0 ]; then
      echo "Error: Failed to update parameter '$param_name' in file '$env_file_path'." >&2
