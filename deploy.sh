@@ -81,21 +81,25 @@ if [ -z "$GIT_REPO_URL" ]; then
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
-
+  echo "GIT_REPO_URL: $GIT_REPO_URL"
+  
   #set git repo name env parameter
   REPO_NAME=$(basename "$url" .git)
   set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
-
+  echo "REPO_NAME: $REPO_NAME"
+  
   #set git repo parent dir parameter
   read -p "$prompt_git_repo " GIT_REPO_PARENT_DIR
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
-
+  echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+ 
   #set git repo dire directory parameter
   if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR=$HOME; fi
      GIT_REPO_DIR="$HOME/$REPO_NAME"
   fi
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_DIR" "$GIT_REPO_DIR"
-
+  echo "GIT_REPO_DIR: $GIT_REPO_DIR"
+  
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
