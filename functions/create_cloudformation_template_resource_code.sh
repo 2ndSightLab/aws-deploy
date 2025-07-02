@@ -9,10 +9,6 @@ create_cloudformation_template_resource_code(){
     local TEMPLATE_FILE_PATH="$3"
     local indent="$4"
         
-    if echo "$readOnlyProps" | grep -q "^$property$"; then
-        continue
-    fi
-    
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
