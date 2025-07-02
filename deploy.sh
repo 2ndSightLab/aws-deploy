@@ -187,8 +187,8 @@ echo "testing profile"
 aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
 
 # get the identity running the commands
-IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE)
-IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
+IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE $REGION)
+IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE $REGION)
 
 prompt = "
 Enter the service from which you want to deploy a resource (type help for a list of services):
@@ -197,12 +197,12 @@ SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
     read SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
-      list_service_names $ENV_PROFILE
+      list_service_names $ENV_PROFILE $REGION
       SERVICE_NAME=""
     fi
 done
 
-is_valid_aws_service $SERVICE_NAME $ENV_PROFILE
+is_valid_aws_service $SERVICE_NAME $ENV_PROFILE $REGION
 
 prompt "
 Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
@@ -211,12 +211,12 @@ RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
     read -p "$prompt" RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
-       list_service_resource_names $SERVICE_NAME $ENV_PROFILE
+       list_service_resource_names $SERVICE_NAME $ENV_PROFILE $REGION
        RESOURCE_NAME=""
     fi
 done
 
-is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE
+is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE $REGION
 
 prompt = "
 If the resource is a user, for a specific user, or associated with an application enter the name. Enter if n/a:"
@@ -252,4 +252,6 @@ echo "Enter to depoy the resource. Control-C to exit."
 read ok
 
 echo "Execute the deploy script $SCRIPT_FILE_PATH"
+
+# this script depends on some of the variables set above
 source $SCRIPT_FILE_PATH
