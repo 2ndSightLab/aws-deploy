@@ -49,54 +49,77 @@ Each stack will have it's own directory /account/region/stackname/.
 The deploy script, cloudformation template, and parameters will be stored to the directory.
 "
       
-prompt="
+prompt_git_url="
 Enter the git repository URL where configuration files are stored.
 Enter if you don't want to save the output. 
 (To learn how the repository is used, enter help):
 "
+prompt_git_repo="
+Enter the parent directory where you want to clone $GIT_REPO_URL. 
+Enter for default which clones the repo contents to $HOME/$REPO_NAME.
+"
+pompt_repo_overwrite="
+$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
+"
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
-if [ -z "$GIT_REPO_URL" ]; then
 
-  echo "git repo not found in $ENV_FILE_PATH"
-  
-  read -p "$prompt" g
+clone="n"
+if [ -z "$GIT_REPO_URL" ]; then
+  clone="y"
+  read -p "$prompt_git_url" g
   
   while [ "$g" == "help" ]; do
-     echo $help; read -p "$prompt" g
+     echo $help; read -p "$prompt_git_url" g
   done
-  
+
+  #set git repo url env parameter
   GIT_REPO_URL="$g"
-  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO" "$GIT_REPO"
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 
+  #set git repo name env parameter
   REPO_NAME=$(basename "$url" .git)
-  prompt="
-  Enter the parent directory where you want to clone $GIT_REPO_URL. 
-  Enter for default directory: $HOME which clone the directory contents to $HOME/$REPO_NAME"
-  
-  read -p "$prompt_message " GIT_REPO_PARENT_DIR
+  set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
+
+  #set git repo parent dir parameter
+  read -p "$prompt_git_repo " GIT_REPO_PARENT_DIR
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
+
+  #set git repo dire directory parameter
   if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR=$HOME; fi
      GIT_REPO_DIR="$HOME/$REPO_NAME"
   fi
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_DIR" "$GIT_REPO_DIR"
 
-  clone="y"
-  if [ -d $GIT_REPO_DIR ]; then
-    pompt_message="$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)"
-    read -p "$prompt_message " clone
-    if [ "$clone" == "y" ]; then
-      rm -rf $GIT_REPO_DIR
-    fi
-  fi
-  
-  if [ "$clone" == "y" ]; then
-    mkdir -p $GIT_REPO_PARENT_DIR
-    git clone $REPO_URL $GIT_REPO_PARNET_DIR
-  fi 
-  
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
+
+#if the repo directory does not exist, then clone it
+if [ ! -d $GIT_REPO_DIR ]; then
+  clone="y"
+fi
+
+#if clone = y and directory exists confirm overwrite
+if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
+    read -p "$pompt_repo_overwrite " clone
+    if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
+  fi
+fi
+
+
+#after all that, if clone = y then clone the repo
+msg ="
+Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
+Repo directory: $GIT_REPO_DIR"
+"
+
+if [ "$clone" == "y" ]; then
+    echo "$msg"
+    mkdir -p $GIT_REPO_PARENT_DIR
+    git clone $REPO_URL $GIT_REPO_PARENT_DIR
+fi 
 
 echo "Configure AWS CLI profile"
 help="
@@ -148,11 +171,12 @@ if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
 
+prompt = "
+Enter the service from which you want to deploy a resource (type help for a list of services):
+"
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
-    prompt = "
-    Enter the service from which you want to deploy a resource (type help for a list of services):
-    "
+
     read SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
       list_service_names $ENV_PROFILE
@@ -162,11 +186,12 @@ done
 
 is_valid_aws_service $SERVICE_NAME $ENV_PROFILE
 
+prompt "
+Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
+"
 RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
-    prompt "
-    Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
-    "
+
     read -p "$prompt" RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
        list_service_resource_names $SERVICE_NAME $ENV_PROFILE
