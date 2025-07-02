@@ -42,7 +42,7 @@ get_identity_name_from_arn() {
                 local username=${arn##*:user/}
                 echo "$username"
             else
-                echo "Error: Cloud not get user name from: $arn. Resource_path: $resource_path" >&2
+                echo "Error: Could not get user name from: $arn. Resource_path: $resource_path" >&2
                 return 1
             fi
             ;;
