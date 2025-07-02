@@ -8,7 +8,7 @@ create_cloudformation_template_parameter_code(){
     local SCHEMA_B64=$3
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
-    if [ -z $SCHEMA ]; then echo "Error: $SCHEMA is empty generating template parameter code"; exit; fi
+    if [ -z "$SCHEMA" ]; then echo "Error: $SCHEMA is empty generating template parameter code"; exit; fi
   
     echo "Create CloudFormation template parameter code"
 
