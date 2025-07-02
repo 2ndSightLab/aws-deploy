@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 validate_first_n_args_set() {
   local num_args_to_check="$1"
   local calling_func_name="${FUNCNAME[1]}"  # Get the name of the calling function [1]
@@ -10,7 +10,7 @@ validate_first_n_args_set() {
 
   for ((i = 1; i <= num_args_to_check; i++)); do
     local arg_value="${!i}" # Indirect parameter expansion
-    if [ -z "$arg_value" ]; then
+    if [[ -z ${!i+set} ]]; then
       echo "Error in function '${calling_func_name}': Argument ${i} is not set." >&2
       exit 1
     fi
