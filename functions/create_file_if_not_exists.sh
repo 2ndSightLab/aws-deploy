@@ -1,7 +1,7 @@
 #!/bin/bash -e
 create_file_if_not_exists() {
     
-    validate_fist_n_args_set 1
+    validate_first_n_args_set 1
     
     local file_path="$1"
         
