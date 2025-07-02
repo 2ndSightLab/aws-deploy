@@ -92,6 +92,7 @@ if [ "$clone" == "y" ]; then
   while [ -z "$GIT_REPO_PARENT_DIR" ]; do
     read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
     echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+    if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
   done
 fi
 
