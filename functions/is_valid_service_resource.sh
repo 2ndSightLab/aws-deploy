@@ -9,6 +9,8 @@ is_valid_service_resource() {
   ENV_PROFILE=$3
   REGION=$4
 
+  echo "Check to see if $RESOURCE_NAME is a valid resource for service $SERVICE_NAME in region $REGION"
+  
   RESOURCE_EXISTS=$(aws cloudformation list-types --visibility PUBLIC --type RESOURCE \
   --filters TypeNamePrefix="AWS::${SERVICE_NAME}::${RESOURCE_NAME}" \
   --query "TypeSummaries[?TypeName=='AWS::${SERVICE_NAME}::${RESOURCE_NAME}'].TypeName" \
