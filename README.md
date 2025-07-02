@@ -1,6 +1,6 @@
 # Deploy anything on AWS !
 
-1. Execute this in CloudShell or similar
+1. Execute this in CloudShell or similar. You can save this to a file in your home directory.
 
 ```
 cd ~
@@ -11,22 +11,26 @@ chmod 700 deploy.sh
 ./deploy.sh
 ```
 
-2. Enter an environment (like dev, qa, prod - it's just used in names)
-
-3. Enter the service of the resource you want to deploy (Case sensitive. Type help for a list of resources.)
-
-4. Enter the resource type you want to deploy. (Case sensitive. Type help for a list of resources.)
-
-5. The CloudFormation script is generated and name is printed to screen. You can go look at it.
-
-6. The script to deploy the CloudForamtion template is generated.
-
-7. You will be prompted for property values. Enter as needed, skip optional as needed.
-
-8. The script executes and deploys the CloudForamtion stacks.
+2. Enter an environment (like dev, qa, prod or whatever. Type help for more information)
+3. Enter a git repository URL to store output files and paramaeters (optional).
+4. If a git repo was specified it will be cloned to the directory of your choosing.
+5. Configure the AWS profile (or use the default).
+6. Configure the region (or use the one associated with the profile).
+7. Enter the service of the resource you want to deploy (Case sensitive. Type help for a list of resources.)
+8. Enter the resource type you want to deploy. (Case sensitive. Type help for a list of resources.)
+9. The CloudFormation script is generated with file path on screen.
+10. The script to deploy the CloudForamtion template is generated with file path on screen.
+11. You can choose to deploy a resource with those files.
+12. You will be prompted for property values. Enter as needed, skip optional as needed.
+13. The script executes and deploys the CloudForamtion stacks.
+14. Continue with additional resources or exit.
    
 # Revisions:
 
+7/2/25 - Added the ability to set AWS CLI profile and region. Ability to specify GitHub repo where
+         to save the output. Moved init scripts in main into init folder. Added additional
+         functions to validate data. Save templates by /account/region/(template, script, stack-name files).
+         Stack-name file has the parameters, template, and script used deploy the stack.
 6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,\
           ask the user if they want to deploy now, print property name and allowed values to screen,\
           clean up output\
