@@ -70,7 +70,6 @@ if [ -z "$GIT_REPO_URL" ]; then
     if [ "$g" == "help" ]; then echo $help; g=""; fi
   done
 
-  #seet git repo url
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
@@ -79,10 +78,9 @@ if [ -z "$GIT_REPO_URL" ]; then
   
 fi
 
-#set GIT_REPO_NAME in environment parameter
-REPO_NAME=$(basename "$url" .git)
-echo "REPO_NAME: $REPO_NAME"
-if [ -z $REPO_NAME ]; then echo "REPO_NAME not set"; exit 1; fi
+GIT_REPO_NAME=$(basename "$url" .git)
+echo "REPO_NAME: $GIT_REPO_NAME"
+if [ -z $GIT_REPO_NAME ]; then echo "REPO_NAME not set"; exit 1; fi
 
 prompt_git_parent_dir="
 Enter the parent directory where you want to clone $GIT_REPO_URL. 
@@ -90,37 +88,25 @@ Enter for default which clones the repo contents to $HOME/$REPO_NAME.
 "
 if [ "$clone" == "y" ]; then
   #set git repo parent dir parameter
-  read -p "$prompt_git_repo " GIT_REPO_PARENT_DIR
-  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
-  echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
- 
-else
-  echo "GIT_REPO is set in $ENV_FILE_PATH"
+  while [ -z "$GIT_REPO_PARENT_DIR" ]; do
+    read -p "$prompt_git_repo " GIT_REPO_PARENT_DIR
+    echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+  done
 fi
 
-#set GIT_REPO_NAME in environment parameter
-REPO_NAME=$(basename "$url" .git)
-set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
-echo "REPO_NAME: $REPO_NAME"
-if [ -z $REPO_NAME ]; then echo "REPO_NAME not set"; exit 1; fi
-
-#if the repo directory does not exist, then clone it
-if [ ! -d $GIT_REPO_DIR ]; then
-  clone="y"
-fi
+GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
 
 pompt_repo_overwrite="
 $GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
 "
 
-#if clone = y and directory exists confirm overwrite
 if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
     read -p "$pompt_repo_overwrite " clone
     if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
-  fi
+else
+    clone="n"
 fi
 
-#if clone = y then clone the repo
 msg ="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR"
