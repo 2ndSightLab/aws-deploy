@@ -2,7 +2,7 @@
 
 is_valid_aws_service() {
 
-    validate_fist_n_args_set 3
+    validate_first_n_args_set 3  "$@"
 
     local service_name="$1"
     local ENV_PROFILE=$2
