@@ -44,8 +44,6 @@ if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
-cat $ENV_FAILE_PATH
-
 echo "Configure git repository"
 help="
 ~~~
