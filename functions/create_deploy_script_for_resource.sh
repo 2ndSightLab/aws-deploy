@@ -1,24 +1,19 @@
 #!/bin/bash -e
-#this function cals generate_resource_code which recursively calls itself for sub resources
 create_deploy_script_for_resource() {
 
     validate_first_n_args_set 6  "$@"
-    
+
     local RESOURCE_TYPE="$1"
-    local SCHEMA_B64="$2"
-    local SCRIPT_FILE_PATH="$3"
-    local TEMPLATE_FILE_PATH="$4"
-    local ENV_PROFILE="$5"
-    local REGION="$6"
+    local SCRIPT_FILE_PATH="$2"
+    local TEMPLATE_FILE_PATH="$3"
+    local ENV_PROFILE="$4"
+    local REGION="$5"
+    local SCHEMA_B64="$6"
     
-    # Create the script file with shebang
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
-    
-    # Make the script executable
     chmod +x "$SCRIPT_FILE_PATH"
     
-    # Generate the resource code
-    create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCHEMA_B64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
+    create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" 
 
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  read -p \"No parameters provided. Continue? (y/n): \" -n 1 -r" >> "$SCRIPT_FILE_PATH"
