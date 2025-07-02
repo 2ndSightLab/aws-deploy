@@ -59,13 +59,6 @@ Enter the git repository URL where configuration files are stored.
 Enter if you don't want to save the output. 
 (To learn how the repository is used, enter help):
 "
-prompt_git_repo="
-Enter the parent directory where you want to clone $GIT_REPO_URL. 
-Enter for default which clones the repo contents to $HOME/$REPO_NAME.
-"
-pompt_repo_overwrite="
-$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
-"
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 
@@ -81,14 +74,19 @@ if [ -z "$GIT_REPO_URL" ]; then
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
-  if [ -z $GIT_REPO_URL ]; then echo "Error setting GIT_REPO_URL"; exit 1; fi
   echo "GIT_REPO_URL: $GIT_REPO_URL"
   
   #set GIT_REPO_NAME in environment parameter
   REPO_NAME=$(basename "$url" .git)
   set_env_param_value "$ENV_FILE_PATH" "REPO_NAME" "$REPO_NAME"
   echo "REPO_NAME: $REPO_NAME"
-  
+fi
+
+prompt_git_parent_dir="
+Enter the parent directory where you want to clone $GIT_REPO_URL. 
+Enter for default which clones the repo contents to $HOME/$REPO_NAME.
+"
+if [ "$clone" == "y" ]; then
   #set git repo parent dir parameter
   read -p "$prompt_git_repo " GIT_REPO_PARENT_DIR
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
@@ -100,7 +98,6 @@ if [ -z "$GIT_REPO_URL" ]; then
   fi
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_DIR" "$GIT_REPO_DIR"
   echo "GIT_REPO_DIR: $GIT_REPO_DIR"
-  
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
@@ -110,6 +107,10 @@ if [ ! -d $GIT_REPO_DIR ]; then
   clone="y"
 fi
 
+pompt_repo_overwrite="
+$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
+"
+
 #if clone = y and directory exists confirm overwrite
 if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
     read -p "$pompt_repo_overwrite " clone
@@ -117,8 +118,7 @@ if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
   fi
 fi
 
-
-#after all that, if clone = y then clone the repo
+#if clone = y then clone the repo
 msg ="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR"
@@ -187,7 +187,6 @@ Enter the service from which you want to deploy a resource (type help for a list
 "
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
-
     read SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
       list_service_names $ENV_PROFILE
@@ -202,7 +201,6 @@ Enter the resource of the service $SERVICE_NAME that you want to deploy (type he
 "
 RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
-
     read -p "$prompt" RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
        list_service_resource_names $SERVICE_NAME $ENV_PROFILE
@@ -212,15 +210,10 @@ done
 
 is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE
 
-NAME=""
 prompt = "
-Is this resource a user, for a specific user, or associated with an application? (y)
+If the resource is a user, for a specific user, or associated with an application enter the name. Enter if n/a:"
 "
-read hasname
-if [ "$hasname" == "y" ]; then 
-  echo "Enter the name: "
-  read NAME
-fi
+read NAME
 
 echo "Initializing...please wait..."
 STACK_NAME=$(get_stack_name "$ENV_NAME" "$IDENTITY_NAME" "$SERVICE_NAME" "$RESOURCE_NAME" "$NAME")
@@ -247,9 +240,8 @@ echo "AWS CLI PROFILE: $ENV_PROFILE"
 echo ""
 
 #the deploy script assumes the above values have been set prior to sourcing it
-echo "Do you want to deploy the resource now (y)?"
+echo "Enter to depoy the resource. Control-C to exit."
 read ok
-if [ "$ok" == "y" ]; then
-    echo "Execute the deploy script $SCRIPT_FILE_PATH"
-    source $SCRIPT_FILE_PATH
-fi
+
+echo "Execute the deploy script $SCRIPT_FILE_PATH"
+source $SCRIPT_FILE_PATH
