@@ -203,7 +203,7 @@ done
 
 is_valid_aws_service $SERVICE_NAME $ENV_PROFILE $REGION
 
-prompt "
+prompt="
 Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
 "
 RESOURCE_NAME=""
