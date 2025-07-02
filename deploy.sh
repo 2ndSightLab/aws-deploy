@@ -37,7 +37,8 @@ while [ "$ENV_NAME" == "" ]; do
       echo $help
     else
       ENV_NAME="$e"
-      ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"      
+      ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
+      if [ ! -f "$env_file_path" ]; then touch $env_file_path; fi
     fi
 done
 
