@@ -1,4 +1,4 @@
-c#!/bin/bash -e
+#!/bin/bash -e
 
 echo "Initializing..."
 
