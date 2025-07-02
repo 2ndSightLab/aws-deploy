@@ -82,6 +82,17 @@ GIT_REPO_NAME=$(basename "$GIT_REPO_URL" .git)
 echo "GIT_REPO_NAME: $GIT_REPO_NAME"
 if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
 
+
+pompt_repo_overwrite="
+Repo directory: $GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
+"
+if [ ! -d $GIT_REPO_DIR ]; then #directory doe snot exist
+    clone="y"
+elif [ "$clone" == "y" ];  then #directory exists
+    read -p "$pompt_repo_overwrite " clone
+    if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
+fi
+
 prompt_git_parent_dir="
 Enter the parent directory where you want to clone $GIT_REPO_URL. 
 Enter for default which clones the repo contents to $HOME/$GIT_REPO_NAME.
@@ -96,20 +107,8 @@ if [ "$clone" == "y" ]; then
 fi
 
 echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
-if [ -z "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set."; exit 1; fi
 
 GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
-
-pompt_repo_overwrite="
-$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
-"
-
-if [ ! -d $GIT_REPO_DIR ]; then
-    clone="y"
-elif [ "$clone" == "y" ];  then #repo does not exist
-    read -p "$pompt_repo_overwrite " clone
-    if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
-fi
 
 info="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
