@@ -6,8 +6,13 @@ for file in functions/*; do [ -f "$file" ] && source "$file"; done
 ENV_NAME=""
 ENV_DIR="$HOME/.aws-deploy"
 ENV_FILE_PATH=""
-GIT_REPO=""
+GIT_REPO_URL=""
+GIT_REPO_PARENT_DIR=""
+GIT_REPO_DIR=""
+GIT_REPO_NAME=""
 ENV_PROFILE=""
+
+
 
 if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
@@ -39,19 +44,40 @@ help="The github repository URL is used to clone the git repo if it is not alrea
       directory."
 prompt="Enter the git repository URL where configuration files are stored or enter if you don't want to save the output. (Type help for more information.)"
 
-GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
-if [ -z "$GIT_REPO" ]; then
+GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
+if [ -z "$GIT_REPO_URL" ]; then
   read -p "$prompt_message " g
   
   while [ "$g" == "help" ]; do
      echo $help; read -p "$prompt_message " g
   else
   
-  GIT_REPO="$g"
+  GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO" "$GIT_REPO"
-  GIT_REPO=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
-fi
+  GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 
+  REPO_NAME=$(basename "$url" .git)
+  prompt="Enter the parent directory where you want to clone $GIT_REPO_URL. 
+          Enter for default directory: $HOME which clone the directory contents to $HOME/$REPO_NAME"
+  read -p "$prompt_message " GIT_REPO_PARENT_DIR
+  if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR=$HOME; fi
+     GIT_REPO_DIR="$HOME/$REPO_NAME"
+  fi
+
+  clone="y"
+  if [ -d $GIT_REPO_DIR ]; then
+    pompt_message="$GIT_REPO_DIR already exists. Do you want to overwrite it? (y)"
+    read -p "$prompt_message " clone
+    if [ "$clone" == "y" ]; then
+      rm -rf $GIT_REPO_DIR
+    fi
+  fi
+  
+  if [ "$clone" == "y" ]; then
+    mkdir -p $GIT_REPO_PARENT_DIR
+    git clone $REPO_URL $GIT_REPO_PARNET_DIR
+  fi 
+  
 else
   echo "GIT_REPO is set in $ENV_FILE_PATH"
 fi
