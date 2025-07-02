@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ -n "RESOURCE_NAME" ]; then 
+if [ -n "$RESOURCE_NAME" ]; then 
 
 prompt_service="
 The current $SERVICE_NAME resource name is $RESOURCE_NAME. Enter a new service name to change it. (type help for a list of services):
