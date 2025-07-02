@@ -15,7 +15,7 @@ Enter the resource of the $SERVICE_NAME resource name that you want to deploy (t
 fi
 
 while [ -z "$RESOURCE_NAME" ]; do
-    read -p "$prompt_service" CHANGE_SERVICE_NAME
+    read -p "$prompt_service" CHANGE_RESOURCE_NAME
     if [ "$CHANGE_RESOURCE_NAME" == "help" ]; then
       list_service_resource_names $SERVICE_NAME $ENV_PROFILE $REGION
       CHANGE_RESOURCE_NAME=""
