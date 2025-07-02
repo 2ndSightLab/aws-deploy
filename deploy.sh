@@ -227,7 +227,7 @@ echo "Initializing...please wait..."
 STACK_NAME=$(get_stack_name "$ENV_NAME" "$IDENTITY_NAME" "$SERVICE_NAME" "$RESOURCE_NAME" "$NAME")
 STACK_RESOURCE_NAME=$(get_stack_resource_name "$ENV_NAME" "$SERVICE_NAME" "$RESOURCE_NAME" "$REGION" "$NAME")
 
-ACCOUNT=$(get_aws_account $PROFILE)
+ACCOUNT=$(get_aws_account $ENV_PROFILE $REGION)
 if [ -z "$ACCOUNT" ]; then echo "Error: Account not set from profile $ENV_PROFILE"; exit; fi
 
 TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME $ACCOUNT $REGION $GIT_REPO_DIR)
