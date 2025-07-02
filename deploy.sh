@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 echo "Initializing..."
 
@@ -31,7 +31,8 @@ The environment name is also used in CloudFormation stack names and resource nam
 prompt="
 Enter environment name. (To learn more about environments, enter help):
 "
-while [ "$ENV_NAME" == "" ]; do
+
+while [ -z $e ]; do
     read -p "$prompt" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
@@ -70,7 +71,7 @@ GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 clone="n"
 if [ -z "$GIT_REPO_URL" ]; then
   clone="y"
-  while [ "$g" == "" ]; do
+  while [ -z $g ]; do
     read -p "$prompt_git_url" g
     if [ "$g" == "help" ]; then echo $help; g=""; fi
   done
@@ -147,12 +148,12 @@ Enter the AWS CLI profile name you want to use to deploy resources or enter for 
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
 
-  while [ "$g" == "" ]; do
+  while [ -z $p ]; do
     read -p "$prompt_git_url" p
     if [ "$p" == "help" ]; then echo $help; p=""; fi
   done
   
-  ENV_PROFILE="$p"
+  ENV_PROFILE=$p
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
   ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
