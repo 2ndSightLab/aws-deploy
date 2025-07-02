@@ -1,11 +1,13 @@
 #!/bin/bash -e
 get_template_file_path(){
 
-    validate_first_n_args_set 2  "$@"
+    validate_first_n_args_set 4  "$@"
     
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
-    local GIT_REPO_DIR="$3" 
+    local ACCOUNT="$3"
+    local REGION="$4"
+    local GIT_REPO_DIR="$5" 
 
     local DIR_PATH="resources/$SERVICE_NAME"
     
