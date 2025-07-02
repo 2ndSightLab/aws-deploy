@@ -78,8 +78,7 @@ if [ -z "$GIT_REPO_URL" ]; then
   
 fi
 
-GIT_REPO_NAME=$(basename "$GIT_REPO_URL")
-GIT_REPO_NAME=$(echo $GIT_REPO_URL | sed 's|\.git$||' | sed 's| ||g')
+GIT_REPO_NAME=${$(basename "$GIT_REPO_URL")%.git} 
 echo "GIT_REPO_NAME: $GIT_REPO_NAME"
 if [ -z $GIT_REPO_NAME ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
 
