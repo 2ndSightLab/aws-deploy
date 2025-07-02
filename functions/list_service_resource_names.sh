@@ -1,6 +1,6 @@
 list_service_resource_names() {
 
-  validate_fist_n_args_set 3
+  validate_first_n_args_set 3  "$@"
   
   SERVICE_NAME="$1"
   ENV_PROFILE="$2"
