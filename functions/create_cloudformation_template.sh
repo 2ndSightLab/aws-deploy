@@ -9,11 +9,8 @@ create_cloudformation_template() {
     local REGION="$4"
     
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
-  
     local resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
-
     local SCHEMA=$(get_resource_schema $resource_type $ENV_PROFILE $REGION)
-
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
     
     # Start the template
