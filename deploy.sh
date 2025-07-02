@@ -113,15 +113,14 @@ elif [ "$clone" == "y" ];  then #directory exists
 fi
 
 prompt_clone="
-Clone $GIT_REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
-Repo directory: $GIT_REPO_DIR? (y)
+Clone $GIT_REPO_URL into directory: $GIT_REPO_DIR?
 "
 
 if [ "$clone" == "y" ]; then
     read -p "$prompt_clone" clone
     if [ "$clone" = "y" ]; then
         mkdir -p "$GIT_REPO_PARENT_DIR"
-        git clone "$GIT_REPO_URL" "$GIT_REPO_PARENT_DIR"
+        git clone "$GIT_REPO_URL" "$GIT_REPO_DIR"
     fi
 fi 
 
