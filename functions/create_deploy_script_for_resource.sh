@@ -2,15 +2,15 @@
 #this function cals generate_resource_code which recursively calls itself for sub resources
 create_deploy_script_for_resource() {
 
-    validate_first_n_args_set 4  "$@"
+    validate_first_n_args_set 5  "$@"
     
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
     local ENV_PROFILE="$3"
     local REGION="$4"
-
+    local TEMPLATE_FILE_PATH="$5"
+    
     local SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME)
-    local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
     
     # Create the script file with shebang
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
