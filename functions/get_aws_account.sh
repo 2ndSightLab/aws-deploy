@@ -6,6 +6,6 @@ get_aws_account(){
   local ENV_PROFILE="$3"
   local REGION="$4"
 
-  echo $(aws sts get-caller-identity --profile your-profile-name --query "Account" --output text)
+  echo $(aws sts get-caller-identity --profile your-profile-name --query "Account" --profile $ENV_PROFILE --region $REGION --output text)
   
 }
