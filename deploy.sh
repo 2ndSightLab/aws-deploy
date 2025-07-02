@@ -94,6 +94,7 @@ if [ -z "$GIT_REPO_PARENT_DIR" ]; then
   read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
   if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
+
   GIT_REPO_PARENT_DIR=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR")
 fi
 
