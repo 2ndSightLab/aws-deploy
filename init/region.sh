@@ -12,5 +12,3 @@ if [ -n "$CHANGE_REGION" ]; then
   REGION=$CHANGE_REGION; 
 fi
 
-echo "testing profile $ENV_PROFILE in region $REGION"
-aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
