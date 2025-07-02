@@ -25,13 +25,12 @@ The configuration file includes things like which AWS profile(s) to use to deplo
 for that environment and the github repository to use to store the output files. 
 The environment name is also used in CloudFormation stack names and resource names.
 "
-      
+
+prompt="
+Enter environment name. (To learn more about environments, enter help):
+"
 while [ "$ENV_NAME" == "" ]; do
-    prompt="
-    Enter environment name. (To learn more about environments, enter help):
-    "
-    read -p "$prompt" e
-    
+    read -p "$prompt" e    
     if [ "$e" == "help" ]; then
       echo $help
     else
