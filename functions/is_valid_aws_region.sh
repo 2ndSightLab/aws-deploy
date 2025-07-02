@@ -6,7 +6,7 @@ is_valid_aws_region() {
     local REGION=$1
     local ENV_PROFILE=$2
 
-    echo "Checking to see if $REGION" is a valid region."
+    echo "Checking to see if $REGION is a valid region."
     
     # Fetch the list of valid AWS regions using us-east-1 so we know we're starting with a valid region
     # Presuming here the user has access to us-east-1. If you change this it should be hard-coded to a valid region.
