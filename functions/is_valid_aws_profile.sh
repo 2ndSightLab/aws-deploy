@@ -2,7 +2,6 @@
 is_valid_aws_profile() {
 
     local profile="$1"
-    local REGION="$2"
 
     exists="n"
     if aws configure list-profiles | grep -q "^${profile}$"; then
