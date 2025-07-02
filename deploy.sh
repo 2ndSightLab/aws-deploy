@@ -15,6 +15,7 @@ run(){
   local GIT_REPO_DIR=""
   local GIT_REPO_NAME=""
   local ENV_PROFILE=""
+  local ACCOUNT=""
 
   source init/environment.sh
 
@@ -56,6 +57,7 @@ run(){
   echo "GIT_REPO_URL: $GIT_REPO_URL"
   echo "ENV_PROFILE: $ENV_PROFILE"
   echo "REGION: $REGION"
+  echo "ACCOUNT: $ACCOUNT"
   echo "TEMPLATE FILE PATH: $TEMPLATE_FILE_PATH"
   echo "SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH"
   echo ""
