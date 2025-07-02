@@ -5,9 +5,6 @@ echo "Initializing..."
 #source all the files in the functions directory
 for file in functions/*; do [ -f "$file" ] && source "$file"; done
 
-#source all the files in the init directory
-for file in functions/*; do [ -f "$file" ] && source "$file"; done
-
 ENV_NAME=""
 ENV_DIR=""
 ENV_FILE_PATH=""
@@ -17,8 +14,7 @@ GIT_REPO_DIR=""
 GIT_REPO_NAME=""
 ENV_PROFILE=""
 
-
-
+source init/environment.sh
 
 echo "Configure git repository"
 help="
