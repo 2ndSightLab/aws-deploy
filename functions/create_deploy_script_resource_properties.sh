@@ -33,6 +33,7 @@ create_deploy_script_resource_properties() {
             local required=""
             local enum_values=""
             local cf_type=""
+            local param_type=""
             
             echo "echo \"Property: $property\"" >> "$SCRIPT_FILE_PATH"
             
@@ -51,8 +52,8 @@ create_deploy_script_resource_properties() {
             else
 
                 #echo "Processing non-complex type"
-                type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
-                echo "echo \"Type: $type\"" >> "$SCRIPT_FILE_PATH"
+                param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+                echo "echo \"Type: $param_type\"" >> "$SCRIPT_FILE_PATH"
                 
                 # Map JSON Schema types to CloudFormation parameter types
                 # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
