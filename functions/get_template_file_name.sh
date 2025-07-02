@@ -1,7 +1,7 @@
 #!/bin/bash -e
 get_template_file_path(){
 
-    validate_fist_n_args_set 2
+    validate_first_n_args_set 2  "$@"
     
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2" 
