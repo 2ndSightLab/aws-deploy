@@ -1,7 +1,7 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 create_cloudformation_template_condition_code(){
     
-    validate_first_n_args_set 3  "$@"
+    validate_first_n_args_set 3 "$@"
     
     local RESOURCE_TYPE=$1
     local TEMPLATE_FILE_PATH=$2
