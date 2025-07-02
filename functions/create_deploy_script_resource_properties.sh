@@ -96,7 +96,7 @@ create_deploy_script_resource_properties() {
 
                 # Add to parameter overrides
                 echo "if [[ -n \"\${${property}_value}\" ]]; then" >> "$SCRIPT_FILE_PATH"
-                echo "  Property Value: \"${${property}_value}\"" >> "$SCRIPT_FILE_PATH"
+                echo "  Property Value: \"\${${property}_value}\"" >> "$SCRIPT_FILE_PATH"
                 echo "  # Handle special characters including @ in parameter values" >> "$SCRIPT_FILE_PATH"
                 echo "  SAFE_VALUE=\$(printf '%q' \"\${${property}_value}\")" >> "$SCRIPT_FILE_PATH"
                 echo "  SAFE_VALUE: $SAFE_VALUE" >> "$SCRIPT_FILE_PATH"
