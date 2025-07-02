@@ -6,5 +6,8 @@ list_service_names(){
   local ENV_PROFILE=$1
   local REGION=$2
   
-  aws cloudformation list-types --visibility PUBLIC --type RESOURCE --profile $ENV_PROFILE --region $REGION --output json | jq -r '.TypeSummaries[].TypeName' | grep -o 'AWS::[^:]*' | sed 's/AWS:://' | sort -u
+  cmd="aws cloudformation list-types --visibility PUBLIC --type RESOURCE --profile $ENV_PROFILE --region $REGION --output json | jq -r '.TypeSummaries[].TypeName' | grep -o 'AWS::[^:]*' | sed 's/AWS:://' | sort -u"
+  
+  run_aws_cmd_with_retry $cmd
+  
 }
