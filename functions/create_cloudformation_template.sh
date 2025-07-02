@@ -9,6 +9,11 @@ create_cloudformation_template() {
     local TEMPLATE_FILE_PATH="$4"
     local ENV_PROFILE="$5"
     local REGION="$6"
+
+    echo "TEMPLATE:"
+    echo "$TEMPPLATE_FILE_PATH"
+    echo "ok?"
+    read ok
     
     # Start the template
     echo "AWSTemplateFormatVersion: '2010-09-09'" > "$TEMPLATE_FILE_PATH"
