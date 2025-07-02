@@ -9,7 +9,7 @@ get_template_file_path(){
     local REGION="$4"
     local GIT_REPO_DIR="$5" 
 
-    local DIR_PATH="resources/$SERVICE_NAME"
+    local DIR_PATH="$ACCOUNT/resources/$SERVICE_NAME"
     
     if [ -n "$GIT_REPO_DIR" ]; then 
         DIR_PATH="$GIT_REPO_DIR/$DIR_PATH"
