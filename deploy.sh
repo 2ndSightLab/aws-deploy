@@ -33,7 +33,7 @@ prompt="
 Enter environment name. (To learn more about environments, enter help):
 "
 
-while [ -z $e ]; do
+while [ -z "$e" ]; do
     read -p "$prompt" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
@@ -65,7 +65,7 @@ GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 clone="n"
 if [ -z $GIT_REPO_URL ]; then
   clone="y"
-  while [ -z $g ]; do
+  while [ -z "$g" ]; do
     read -p "$prompt_git_url" g
     if [ "$g" == "help" ]; then echo $help; g=""; fi
   done
@@ -74,13 +74,13 @@ if [ -z $GIT_REPO_URL ]; then
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
   echo "GIT_REPO_URL: $GIT_REPO_URL"
-  if [ -z $GIT_REPO_URL ]; then echo "GIT_REPO_URL not set"; exit 1; fi
+  if [ -z "$GIT_REPO_URL" ]; then echo "GIT_REPO_URL not set"; exit 1; fi
   
 fi
 
 GIT_REPO_NAME=$(basename $GIT_REPO_URL | sed "s/[[:space:]\'\"]//g" | sed 's|\.git$||')
 echo "GIT_REPO_NAME: $GIT_REPO_NAME"
-if [ -z $GIT_REPO_NAME ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
+if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
 
 prompt_git_parent_dir="
 Enter the parent directory where you want to clone $GIT_REPO_URL. 
@@ -89,9 +89,9 @@ Enter for default which clones the repo contents to $HOME/$GIT_REPO_NAME.
 
 if [ "$clone" == "y" ]; then
   #set git repo parent dir parameter
-  while [ -z $GIT_REPO_PARENT_DIR ]; do
+  while [ -z "$GIT_REPO_PARENT_DIR" ]; do
     read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
-    if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
+    if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
     echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
   done
 fi
@@ -139,7 +139,7 @@ Enter the AWS CLI profile name you want to use to deploy resources or enter for 
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
 
-  while [ -z $p ]; do
+  while [ -z "$p" ]; do
     read -p "$prompt_git_url" p
     if [ "$p" == "help" ]; then echo $help; p=""; fi
   done
