@@ -132,7 +132,7 @@ If do not enter a profile name, then the default profile will be used to run aws
 ~~~
 "
       
-prompt="
+prompt_profile="
 Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile. 
 (Type help for more information.)
 "
@@ -140,7 +140,7 @@ ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ -z "$ENV_PROFILE" ]; then
 
   while [ -z "$p" ]; do
-    read -p "$prompt_git_url" p
+    read -p "$prompt_profile" p
     if [ "$p" == "help" ]; then echo $help; p=""; fi
   done
   
