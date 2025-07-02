@@ -10,6 +10,7 @@ if [ -z "$SCHEMA" ]; then echo "Error: No schmea returned for resource type: $RE
 
 #this will not work on a Mac. This code is designed to run on Amazon Linux
 SCHEMA_B64=$(echo $SCHEMA | base64 -w 0)
+validate_base64($SCHEMA_B64)
 
 #echo "SCHEMA:"
 #echo "$SCHEMA" | jq .
