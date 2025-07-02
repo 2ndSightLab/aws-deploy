@@ -52,6 +52,12 @@ run(){
   echo "TEMPLATE FILE: $TEMPLATE_FILE_PATH"
   echo "SCRIPT: $SCRIPT_FILE_PATH" 
   echo "AWS CLI PROFILE: $ENV_PROFILE"
+  echo "RESOURCE_TYPE: $RESOURCE_TYPE"
+  echo "GIT_REPO_URL: $GIT_REPO_URL"
+  echo "ENV_PROFILE: $ENV_PROFILE"
+  echo "REGION: $REGION"
+  echo "TEMPLATE FILE PATH: $TEMPLATE_FILE_PATH"
+  echo "SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH"
   echo ""
 
   #the deploy script assumes the above values have been set prior to sourcing it
