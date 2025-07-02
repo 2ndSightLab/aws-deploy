@@ -62,8 +62,14 @@ Enter if you don't want to save the output.
 
 GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
 
+if [ -z $GIT_REPO_URL ]; then
+  echo "error: git url not found."
+  cat $GIT_REPO_URL
+  exit
+fi
+
 clone="n"
-if [ -z "$GIT_REPO_URL" ]; then
+if [ -z $GIT_REPO_URL ]; then
   clone="y"
   while [ -z $g ]; do
     read -p "$prompt_git_url" g
