@@ -6,6 +6,8 @@ set_env_param_value() {
   env_file_path="$1"
   param_name="$2"
   value="$3"
+
+  echo "Set $param_name: $value in $env_file_path"
     
   if [[ "$param_name" == *"|"* ]]; then
     echo "Error: The variable 'param_name' contains a pipe character '|', which is not allowed." >&2
