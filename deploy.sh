@@ -18,12 +18,14 @@ if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
 #set environment
 help="
+~~~
 The environment name used to create a file that stores configuration information. 
 This approach allows you to create configurations for different environments such as Dev, QA, Prod 
 or even more granular environments such as for teams, projects, or applications. 
 The configuration file includes things like which AWS profile(s) to use to deploy resources 
 for that environment and the github repository to use to store the output files. 
 The environment name is also used in CloudFormation stack names and resource names.
+~~~
 "
 
 prompt="
@@ -43,10 +45,12 @@ echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
 echo "Configure git repository"
 help="
+~~~
 The github repository URL is used to clone the git repo where the output files will be stored that are generated
 by aws-deploy. You will be asked for a directory where the repository should be cloned. 
 Each stack will have it's own directory /account/region/stackname/.
 The deploy script, cloudformation template, and parameters will be stored to the directory.
+~~~
 "
       
 prompt_git_url="
@@ -123,12 +127,14 @@ fi
 
 echo "Configure AWS CLI profile"
 help="
+~~~
 The AWS CLI profile is used with the commands that look up and deploy resources. 
 To view a list of profiles run this command: 
    aws configure list-profiles
 If no profiles are configured either your system is not configured with AWS credentials,
 or you're using the default profile for the environment (e.g. CloudShell). 
 If do not enter a profile name, then the default profile will be used to run aws commands.
+~~~
 "
       
 prompt="
