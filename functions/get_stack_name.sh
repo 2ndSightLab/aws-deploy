@@ -1,6 +1,6 @@
 get_stack_name() {
 
-    validate_fist_n_args_set 5
+    vvalidate_first_n_args_set 5  "$@"
     
     local ENV_NAME="$1"
     local IDENTITY_NAME="$2"
