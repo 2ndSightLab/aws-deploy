@@ -10,8 +10,7 @@ create_cloudformation_template_condition_code(){
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     if [ -z $SCHEMA ]; then echo "Error: Schma is empty generating template conditions."; fi
     
-    echo "SCHEMA:"
-    echo $SCHEMA
+    echo "Create cloud formation template condition code"
     
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
