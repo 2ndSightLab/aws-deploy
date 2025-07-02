@@ -2,7 +2,7 @@
 #this function cals generate_resource_code which recursively calls itself for sub resources
 create_deploy_script_for_resource() {
 
-    validate_fist_n_args_set 4
+    validate_first_n_args_set 4
     
     local SERVICE_NAME="$1"
     local RESOURCE_NAME="$2"
