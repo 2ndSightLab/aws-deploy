@@ -7,6 +7,7 @@ get_current_identity_arn() {
     
     local arn
     arn=$(aws sts get-caller-identity --query 'Arn' --profile $ENV_PROFILE --output text)
+    arn=$(trim_spaces_and_quotes $arn)
     
     echo "$arn"
 }
