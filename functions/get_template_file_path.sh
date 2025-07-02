@@ -9,14 +9,15 @@ get_template_file_path(){
 
     local DIR_PATH="resources/$SERVICE_NAME"
     
+    if [ -n "$GIT_REPO_DIR" ]; then 
+        DIR_PATH="$GET_REPO_DIR/$DIR_PATH"
+    fi
+     
     # Create the directory structure if it doesn't exist
     if [ ! -d "$DIR_PATH" ]; then
         mkdir -p "$DIR_PATH"
     fi
 
     path="$DIR_PATH/$RESOURCE_NAME.yaml"
-    if [ -z "$GIT_REPO_DIR" ]; then 
-      path="$GIT_REPO_DIR/$path"
-    fi
     
 }
