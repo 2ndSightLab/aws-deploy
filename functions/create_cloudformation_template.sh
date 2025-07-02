@@ -11,7 +11,10 @@ create_cloudformation_template() {
     local TEMPLATE_FILE_PATH=$(get_template_file_path $SERVICE_NAME $RESOURCE_NAME)
     local resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
     local SCHEMA=$(get_resource_schema $resource_type $ENV_PROFILE $REGION)
+    if [ -z SCHEMA ]; then echo "Error: Schema not found for resource type: $resource_type; exit"; fi
+    
     local SCHEMA_B64=$(echo "$SCHEMA" | base64)
+    if [ -z SCHEMA_B64 ]; then echo "Error: Could not base64 encode schema; exit"; fi
     
     # Start the template
     echo "AWSTemplateFormatVersion: '2010-09-09'" > "$TEMPLATE_FILE_PATH"
