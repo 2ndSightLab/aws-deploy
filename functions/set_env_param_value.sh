@@ -1,5 +1,5 @@
-#!/bin/bash
-set_env_param_value(){
+#!/bin/bash -ex
+set_env_param_value() {
 
   validate_fist_n_args_set 3
 
