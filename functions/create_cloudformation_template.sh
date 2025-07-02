@@ -26,7 +26,7 @@ create_cloudformation_template() {
     echo "    Properties:" >> "$TEMPLATE_FILE_PATH"
     create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
 
-    echo "Create cloud formation template outputs code"
+    echo "Create CloudFormation template outputs code"
     #todo: all outputs
    
     echo "Outputs:" >> "$TEMPLATE_FILE_PATH"
