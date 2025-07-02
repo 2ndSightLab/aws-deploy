@@ -102,7 +102,9 @@ pompt_repo_overwrite="
 $GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
 "
 
-if [ "$clone" == "y" ] && [ -d $GIT_REPO_DIR ]; then
+if [ ! -d $GIT_REPO_DIR ]; then
+    clone="y"
+elif [ "$clone" == "y" ];  then #repo does not exist
     read -p "$pompt_repo_overwrite " clone
     if [ "$clone" == "y" ]; then rm -rf $GIT_REPO_DIR; fi
 fi
@@ -111,7 +113,6 @@ info="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR
 "
-
 
 if [ "$clone" == "y" ]; then
     echo "$info"
