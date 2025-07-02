@@ -111,8 +111,9 @@ info="
 Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR"
 "
+echo $info
+
 if [ "$clone" == "y" ]; then
-    echo "$info"
     mkdir -p $GIT_REPO_PARENT_DIR
     git clone $REPO_URL $GIT_REPO_PARENT_DIR
 fi 
