@@ -12,7 +12,7 @@ create_cloudformation_template_resource_code(){
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     if [ -z $SCHEMA ]; then echo "Error: $SCHEMA is empty generating template resource code"; fi
 
-    echo "Create cloud formation template resource code"
+    echo "Create CloudForamtion template resource code"
 
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
