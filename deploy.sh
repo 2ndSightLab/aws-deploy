@@ -186,7 +186,6 @@ if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 echo "testing profile"
 aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
 
-echo "get identity arn and name
 IDENTITY_ARN=$(get_current_identity_arn $ENV_PROFILE $REGION)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE $REGION)
 
