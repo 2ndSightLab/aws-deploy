@@ -35,7 +35,7 @@ chmod 700 deploy.sh
 
 # Known Issues:
 
-See issues list
+See issues list. Feel free to add issues. I'll fix them if I have time. :)
 
 # Types Tested:
 These types have been tested though possbily not all variations and see known issues for workarounds to some issues.\
