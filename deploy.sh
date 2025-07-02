@@ -27,10 +27,11 @@ The environment name is also used in CloudFormation stack names and resource nam
 "
       
 while [ "$ENV_NAME" == "" ]; do
-    echo "
+    prompt="
     Enter environment name. (To learn more about environments, enter help):
     "
-    read e
+    read -p "$prompt" e
+    
     if [ "$e" == "help" ]; then
       echo $help
     else
