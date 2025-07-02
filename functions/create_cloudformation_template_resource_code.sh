@@ -19,7 +19,7 @@ create_cloudformation_template_resource_code(){
     
     while read -r property; do
     
-      if echo "$readOnlyProps" | grep -q "^$property$"; then; continue; fi
+      if echo "$readOnlyProps" | grep -q "^$property$" then; continue; fi
       
       local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
