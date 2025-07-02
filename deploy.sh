@@ -190,12 +190,12 @@ aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
 IDENTITY_ARN=$(get_current_identity_arn $ENV_PROFILE $REGION)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE $REGION)
 
-prompt = "
+prompt_service="
 Enter the service from which you want to deploy a resource (type help for a list of services):
 "
 SERVICE_NAME=""
 while [ -z "$SERVICE_NAME" ]; do
-    read SERVICE_NAME
+    read -p $prompt_service SERVICE_NAME
     if [ "$SERVICE_NAME" == "help" ]; then
       list_service_names $ENV_PROFILE $REGION
       SERVICE_NAME=""
@@ -204,12 +204,12 @@ done
 
 is_valid_aws_service $SERVICE_NAME $ENV_PROFILE $REGION
 
-prompt="
+prompt_resource="
 Enter the resource of the service $SERVICE_NAME that you want to deploy (type help for a list of resources):
 "
 RESOURCE_NAME=""
 while [ -z "$RESOURCE_NAME" ]; do
-    read -p "$prompt" RESOURCE_NAME
+    read -p "$prompt_resource" RESOURCE_NAME
     if [ "$RESOURCE_NAME" == "help" ]; then
        list_service_resource_names $SERVICE_NAME $ENV_PROFILE $REGION
        RESOURCE_NAME=""
@@ -218,10 +218,10 @@ done
 
 is_valid_service_resource $SERVICE_NAME $RESOURCE_NAME $ENV_PROFILE $REGION
 
-prompt = "
-If the resource is a user, for a specific user, or associated with an application enter the name. Enter if n/a:"
+prompt_name="
+If the resource is a user, for a specific user, or associated with an application enter the name. Enter if n/a:
 "
-read NAME
+read -p "$prompt_name" NAME
 
 echo "Initializing...please wait..."
 STACK_NAME=$(get_stack_name "$ENV_NAME" "$IDENTITY_NAME" "$SERVICE_NAME" "$RESOURCE_NAME" "$NAME")
