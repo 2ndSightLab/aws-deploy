@@ -3,13 +3,13 @@ create_cloudformation_template() {
 
     validate_first_n_args_set 6  "$@"
 
-    local RESOURCE_NAME="$1"
-    local RESOURCE_TYPE="$2"
-    local SCHEMA_B64="$3"
-    local TEMPLATE_FILE_PATH="$4"
-    local ENV_PROFILE="$5"
-    local REGION="$6"
-
+    local RESOURCE_NAME=$1
+    local RESOURCE_TYPE=$2
+    local TEMPLATE_FILE_PATH=$3
+    local ENV_PROFILE=$4
+    local REGION=$5
+    local SCHEMA_B64=$6
+    
     echo "TEMPLATE:"
     echo "$TEMPPLATE_FILE_PATH"
     echo "ok?"
