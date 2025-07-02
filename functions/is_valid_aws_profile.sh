@@ -3,6 +3,8 @@ is_valid_aws_profile() {
 
     local profile="$1"
 
+    echo "Checking to see if $profile is a valid AWS CLI profile on this system."
+
     exists="n"
     if aws configure list-profiles | grep -q "^${profile}$"; then
         exists="y"
