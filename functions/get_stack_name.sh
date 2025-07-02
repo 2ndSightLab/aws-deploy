@@ -1,15 +1,12 @@
 get_stack_name() {
+
+    validate_fist_n_args_set 5
+    
     local ENV_NAME="$1"
     local IDENTITY_NAME="$2"
     local SERVICE="$3"
     local RESOURCE="$4"
     local NAME="$5"
-
-    if [ -z "$ENV_NAME" ]; then echo "$ENV_NAME not set in get_stack_name" >&2; exit 1; fi
-    if [ -z "$IDENTITY_NAME" ]; then echo "$IDENTITY_NAME not set in get_stack_name" >&2; exit 1; fi
-    if [ -z "$SERVICE" ]; then echo "$SERVICE not set in get_stack_name" >&2; exit 1; fi
-    if [ -z "$RESOURCE" ]; then echo "$RESOURCE not set in get_stack_name" >&2; exit 1; fi
-    if [ -z "$NAME" ]; then echo "$NAME not set in get_stack_name" >&2; exit 1; fi
 
     # Concatenate the string
     local FULL_NAME="${ENV_NAME}-${IDENTITY_NAME}-${SERVICE}-${RESOURCE}-${NAME}"
