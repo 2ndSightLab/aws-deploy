@@ -14,6 +14,7 @@ GIT_REPO_DIR=""
 GIT_REPO_NAME=""
 ENV_PROFILE=""
 
+
 if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
 #set environment
