@@ -13,7 +13,7 @@ is_valid_service_resource() {
   
   cmd="aws cloudformation list-types --visibility PUBLIC --type RESOURCE \
   --filters TypeNamePrefix="AWS::${SERVICE_NAME}::${RESOURCE_NAME}" \
-  --query "TypeSummaries[?TypeName=='AWS::${SERVICE_NAME}::${RESOURCE_NAME}'].TypeName" \
+  --query \"TypeSummaries[?TypeName=='AWS::${SERVICE_NAME}::${RESOURCE_NAME}'].TypeName\" \
   --profile $ENV_PROFILE --region $REGION \
   --output text"
 
