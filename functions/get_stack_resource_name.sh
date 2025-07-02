@@ -1,7 +1,7 @@
 #!/bin/bash -e
 get_stack_resource_name() {
 
-    validate_fist_n_args_set 5
+    validate_first_n_args_set 5  "$@"
     
     local ENV_NAME="$1" 
     local SERVICE="$2" 
