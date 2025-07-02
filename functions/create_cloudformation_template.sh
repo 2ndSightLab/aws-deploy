@@ -1,21 +1,18 @@
 #!/bin/bash -e
 create_cloudformation_template() {
 
-     validate_first_n_args_set 5  "$@"
-    
-    local SERVICE_NAME="$1"
-    local RESOURCE_NAME="$2"
-    local TEMPLATE_FILE_PATH="$3"
-    local ENV_PROFILE="$4"
-    local REGION="$5"
-    
-    local resource_type="AWS::$SERVICE_NAME::$RESOURCE_NAME"
-    local SCHEMA=$(get_resource_schema $resource_type $ENV_PROFILE $REGION)
-    local SCHEMA_B64=$(echo "$SCHEMA" | base64)
+    validate_first_n_args_set 6  "$@"
+
+    local RESOURCE_NAME="$1"
+    local RESOURCE_TYPE="$2"
+    local SCHEMA_B64="$3"
+    local TEMPLATE_FILE_PATH="$4"
+    local ENV_PROFILE="$5"
+    local REGION="$6"
     
     # Start the template
     echo "AWSTemplateFormatVersion: '2010-09-09'" > "$TEMPLATE_FILE_PATH"
-    echo "Description: CloudFormation template for $SERVICE_NAME $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
+    echo "Description: CloudFormation template for $RESOURCE_TYPE" >> "$TEMPLATE_FILE_PATH"
     echo "" >> "$TEMPLATE_FILE_PATH"
 
     echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
@@ -32,7 +29,7 @@ create_cloudformation_template() {
 
     echo "Outputs:" >> "$TEMPLATE_FILE_PATH"
     echo "  ${RESOURCE_NAME}Id:" >> "$TEMPLATE_FILE_PATH"
-    echo "    Description: The ID of the ${SERVICE_NAME} ${RESOURCE_NAME}" >> "$TEMPLATE_FILE_PATH"
+    echo "    Description: The ID of the ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
     echo "    Value:" >> "$TEMPLATE_FILE_PATH"
     echo "      Ref: $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
 
