@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 set_env_param_value() {
 
   validate_fist_n_args_set 3  "$@"
