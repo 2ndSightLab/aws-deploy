@@ -1,5 +1,5 @@
 #!/bin/bash -e
-echo "Generating script file path
+echo "Generating script file path"
 SCRIPT_FILE_PATH=$(get_script_file_path $SERVICE_NAME $RESOURCE_NAME $ACCOUNT $REGION $GIT_REPO_DIR)
 echo "SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH"
 echo "Creating deploy script for resource: $RESOURCE_TYPE and temlpate file: $TEMPLATE_FILE_PATH in region: $REGION"
