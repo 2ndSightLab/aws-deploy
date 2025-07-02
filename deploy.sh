@@ -49,10 +49,10 @@ if [ -z "$GIT_REPO_URL" ]; then
 
   echo "git repo not found in $ENV_FILE_PATH"
   
-  read -p "$prompt_message " g
+  read -p "$prompt" g
   
   while [ "$g" == "help" ]; do
-     echo $help; read -p "$prompt_message " g
+     echo $help; read -p "$prompt" g
   done
   
   GIT_REPO_URL="$g"
