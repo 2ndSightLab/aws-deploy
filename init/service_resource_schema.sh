@@ -9,7 +9,18 @@ SCHEMA=$(get_resource_schema $RESOURCE_TYPE $ENV_PROFILE $REGION)
 if [ -z "$SCHEMA" ]; then echo "Error: No schmea returned for resource type: $RESOURCE_TYPE"; exit 1; fi
 
 echo "SCHEMA:"
-echo "$SCHEMA" | jq "."
+echo "$SCHEMA" | jq .
 
 SCHEMA_B64=$(echo $SCHEMA | base64)
+
+echo "Base64 encoded:"
+echo "$SCHEMA_B64"
+
+echo "Base64 decoded:"
+echo $SCHEMA_B64 | base64 -d 
+
+echo "base64 decoded pretty:"
+
+echo $SCHEMA_B64 | base64 -d | jq .
+exit
 
