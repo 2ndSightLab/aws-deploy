@@ -8,3 +8,4 @@ If the resource is a user, for a specific user, or associated with an applicatio
 read -p "$prompt_name" NAME
 
 STACK_NAME=$(get_stack_name "$ENV_NAME" "$IDENTITY_NAME" "$SERVICE_NAME" "$RESOURCE_NAME" "$NAME")
+echo "STACK_NAME: $STACK_NAME"
