@@ -175,23 +175,17 @@ fi
 
 echo "ENV_PROFILE: $ENV_PROFILE"
 
-echo ""
-echo "Enviroment $ENV_NAME configuration:"
-cat $ENV_FILE_PATH
-msg="
-If you want to change the configuration for evironment $ENV_NAME
-then modify the file $ENV_FILE_PATH or delete it to reconfigure it.
-Enter to continue. Ctrl-c to exit.
-"
-echo $msg
-read ok
-
 #set the region
 REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
 read CHANGE_REGION
 if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
 
+
+echo "testing profile"
+aws sts get-caller-identity --profile $ENV_PROFILE
+
+  
 # get the identity running the commands
 IDENTITY_ARN=$(get_current_identity_arn $ENV_RROFILE)
 IDENTITY_NAME=$(get_identity_name_from_arn $IDENTITY_ARN $ENV_PROFILE)
