@@ -156,12 +156,14 @@ if [ -z "$ENV_PROFILE" ]; then
 
   while [ -z "$p" ]; do
     read -p "$prompt_profile" p
-    if [ "$p" == "help" ]; then echo $help; p=""; fi
-    if [ "$p" == "" ]; then p="default"
-    is_valid_aws_profile $ENV_PROFILE
-    if [ $? -ne 0 ]; then 
-         echo "Invald profile: $ENV_PROFILE"
-         ENV_PROFILE=""; 
+    if [ "$p" == "help" ]; then echo $help; p=""
+    else
+      if [ "$p" == "" ]; then p="default"; fi
+      is_valid_aws_profile $p
+      if [ $? -ne 0 ]; then 
+         echo "Invald profile: $p"
+         p=""; 
+      fi
     fi
   done
 
@@ -171,9 +173,9 @@ if [ -z "$ENV_PROFILE" ]; then
 
 fi
 
-echo "ENV_PROFILE is set in $ENV_FILE_PATH"
+echo "ENV_PROFILE: $ENV_PROFILE"
 
-
+echo ""
 echo "Enviroment $ENV_NAME configuration:"
 cat $ENV_FILE_PATH
 msg="
