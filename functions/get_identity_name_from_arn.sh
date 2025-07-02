@@ -1,6 +1,6 @@
 get_identity_name_from_arn() {
 
-    validate_fist_n_args_set 1
+    validate_first_n_args_set 1  "$@"
     
     local arn=$1
 
