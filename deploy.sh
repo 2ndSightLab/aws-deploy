@@ -1,4 +1,4 @@
-#!/bin/bash -e
+c#!/bin/bash -e
 
 echo "Initializing..."
 
@@ -108,7 +108,7 @@ if [ -z "$GIT_REPO_PARENT_DIR" ]; then
 fi
 
 echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
-if [ "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set in environment file."; fi
+if [ -z "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set in environment file."; ecxit 1; fi
 
 GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
 echo "GIT_REPO_DIR: $GIT_REPO_DIR"
@@ -143,21 +143,33 @@ prompt_profile="
 Enter the AWS CLI profile name you want to use to deploy resources or enter for the default profile. 
 (Type help for more information.)
 "
+
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
+
+if [ -n "$ENV_PROFILE" ]; then
+     is_valid_aws_profile $ENV_PROFILE
+     if [ $? -ne 0 ]; then 
+         echo "Invald profile: $ENV_PROFILE"
+         ENV_PROFILE=""; 
+    fi
+fi
+
 if [ -z "$ENV_PROFILE" ]; then
 
   while [ -z "$p" ]; do
     read -p "$prompt_profile" p
     if [ "$p" == "help" ]; then echo $help; p=""; fi
   done
-  
+
+
   ENV_PROFILE=$p
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
   ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
-else
-  echo "ENV_PROFILE is set in $ENV_FILE_PATH"
 fi
+
+echo "ENV_PROFILE is set in $ENV_FILE_PATH"
+
 
 echo "Enviroment $ENV_NAME configuration:"
 cat $ENV_FILE_PATH
