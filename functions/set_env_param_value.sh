@@ -27,7 +27,7 @@ set_env_param_value() {
     echo "${param_name}=\"${value}\"" >> "$env_file_path"
   else  
     #update
-    sed -i "s|^${param_name}=.*|${param_name}=\"${value}\"|" "$env_file_path"
+    sed -i "s|^${param_name}=.*|${param_name}=${value}|" "$env_file_path"
   fi
 
   if [ $? -ne 0 ]; then
