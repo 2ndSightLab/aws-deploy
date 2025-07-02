@@ -1,5 +1,5 @@
 #!/bin/bash -ex
-validate_fist_n_args_set() {
+validate_first_n_args_set() {
   local num_args_to_check="$1"
   local calling_func_name="${FUNCNAME[1]}"  # Get the name of the calling function [1]
 
