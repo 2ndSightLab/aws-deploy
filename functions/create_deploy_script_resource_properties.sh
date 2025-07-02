@@ -5,10 +5,10 @@ create_deploy_script_resource_properties() {
     validate_first_n_args_set 4  "$@"
     
     local RESOURCE_TYPE="$1"
-    local SCHEMA_B64="$2"
-    local SCRIPT_FILE_PATH="$3"
-    local TEMPLATE_FILE_PATH="$4"
-       
+    local SCRIPT_FILE_PATH="$2"
+    local TEMPLATE_FILE_PATH="$3"
+    local SCHEMA_B64="$4"
+    
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
