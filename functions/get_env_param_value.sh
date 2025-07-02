@@ -6,6 +6,8 @@ get_env_param_value(){
   env_file_path="$1"
   param_name="$2"
 
+  param_name=$(trim_spaces_and_quotes $param_name)
+  
   if [ ! -f "$env_file_path" ]; then echo ""; return; fi
 
   val=$(grep "^${param_name}=" "$env_file_path" | sed -e 's/^.*=//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
