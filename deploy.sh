@@ -34,6 +34,7 @@ Enter environment name. (To learn more about environments, enter help):
 "
 
 while [ -z "$e" ]; do
+
     read -p "$prompt" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
@@ -180,12 +181,12 @@ REGION=$(get_region)
 echo "The current region is $REGION. If you want to change the region enter it now"
 read CHANGE_REGION
 if [ "$CHANGE_REGION" != "" ]; then REGION=$CHANGE_REGION; fi
-is_valid_aws_region $REGION
-    
-if [ $? -ne 0 ]; then
-    echo "Error: Not a valid region $REGION."
-    exit 1
-fi
+#is_valid_aws_region $REGION
+
+#if [ $? -ne 0 ]; then
+#    echo "Error: Not a valid region $REGION."
+#    exit 1
+#fi
 
 echo "testing profile"
 aws sts get-caller-identity --profile $ENV_PROFILE --region $REGION
