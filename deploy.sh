@@ -103,7 +103,7 @@ if [ -z "$GIT_REPO_PARENT_DIR" ]; then
   clone="y"
   read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
   if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
-  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" $GIT_REPO_PARENT_DIR
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" "$GIT_REPO_PARENT_DIR"
   GIT_REPO_PARENT_DIR=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR")
 fi
 
@@ -114,7 +114,7 @@ GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
 echo "GIT_REPO_DIR: $GIT_REPO_DIR"
 
 prompt_clone="
-Clone $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
+Clone $GIT_REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
 Repo directory: $GIT_REPO_DIR? (y)
 "
 
