@@ -10,5 +10,11 @@ get_env_param_value(){
   
   val=$(grep "$param_name:" "$env_file_path" | sed -e 's/^.*://' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
+  # Check if the sed command was successful
+  if [ $? -ne 0 ]; then
+     echo "Error: Failed to get parameter '$param_name' in file '$env_file_path'." >&2
+     exit 1
+  fi
+
   echo $val
 }
