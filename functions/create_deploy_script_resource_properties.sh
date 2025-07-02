@@ -60,7 +60,8 @@ create_deploy_script_resource_properties() {
                     "integer"|"number") cf_type="Number" ;;
                     "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$TEMPLATE_FILE_PATH" ;;
                     "array") cf_type="CommaDelimitedList" ;;
-                    *) echo "Other type to String: $param_type"; cf_type="String" ;;
+                    "string") cf_type="String" ;;
+                    *) echo "Other type: $param_type to String: $param_type"; cf_type="String" ;;
                 esac
                 #echo "CloudFormation Type: $cf_type"
                 
