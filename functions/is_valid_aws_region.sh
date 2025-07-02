@@ -1,7 +1,7 @@
 #!/bin/bash
 is_valid_aws_region() {
 
-    validate_fist_n_args_set 2
+    validate_first_n_args_set 2  "$@"
     
     local REGION=$1
     local ENV_PROFILE=$2
