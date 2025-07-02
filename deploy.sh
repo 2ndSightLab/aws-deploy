@@ -98,27 +98,32 @@ Enter the parent directory where you want to clone $GIT_REPO_URL.
 Enter for default which clones the repo contents to $HOME/$GIT_REPO_NAME.
 "
 
-if [ "$clone" == "y" ]; then
-  #set git repo parent dir parameter
-  while [ -z "$GIT_REPO_PARENT_DIR" ]; do
-    read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
-    if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
-  done
+GIT_REPO_PARENT_DIR=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR")
+if [ -z "$GIT_REPO_PARENT_DIR" ]; then
+  clone="y"
+  read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
+  if [ -z "$GIT_REPO_PARENT_DIR" ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
+  set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR" $GIT_REPO_PARENT_DIR
+  GIT_REPO_PARENT_DIR=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR")
 fi
 
 echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+if [ "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set in environment file."; fi
 
 GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
+echo "GIT_REPO_DIR: $GIT_REPO_DIR"
 
-info="
-Cloning $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
-Repo directory: $GIT_REPO_DIR
+prompt_clone="
+Clone $REPO_URL into directory: $GIT_REPO_PARENT_DIR. 
+Repo directory: $GIT_REPO_DIR? (y)
 "
 
 if [ "$clone" == "y" ]; then
-    echo "$info"
-    mkdir -p $GIT_REPO_PARENT_DIR
-    git clone $REPO_URL $GIT_REPO_PARENT_DIR
+    read -p $prompt_clone clone
+    if [ "$clone" = "y" ]; then
+        mkdir -p $GIT_REPO_PARENT_DIR
+        git clone $REPO_URL $GIT_REPO_PARENT_DIR
+    fi
 fi 
 
 echo "Configure AWS CLI profile"
