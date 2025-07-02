@@ -3,11 +3,12 @@ create_cloudformation_template_parameter_code(){
 
      validate_first_n_args_set 3  "$@"
     
-    local RESOURCE_TYPE="$1"
-    local SCHEMA_B64="$2"
-    local TEMPLATE_FILE_PATH="$3"
+    local RESOURCE_TYPE=$1
+    local TEMPLATE_FILE_PATH=$2
+    local SCHEMA_B64=$3
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
+    if [ -z $SCHEMA ]; then echo "Error: $SCHEMA is empty generating template parameter code"; fi
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
 
