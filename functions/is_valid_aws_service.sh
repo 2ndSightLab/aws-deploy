@@ -16,8 +16,10 @@ is_valid_aws_service() {
         exit
     fi
 
-    SERVICE_COUNT=$(run_aws_cmd_with_retry aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --profile $ENV_PROFILE --region $REGION --output text)
-
+    cmd="aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters TypeNamePrefix=AWS::${SERVICE_NAME}:: --query 'length(TypeSummaries)' --profile $ENV_PROFILE --region $REGION --output text"
+    
+    SERVICE_COUNT=$(run_aws_cmd_with_retry $cmd)
+    
     if [[ $? -eq 0 && "$SERVICE_COUNT" != "0" ]]; then
         echo "${SERVICE_NAME} service exists"
     else
