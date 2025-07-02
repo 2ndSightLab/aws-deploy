@@ -1,7 +1,8 @@
 #!/bin/bash -e
+create_stack_file() {
 
-create_stack_filie(){
-
+  validate_first_n_args_set 6 "$@"
+    
   STACK_FILE_NAME="$1"
   STACK_RESOURCE_NAME="$2"
   RESOURCE_TYPE="$3"
