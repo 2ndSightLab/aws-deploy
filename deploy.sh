@@ -33,7 +33,9 @@ run(){
   while [ true ]; do
 
     source init/region.sh
-  
+
+    source init/test_aws_profile.sh
+    
     source init/service.sh
   
     source init/service_resource.sh
