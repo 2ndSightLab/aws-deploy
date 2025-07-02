@@ -136,7 +136,7 @@ The AWS CLI profile is used with the commands that look up and deploy resources.
 To view a list of profiles run this command: 
    aws configure list-profiles
 If no profiles are configured either your system is not configured with AWS credentials,
-or you're using the default profile for the environment (e.g. CloudShell). 
+or commands are executed using a default profile for the environment (e.g. CloudShell). 
 If do not enter a profile name, then the default profile will be used to run aws commands.
 ~~~
 "
