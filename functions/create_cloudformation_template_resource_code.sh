@@ -18,10 +18,8 @@ create_cloudformation_template_resource_code(){
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
     
     while read -r property; do
-      if echo "$readOnlyProps" | grep -q "^$property$"; then
-         #echo "Skipping read-only property: $property" 
-         continue
-      fi
+    
+      if echo "$readOnlyProps" | grep -q "^$property$"; then; continue; fi
       
       local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
