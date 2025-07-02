@@ -12,7 +12,7 @@ get_template_file_path(){
     local DIR_PATH="resources/$SERVICE_NAME"
     
     if [ -n "$GIT_REPO_DIR" ]; then 
-        DIR_PATH="$GET_REPO_DIR/$DIR_PATH"
+        DIR_PATH="$GIT_REPO_DIR/$DIR_PATH"
     fi
      
     # Create the directory structure if it doesn't exist
