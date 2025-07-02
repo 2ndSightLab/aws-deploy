@@ -89,7 +89,7 @@ Enter for default which clones the repo contents to $HOME/$GIT_REPO_NAME.
 
 if [ "$clone" == "y" ]; then
   #set git repo parent dir parameter
-  while [ -z "$GIT_REPO_PARENT_DIR" ]; do
+  while [ -z $GIT_REPO_PARENT_DIR ]; do
     read -p "$prompt_git_parent_dir" GIT_REPO_PARENT_DIR
     if [ -z $GIT_REPO_PARENT_DIR ]; then GIT_REPO_PARENT_DIR="$HOME"; fi
     echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
