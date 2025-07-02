@@ -1,7 +1,7 @@
 #!/bin/bash
 create_cloudformation_template_parameter_code(){
 
-    validate_first_n_args_set 3
+     validate_first_n_args_set 3  "$@"
     
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
