@@ -1,12 +1,10 @@
 #!/bin/bash -e
 create_cloudformation_template_condition_code(){
+    validate_fist_n_args_set 3
+    
     local RESOURCE_TYPE="$1"
     local SCHEMA_B64="$2"
     local TEMPLATE_FILE_PATH="$3"
-
-    if [ -z $RESOURCE_TYPE ]; then echo "$RESOURCE_TYPE not set in create_cloudformation_template_condition_code" >&2; exit 1; fi
-    if [ -z $SCHEMA_B64 ]; then echo "$SCHEMA_B64 not set in create_cloudformation_template_condition_code" >&2; exit 1; fi
-    if [ -z $TEMPLATE_FILE_PATH ]; then echo "$TEMPLATE_FILE_PATH not set in create_cloudformation_template_condition_code" >&2; exit 1; fi
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
