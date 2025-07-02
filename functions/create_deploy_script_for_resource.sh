@@ -49,13 +49,13 @@ create_deploy_script_for_resource() {
     echo "" >> "$SCRIPT_FILE_PATH"
 
     #create the stack file
-    create_stack_file \
-     $STACK_FILE_NAME \
+    echo "create_stack_file \
+     $STACK_FILE_PATH \
      $STACK_RESOURCE_NAME \
      $RESOURCE_TYPE \
      $TEMPLATE_FILE_PATH \
      $SCRIPT_FILE_PATH \
-     $PARAMETER_OVERRIDES_B64 
+     $PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
      
     # Deploy CloudFormation stack
     echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
