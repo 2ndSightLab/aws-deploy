@@ -7,6 +7,7 @@ set_env_param_value(){
   if [ -z "$env_file_path" ]; then echo "$env_file_path not set in set_env_param_value" >&2; exit 1; fi 
   if [ -z "$param_name" ]; then echo "$param_name not set in set_env_param_value" >&2; exit 1; fi
   if [ -z "$value" ]; then echo "$value not set in set_env_param_value" >&2; exit 1; fi 
+  if [[ "$value" == *"|"* ]] && { echo "Error: The variable 'value' contains a pipe character '|', which is not allowed." >&2; exit 1; }
 
   #set the parameter value
   sed -i "s|^${param_name}=.*|${param_name}=\"${value}\"|" "$env_file_path"
