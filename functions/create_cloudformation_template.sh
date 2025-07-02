@@ -10,12 +10,6 @@ create_cloudformation_template() {
     local REGION=$5
     local SCHEMA_B64=$6
     
-    echo "TEMPLATE:"
-    echo "$TEMPLATE_FILE_PATH"
-    echo "ok?"
-    read ok
-    
-    # Start the template
     echo "AWSTemplateFormatVersion: '2010-09-09'" > "$TEMPLATE_FILE_PATH"
     echo "Description: CloudFormation template for $RESOURCE_TYPE" >> "$TEMPLATE_FILE_PATH"
     echo "" >> "$TEMPLATE_FILE_PATH"
