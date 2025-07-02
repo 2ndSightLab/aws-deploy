@@ -11,12 +11,14 @@ is_valid_service_resource() {
 
   echo "Check to see if $RESOURCE_NAME is a valid resource for service $SERVICE_NAME in region $REGION"
   
-  RESOURCE_EXISTS=$(aws cloudformation list-types --visibility PUBLIC --type RESOURCE \
+  cmd="aws cloudformation list-types --visibility PUBLIC --type RESOURCE \
   --filters TypeNamePrefix="AWS::${SERVICE_NAME}::${RESOURCE_NAME}" \
   --query "TypeSummaries[?TypeName=='AWS::${SERVICE_NAME}::${RESOURCE_NAME}'].TypeName" \
   --profile $ENV_PROFILE --region $REGION \
-  --output text)
-  
+  --output text"
+
+  RESOURCE_EXISTS=$(run_aws_cmd_with_retry $cmd)
+   
   if [ -z "$RESOURCE_EXISTS" ]; then
     echo "Error: Invalid resource name '$RESOURCE_NAME' for service '$SERVICE_NAME'"
     exit
