@@ -44,6 +44,8 @@ if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi
 
 echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
+cat $ENV_FAILE_PATH
+
 echo "Configure git repository"
 help="
 ~~~
@@ -53,14 +55,14 @@ Each stack will have it's own directory /account/region/stackname/.
 The deploy script, cloudformation template, and parameters will be stored to the directory.
 ~~~
 "
-      
+     
 prompt_git_url="
 Enter the git repository URL where configuration files are stored.
 Enter if you don't want to save the output. 
 (To learn how the repository is used, enter help):
 "
 
-GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO")
+GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 
 clone="n"
 if [ -z $GIT_REPO_URL ]; then
