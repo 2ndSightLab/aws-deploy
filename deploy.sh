@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
-echo "source all the files in the functions directory"
+echo "Initializing..."
+
+#source all the files in the functions directory
 for file in functions/*; do [ -f "$file" ] && source "$file"; done
 
 ENV_NAME=""
@@ -11,8 +13,6 @@ GIT_REPO_PARENT_DIR=""
 GIT_REPO_DIR=""
 GIT_REPO_NAME=""
 ENV_PROFILE=""
-
-
 
 if [ ! -d "$ENV_DIR" ]; then mkdir "$ENV_DIR"; fi
 
@@ -50,7 +50,7 @@ if [ -z "$GIT_REPO_URL" ]; then
   
   while [ "$g" == "help" ]; do
      echo $help; read -p "$prompt_message " g
-  else
+  done
   
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO" "$GIT_REPO"
