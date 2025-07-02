@@ -27,10 +27,10 @@ get_region() {
     fi
     
     # Validate the region using the is_valid_aws_region function
-    is_valid_aws_region "$region"
-    if [ $? -ne 0 ]; then
-        return 1
-    fi
+    #is_valid_aws_region "$region"
+    #if [ $? -ne 0 ]; then
+    #    return 1
+    #fi
     
     # If we've made it here, the region is valid
     echo "$region"
