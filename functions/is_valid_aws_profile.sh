@@ -13,7 +13,6 @@ is_valid_aws_profile() {
           echo "AWS CloudShell environment" >&2
 
           REGION=$(get_region)
-          is_valid_aws_region $REGION
  
           #add default profile
           echo "[default]" >> ~/.aws/config
