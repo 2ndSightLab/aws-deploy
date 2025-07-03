@@ -82,7 +82,7 @@ create_cloudformation_template_parameter_code(){
             if [ "$allowed_values" != "" ]; then 
                 echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
             fi
-            echo "#Done" >> "$TEMPLATE_FILE_PATH"
+          
         fi
         
     done < <(echo "$properties_json" | jq -r 'keys[]')
