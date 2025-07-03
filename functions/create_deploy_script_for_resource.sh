@@ -49,13 +49,13 @@ create_deploy_script_for_resource() {
     #all values can be hardcoded except PARAMETER_OVERRIDES
     #which are set at run time
     echo "create_stack_file \
-     $RESOURCE_TYPE \   
-     $STACK_NAME \
-     $ENV_PROFILE \
-     $REGION \
-     $TEMPLATE_FILE_PATH \
-     $SCRIPT_FILE_PATH \
-     $IAM_CAPABILITY \
+     \"$RESOURCE_TYPE\" \   
+     \"$STACK_NAME\" \
+     \"$ENV_PROFILE\" \
+     \"$REGION\" \
+     \"$TEMPLATE_FILE_PATH\" \
+     \"$SCRIPT_FILE_PATH\" \
+     \"$IAM_CAPABILITY\" \
      \$PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
      
     # Add template file existence check
