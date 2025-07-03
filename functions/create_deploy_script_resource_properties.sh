@@ -8,6 +8,8 @@ create_deploy_script_resource_properties() {
     local SCRIPT_FILE_PATH="$2"
     local TEMPLATE_FILE_PATH="$3"
     local SCHEMA_B64="$4"
+    local SCHEMA_B64="$5"
+    local IAM_CAPABILITY="$6"
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
@@ -112,9 +114,48 @@ create_deploy_script_resource_properties() {
             fi
             
             echo "" >> "$SCRIPT_FILE_PATH"
-
-            #echo "$property compPlete"
             
         done < <(echo "$properties_json" | jq -r 'keys[]')
+
+        echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
+        echo "  read -p \"No parameters provided. Continue? (y/n): \" REPLY " >> "$SCRIPT_FILE_PATH"
+        echo "  [[ ! \$REPLY =~ ^[Yy]$ ]] && exit 1" >> "$SCRIPT_FILE_PATH"
+        echo "else" >> "$SCRIPT_FILE_PATH"
+        echo "  # Add base64 encoding of parameter overrides with proper handling of special characters" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"# Base64 encode the parameter overrides\"" >> "$SCRIPT_FILE_PATH"
+        echo "  PARAMETER_OVERRIDES_B64=\$(echo -n \"\$PARAMETER_OVERRIDES\" | base64 -w 0)" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"Base64 encoded parameters:\"" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"\$PARAMETER_OVERRIDES_B64\"" >> "$SCRIPT_FILE_PATH"
+        echo "fi" >> "$SCRIPT_FILE_PATH"
+ 
+        # Add template file existence check
+        echo "# Check if CloudFormation template file exists" >> "$SCRIPT_FILE_PATH"
+        echo "if [[ ! -f \"$TEMPLATE_FILE_PATH\" ]]; then" >> "$SCRIPT_FILE_PATH"
+        echo "  echo \"Error: CloudFormation template file not found at $TEMPLATE_FILE_PATH\" >&2" >> "$SCRIPT_FILE_PATH"
+        echo "  exit 1" >> "$SCRIPT_FILE_PATH"
+        echo "fi" >> "$SCRIPT_FILE_PATH"
+        echo "" >> "$SCRIPT_FILE_PATH"
+         
+        # Deploy CloudFormation stack
+        echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
+        echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
+        echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \"\" \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
+        echo "else" >> "$SCRIPT_FILE_PATH"
+        echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \$PARAMETER_OVERRIDES_B64 \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
+        echo "fi" >> "$SCRIPT_FILE_PATH"
+
+        #create the stack file
+        echo "create_stack_file \
+         $RESOURCE_TYPE \   
+         $STACK_NAME \
+         $ENV_PROFILE \
+         $REGION \
+         $TEMPLATE_FILE_PATH \
+         $SCRIPT_FILE_PATH \
+         $IAM_CAPABILITY \
+         $PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
+            
     
 }
