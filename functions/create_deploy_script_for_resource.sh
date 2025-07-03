@@ -2,12 +2,12 @@
 create_deploy_script_for_resource() {
 
     validate_first_n_args_set 8 "$@"
-
-    local RESOURCE_TYPE="$1"
-    local SCRIPT_FILE_PATH="$2"
-    local TEMPLATE_FILE_PATH="$3"
-    local ENV_PROFILE="$4"
-    local REGION="$5"
+    
+    local ENV_PROFILE="$1"
+    local REGION="$2"
+    local RESOURCE_TYPE="$3"
+    local SCRIPT_FILE_PATH="$4"
+    local TEMPLATE_FILE_PATH="$5"
     local SCHEMA_B64="$6"
     local STACK_NAME="$7"
     local STACK_FILE_PATH="$8"
