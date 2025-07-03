@@ -17,6 +17,9 @@ create_deploy_script_for_resource() {
     #this function loop sthrough properties and adds them to the file 
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
 
+    #PARAMETER OVERRIDES IS SET IN THE CODE ADDED BY THE LAST FUNCTION AND WILL BE AVAILABLE TO THE
+    #CODE BELOW ADDED IN THE FILE BUT NOT IN THIS FUNCTION
+    
     # Set IAM_CAPABILITY variable based on resource type
     echo "" >> "$SCRIPT_FILE_PATH"
     echo "# Set IAM capability flag based on resource type" >> "$SCRIPT_FILE_PATH"
@@ -28,8 +31,7 @@ create_deploy_script_for_resource() {
     echo "  IAM_CAPABILITY=true" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"This resource requires IAM capabilities for deployment.\"" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
-    
-    #The code below is inserted after in the file and can reference variables already added in the above function
+
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  read -p \"No parameters provided. Continue? (y/n): \" REPLY " >> "$SCRIPT_FILE_PATH"
     echo "  [[ ! \$REPLY =~ ^[Yy]$ ]] && exit 1" >> "$SCRIPT_FILE_PATH"
@@ -44,6 +46,8 @@ create_deploy_script_for_resource() {
     echo "fi" >> "$SCRIPT_FILE_PATH"
         
     #create the stack file
+    #all values can be hardcoded except PARAMETER_OVERRIDES
+    #which are set at run time
     echo "create_stack_file \
      $RESOURCE_TYPE \   
      $STACK_NAME \
@@ -52,7 +56,7 @@ create_deploy_script_for_resource() {
      $TEMPLATE_FILE_PATH \
      $SCRIPT_FILE_PATH \
      $IAM_CAPABILITY \
-     $PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
+     \$PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
      
     # Add template file existence check
     echo "# Check if CloudFormation template file exists" >> "$SCRIPT_FILE_PATH"
