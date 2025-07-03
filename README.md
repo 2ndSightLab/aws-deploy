@@ -31,6 +31,7 @@ chmod 700 deploy.sh
 7/3/25 - Fixed issue with mutually exclusive property which actually had to do with
          incorrect processing of numeric default values and conditions. Added debug mode.
          Simplified file paths.
+         
 7/2/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
          to save output. Save save files by resources/account/region/ in git repo 
          if specified otherwise this repo folder. Added a stack_file with stack
@@ -40,10 +41,13 @@ chmod 700 deploy.sh
          without exiting. Configuration file to store environment configuration
          to avoid repeatedly re-entering it on each run. Supports multiple environments
          with different configurations (profile, git repo, etc.)
-6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,\
-          ask the user if they want to deploy now, print property name and allowed values to screen,\
-          clean up output\
-6/30/25 - added support for sub resources\
+         
+6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,
+          ask the user if they want to deploy now, print property name and allowed values to screen,
+          clean up output
+          
+6/30/25 - added support for sub resources
+
 6/29/25 - created new public repo for aws-deploy code
 
 # Known Issues:
