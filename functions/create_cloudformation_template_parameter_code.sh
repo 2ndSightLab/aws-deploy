@@ -79,9 +79,9 @@ create_cloudformation_template_parameter_code(){
                 echo "    Description: Optional - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
                 echo "$default_value" >> "$TEMPLATE_FILE_PATH"
             fi
-            #if [ "$allowed_values" != "" ]; then 
-            #    echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
-            #fi
+            if [ "$allowed_values" != "" ]; then 
+                echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
+            fi
           
         fi
         
