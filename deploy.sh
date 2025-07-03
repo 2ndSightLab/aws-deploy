@@ -49,10 +49,10 @@ run(){
     source init/service_resource_schema.sh
     
     source init/template_file.sh
-
-    exit
     
     source init/stack_file.sh
+
+    exit
     
     source init/script_file.sh
 
