@@ -29,13 +29,13 @@ create_cloudformation_template_condition_code(){
             local object_schema_b64=$(echo "$object_schema" | base64)
             create_cloudformation_template_condition_code "$property" "$object_schema_b64" "$TEMPLATE_FILE_PATH"
         else
-            local type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
+            local param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
             local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
-
+            echo "param_type: $param_type"
             # Only create conditions for optional properties
             if [[ "$required" == "false" || "$required" == "No" ]]; then
                 echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
-                if [ "$type" == "array" ]; then
+                if [ "$param_type" == "array" ]; then
                     # For array types, check if the array is empty using Fn::Join
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
@@ -43,7 +43,7 @@ create_cloudformation_template_condition_code(){
                     echo "              - ''" >> "$TEMPLATE_FILE_PATH"
                     echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                     echo "          - ''" >> "$TEMPLATE_FILE_PATH"
-                elif [ "$type" == "number" ]; then
+                elif [ "$param_type" == "number" ]; then
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
                     echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
