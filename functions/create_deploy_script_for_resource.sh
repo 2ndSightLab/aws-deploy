@@ -16,11 +16,6 @@ create_deploy_script_for_resource() {
     
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
     
-    # Set IAM_CAPABILITY variable based on resource type
-    echo "" >> "$SCRIPT_FILE_PATH"
-    echo "# Set IAM capability flag based on resource type" >> "$SCRIPT_FILE_PATH"
-    echo "IAM_CAPABILITY=false" >> "$SCRIPT_FILE_PATH"
-    
     # Check if resource type requires IAM permissions with more precise matching
     echo "# Check if resource requires IAM permissions" >> "$SCRIPT_FILE_PATH"
     echo "if [[ \"$RESOURCE_TYPE\" == \"AWS::IAM::\"* ]]; then" >> "$SCRIPT_FILE_PATH"
