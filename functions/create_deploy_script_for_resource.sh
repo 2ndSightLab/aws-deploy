@@ -48,8 +48,8 @@ create_deploy_script_for_resource() {
     #create the stack file
     #all values can be hardcoded except PARAMETER_OVERRIDES
     #which are set at run time
-    echo "create_stack_file \
-     \"$RESOURCE_TYPE\" \   
+    echo "create_stack_file " \
+     \"$RESOURCE_TYPE\" \
      \"$STACK_NAME\" \
      \"$ENV_PROFILE\" \
      \"$REGION\" \
