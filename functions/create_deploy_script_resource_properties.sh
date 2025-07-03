@@ -2,14 +2,13 @@
 
 create_deploy_script_resource_properties() {
 
-    validate_first_n_args_set 4  "$@"
+    validate_first_n_args_set 5  "$@"
     
     local RESOURCE_TYPE="$1"
     local SCRIPT_FILE_PATH="$2"
     local TEMPLATE_FILE_PATH="$3"
     local SCHEMA_B64="$4"
-    local SCHEMA_B64="$5"
-    local IAM_CAPABILITY="$6"
+    local IAM_CAPABILITY="$5"
     
     local SCHEMA=$(echo "$SCHEMA_B64" | base64 -d)
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA")
