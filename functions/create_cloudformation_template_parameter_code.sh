@@ -84,8 +84,8 @@ create_cloudformation_template_parameter_code(){
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
             echo "    Description: Enter value for ${property} ($required)" >> "$TEMPLATE_FILE_PATH"
-            echo $default_value >> "$TEMPLATE_FILE_PATH"
-            echo $allowed_values >> "$TEMPLATE_FILE_PATH"
+            echo "$default_value" >> "$TEMPLATE_FILE_PATH"
+            echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
           
         fi
         
