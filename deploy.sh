@@ -53,8 +53,6 @@ run(){
     source init/stack_file.sh
     
     source init/script_file.sh
-    
-    exit
    
     echo ""
     echo "ENV: $ENV_NAME"
