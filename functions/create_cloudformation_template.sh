@@ -14,25 +14,25 @@ create_cloudformation_template() {
     echo "Description: CloudFormation template for $RESOURCE_TYPE" >> "$TEMPLATE_FILE_PATH"
     echo "" >> "$TEMPLATE_FILE_PATH"
 
-    #echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
-    #create_cloudformation_template_parameter_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
+    create_cloudformation_template_parameter_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
     
-    #echo "Conditions:" >> "$TEMPLATE_FILE_PATH"
-    #create_cloudformation_template_condition_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    echo "Conditions:" >> "$TEMPLATE_FILE_PATH"
+    create_cloudformation_template_condition_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
     
-    #echo "Resources:" >> "$TEMPLATE_FILE_PATH"
-    #echo "  $RESOURCE_NAME:" >> "$TEMPLATE_FILE_PATH"
-    #echo "    Type: ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
-    #echo "    Properties:" >> "$TEMPLATE_FILE_PATH"
-    #create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    echo "Resources:" >> "$TEMPLATE_FILE_PATH"
+    echo "  $RESOURCE_NAME:" >> "$TEMPLATE_FILE_PATH"
+    echo "    Type: ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
+    echo "    Properties:" >> "$TEMPLATE_FILE_PATH"
+    create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
     
-    #echo "Create CloudFormation template outputs code"
+    echo "Create CloudFormation template outputs code"
    
-    #echo "Outputs:" >> "$TEMPLATE_FILE_PATH"
-    #echo "  ${RESOURCE_NAME}Id:" >> "$TEMPLATE_FILE_PATH"
-    #echo "    Description: The ID of the ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
-    #echo "    Value:" >> "$TEMPLATE_FILE_PATH"
-    #echo "      Ref: $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
+    echo "Outputs:" >> "$TEMPLATE_FILE_PATH"
+    echo "  ${RESOURCE_NAME}Id:" >> "$TEMPLATE_FILE_PATH"
+    echo "    Description: The ID of the ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
+    echo "    Value:" >> "$TEMPLATE_FILE_PATH"
+    echo "      Ref: $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
 
     echo "CloudFormation template created and saved to $TEMPLATE_FILE_PATH"
 }
