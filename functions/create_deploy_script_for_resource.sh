@@ -11,15 +11,29 @@ create_deploy_script_for_resource() {
     local SCHEMA_B64="$6"
     local STACK_NAME="$7"
     local STACK_FILE_PATH="$8"
+
+  
     
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
     chmod +x "$SCRIPT_FILE_PATH"
+
+    #record the values used for this deployment to the stack file path
+    s="record deployment values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $ENV_PROFILE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $REGION >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $RESOURCE_TYPE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $SCRIPT_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $TEMPLATE_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $SCHEMA_B64 >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $STACK_NAME >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo $STACK_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
     #this function loop sthrough properties and adds them to the file 
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
 
     #PARAMETER OVERRIDES IS SET IN THE CODE ADDED BY THE LAST FUNCTION AND WILL BE AVAILABLE TO THE
     #CODE BELOW ADDED IN THE FILE BUT NOT IN THIS FUNCTION
+    s="echo \$PARAMETER_OVERRIDES >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
     # Set IAM_CAPABILITY variable based on resource type
     echo "" >> "$SCRIPT_FILE_PATH"
@@ -45,20 +59,6 @@ create_deploy_script_for_resource() {
     echo "  echo \"Base64 encoded parameters:\"" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"\$PARAMETER_OVERRIDES_B64\"" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
-        
-    #create the stack file
-    #all values can be hardcoded except PARAMETER_OVERRIDES
-    #which are set at run time
-    echo "create_stack_file \
-     \"$STACK_FILE_PATH\" \    
-     \"$RESOURCE_TYPE\" \
-     \"$STACK_NAME\" \
-     \"$ENV_PROFILE\" \
-     \"$REGION\" \
-     \"$TEMPLATE_FILE_PATH\" \
-     \"$SCRIPT_FILE_PATH\" \
-     \"$IAM_CAPABILITY\" \
-     \$PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
      
     # Add template file existence check
     echo "# Check if CloudFormation template file exists" >> "$SCRIPT_FILE_PATH"
