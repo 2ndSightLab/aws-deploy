@@ -2,15 +2,16 @@
 create_stack_file() {
 
   validate_first_n_args_set 8 "$@"
-  
-  RESOURCE_TYPE="$1"   
-  STACK_NAME="$2"
-  ENV_PROFILE="$3"
-  REGION="$4"
-  TEMPLATE_FILE_PATH="$5"
-  SCRIPT_FILE_PATH="$6"
-  IAM_CAPABILITY="$7"
-  PARAMETER_OVERRIDES_B64="$8"
+
+  STACK_FILE_PATH="$1"
+  RESOURCE_TYPE="$2"   
+  STACK_NAME="$3"
+  ENV_PROFILE="$4"
+  REGION="$5"
+  TEMPLATE_FILE_PATH="$6"
+  SCRIPT_FILE_PATH="$7"
+  IAM_CAPABILITY="$8"
+  PARAMETER_OVERRIDES_B64="$9"
          
   echo "storing the stack code generation info to: $STACK_FILE_PATH"
   timestamp=$(date +'%Y%m%d-%I:%M:%S%p')
