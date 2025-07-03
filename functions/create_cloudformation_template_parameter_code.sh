@@ -73,7 +73,7 @@ create_cloudformation_template_parameter_code(){
             #'' to the property list
             if [ "$required" != "true" ]; then
                 default_value="    Default: ''"
-            esac
+            fi
 
             # get allowed values from enum
             allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
