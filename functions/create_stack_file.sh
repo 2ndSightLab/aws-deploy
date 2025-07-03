@@ -20,6 +20,9 @@ create_stack_file() {
   
   indent="  "
   echo $indent'CODE_CREATION_TIMESTAMP='$timestamp >> "$STACK_FILE_NAME"
+  echo $indent'REGION='$REGION >> "$REGION"
+  echo $indent'ENV_PROFILE='$ENV_PROFILE >> "$ENV_PROFILE"
+  echo $indent'STACK_NAME='$STACK_NAME >> "$STACK_FILE_NAME"
   echo $indent'STACK_RESOURCE_NAME='$STACK_RESOURCE_NAME >> "$STACK_FILE_NAME"
   echo $indent'RESOURCE_TYPE='$RESOURCE_TYPE >> "$STACK_FILE_NAME"
   echo $indent'TEMPLATE_FILE_PATH='$TEMPLATE_FILE_PATH >> "$STACK_FILE_NAME"
