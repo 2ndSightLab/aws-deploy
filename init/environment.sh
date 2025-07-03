@@ -31,4 +31,7 @@ if [ ! -f "$env_file_path" ]; then
   touch $ENV_FILE_PATH;  
   echo "$ENV_NAME:" >> "$ENV_FILE_PATH"
 fi
-echo "ENV_FILE_PATH: $ENV_FILE_PATH"
+
+if [ DEBUG ]; then 
+  echo "ENV_FILE_PATH: $ENV_FILE_PATH"
+fi
