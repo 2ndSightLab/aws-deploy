@@ -13,6 +13,11 @@ create_deploy_script_for_resource() {
     
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
     chmod +x "$SCRIPT_FILE_PATH"
+
+    # Set IAM_CAPABILITY variable based on resource type
+    echo "" >> "$SCRIPT_FILE_PATH"
+    echo "# Set IAM capability flag based on resource type" >> "$SCRIPT_FILE_PATH"
+    echo "IAM_CAPABILITY=false" >> "$SCRIPT_FILE_PATH"
     
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
     
