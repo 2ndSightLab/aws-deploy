@@ -1,14 +1,14 @@
 #/bin/bash -e
 deploy_cloudformation_stack() {
   
-    validate_first_n_args_set 5  "$@"
+    validate_first_n_args_set 4 "$@"
     
     local STACK_NAME=$1
     local TEMPLATE_FILE_PATH=$2
-    local ENCODED_PARAMETER_LIST=$3
-    local ENV_PROFILE=$4
-    local REGION=$5
-    local IAM=${6:-false}
+    local ENV_PROFILE=$3
+    local REGION=$4
+    local IAM=${5:-false}
+    local ENCODED_PARAMETER_LIST=$6
     
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
