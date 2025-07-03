@@ -70,8 +70,10 @@ if [ -z $GIT_REPO_URL ]; then
 fi
 
 GIT_REPO_NAME=$(basename "$GIT_REPO_URL" .git)
-echo "GIT_REPO_NAME: $GIT_REPO_NAME"
-if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
+if [ $DEBUG ]; then 
+  echo "GIT_REPO_NAME: $GIT_REPO_NAME"; 
+  if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
+fi
 
 prompt_git_parent_dir="
 Enter the parent directory where you want to clone $GIT_REPO_URL. 
