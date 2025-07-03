@@ -68,21 +68,15 @@ create_cloudformation_template_parameter_code(){
                     ;;
             esac
             
-            #if required is false default value is '' and the property will not 
-            #be set. When reading the parameter list, don't add properties set to 
-            #'' to the property list
-            if [ "$required" != "true" ]; then
-                default_value="    Default: ''"
-            fi
-
             # get allowed values from enum
             allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
- 
-            #default allowed value list for boolean
-            #if [ "$param_type" ==
-
+            
             if [[ "$required" == "true" ]]; then required="Required"; else required="Optional"; fi
 
+            if [ "$required" == "Optional" ]; then
+                default_value="    Default: ''"
+            fi
+            
             if [ "$allowed_values" != "" ]; then 
                 allowed_values="    AllowedValues: $allowed_values" 
             fi
@@ -90,8 +84,8 @@ create_cloudformation_template_parameter_code(){
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
             echo "    Description: Enter value for ${property} ($required)" >> "$TEMPLATE_FILE_PATH"
-            echo $default_value
-            echo $allowed_values
+            echo $default_value >> "$TEMPLATE_FILE_PATH"
+            echo $allowed_values >> "$TEMPLATE_FILE_PATH"
           
         fi
         
