@@ -38,7 +38,7 @@ create_deploy_script_resource_properties() {
             echo "echo \"Property: $property\"" >> "$SCRIPT_FILE_PATH"
             
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
-            echo "echo \"Description:\"" >> "$SCRIPT_FILE_PATH"
+            echo "echo \"Description: $description\"" >> "$SCRIPT_FILE_PATH"
             
             local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
