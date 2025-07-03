@@ -1,10 +1,8 @@
 #!/bin/bash -e
 create_stack_file() {
 
-  validate_first_n_args_set 6 "$@"
+  validate_first_n_args_set 4 "$@"
     
-  STACK_FILE_PATH="$1"
-  STACK_RESOURCE_NAME="$2"
   RESOURCE_TYPE="$3"
   TEMPLATE_FILE_PATH="$4"
   SCRIPT_FILE_PATH="$5"
