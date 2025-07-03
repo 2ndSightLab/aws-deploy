@@ -62,11 +62,11 @@ create_cloudformation_template_parameter_code(){
                     ;;
                 "array") 
                     cf_type="CommaDelimitedList"
-                    default_value=''
+                    default_value="    Default: ''"
                     ;;
                 *) 
                     cf_type="String"
-                    default_value=''
+                    default_value="    Default: ''"
                     ;;
             esac
             
