@@ -28,8 +28,10 @@ chmod 700 deploy.sh
 14. Continue with additional resources or exit.
    
 # Revisions:
-
-7/3/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
+7/3/25 - Fixed issue with mutually exclusive property which actually had to do with
+         incorrect processing of numeric default values and conditions. Added debug mode.
+         Simplified file paths.
+7/2/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
          to save output. Save save files by resources/account/region/ in git repo 
          if specified otherwise this repo folder. Added a stack_file with stack
          configuration and parameter overrides used for last deployment (which 
