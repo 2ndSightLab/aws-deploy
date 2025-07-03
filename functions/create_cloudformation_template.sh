@@ -22,7 +22,7 @@ create_cloudformation_template() {
 
     echo "Resources:" >> "$TEMPLATE_FILE_PATH"
     echo "  $RESOURCE_NAME:" >> "$TEMPLATE_FILE_PATH"
-    echo "    Type: ${resource_type}" >> "$TEMPLATE_FILE_PATH"
+    echo "    Type: ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
     echo "    Properties:" >> "$TEMPLATE_FILE_PATH"
     create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
 
