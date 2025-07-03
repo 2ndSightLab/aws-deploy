@@ -73,7 +73,7 @@ create_cloudformation_template_parameter_code(){
                 default_value="    Default: ''"
             fi
 
-            allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if has($prop) then .[$prop].enum else empty end')
+            allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if has($prop) and .[$prop].enum then .[$prop].enum | join(",") else empty end')
 
             if [ -n "$allowed_values" ]; then 
                 allowed_values="    AllowedValues: $allowed_values" 
