@@ -73,7 +73,7 @@ create_cloudformation_template_parameter_code(){
             
                case "$param_type" in
                     "integer"|"number") 
-                        default_value="-99999"
+                        default_value="-9999"
                         ;;
                     *) 
                         default_value="''"
