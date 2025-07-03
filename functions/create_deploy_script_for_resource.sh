@@ -16,7 +16,7 @@ create_deploy_script_for_resource() {
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" 
 
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
-    echo "  read -p \"No parameters provided. Continue? (y/n): \"" >> "$SCRIPT_FILE_PATH"
+    echo "  read -p \"No parameters provided. Continue? (y/n): \" REPLY " >> "$SCRIPT_FILE_PATH"
     echo "  [[ ! \$REPLY =~ ^[Yy]$ ]] && exit 1" >> "$SCRIPT_FILE_PATH"
     echo "else" >> "$SCRIPT_FILE_PATH"
     echo "  # Add base64 encoding of parameter overrides with proper handling of special characters" >> "$SCRIPT_FILE_PATH"
