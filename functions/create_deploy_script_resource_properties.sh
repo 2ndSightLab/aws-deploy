@@ -57,7 +57,7 @@ create_deploy_script_resource_properties() {
                 # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
                 case "$param_type" in
                     "integer"|"number") cf_type="Number" ;;
-                    "boolean") cf_type="String"; echo "    AllowedValues: [true, false]" >> "$SCRIPT_FILE_PATH" ;;
+                    "boolean") cf_type="String" ;;
                     "array") cf_type="CommaDelimitedList" ;;
                     "string") cf_type="String" ;;
                     *) echo "Other type: $param_type to String: $param_type"; cf_type="String" ;;
