@@ -29,12 +29,15 @@ chmod 700 deploy.sh
    
 # Revisions:
 
-7/2/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
-         to save output. Broke main into init scripts in init folder. Added additional
-         functions to validate data. Save save files by resources/account/region/ in git repo 
-         if specified otherwise this repo folder. Loop to deploy additional resources
+7/3/25 - Added the ability to set AWS CLI profile and region. Option to specify git repo 
+         to save output. Save save files by resources/account/region/ in git repo 
+         if specified otherwise this repo folder. Added a stack_file with stack
+         configuration and parameter overrides used for last deployment (which 
+         should align with what is in AWS). Broke main into init scripts in init folder. 
+         Added additional functions to validate data. Loop to deploy additional resources
          without exiting. Configuration file to store environment configuration
-         to avoid repeatedly re-entering it.\
+         to avoid repeatedly re-entering it on each run. Supports multiple environments
+         with different configurations (profile, git repo, etc.)
 6/30/25 - fixed issue: empty parameter list didn't work, allowed values added to wrong parameter,\
           ask the user if they want to deploy now, print property name and allowed values to screen,\
           clean up output\
