@@ -1,5 +1,3 @@
-#!/bin/bash -e
-
 echo "Initializing..."
 
 run(){
@@ -48,11 +46,7 @@ run(){
   
     source init/service_resource_schema.sh
     
-    source init/template_file.sh
-    
-    source init/stack_file.sh
-    
-    source init/script_file.sh
+    source init/file_paths.sh
    
     echo ""
     echo "ENV: $ENV_NAME"
@@ -90,6 +84,9 @@ run(){
 
  
 }
+
+#run in function to protect local vars
+run
 
 #run in function to protect local vars
 run
