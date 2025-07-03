@@ -68,16 +68,15 @@ create_cloudformation_template_parameter_code(){
                     ;;
             esac
             
-            # get allowed values from enum
-            allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
-            
             if [[ "$required" == "true" ]]; then required="Required"; else required="Optional"; fi
 
             if [ "$required" == "Optional" ]; then
                 default_value="    Default: ''"
             fi
+
+            allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum' | sed 's|null||')
             
-            if [ "$allowed_values" != "" ]; then 
+            if [ -n "$allowed_values"]; then 
                 allowed_values="    AllowedValues: $allowed_values" 
             fi
             
