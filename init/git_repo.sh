@@ -65,14 +65,14 @@ if [ -z $GIT_REPO_URL ]; then
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
   echo "GIT_REPO_URL: $GIT_REPO_URL"
-  if [ -z "$GIT_REPO_URL" ]; then echo "GIT_REPO_URL not set"; exit 1; fi
+  if [ -z "$GIT_REPO_URL" ]; then echo "GIT_REPO_URL not set"; fi
   
 fi
 
 GIT_REPO_NAME=$(basename "$GIT_REPO_URL" .git)
 if [ $DEBUG ]; then 
   echo "GIT_REPO_NAME: $GIT_REPO_NAME"; 
-  if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; exit 1; fi
+  if [ -z "$GIT_REPO_NAME" ]; then echo "GIT_REPO_NAME not set"; fi
 fi
 
 prompt_git_parent_dir="
