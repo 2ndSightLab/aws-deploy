@@ -115,30 +115,7 @@ create_deploy_script_resource_properties() {
             echo "" >> "$SCRIPT_FILE_PATH"
             
         done < <(echo "$properties_json" | jq -r 'keys[]')
-
-        echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
-        echo "  read -p \"No parameters provided. Continue? (y/n): \" REPLY " >> "$SCRIPT_FILE_PATH"
-        echo "  [[ ! \$REPLY =~ ^[Yy]$ ]] && exit 1" >> "$SCRIPT_FILE_PATH"
-        echo "else" >> "$SCRIPT_FILE_PATH"
-        echo "  # Add base64 encoding of parameter overrides with proper handling of special characters" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"# Base64 encode the parameter overrides\"" >> "$SCRIPT_FILE_PATH"
-        echo "  PARAMETER_OVERRIDES_B64=\$(echo -n \"\$PARAMETER_OVERRIDES\" | base64 -w 0)" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"\"" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"Base64 encoded parameters:\"" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"\$PARAMETER_OVERRIDES_B64\"" >> "$SCRIPT_FILE_PATH"
-        echo "fi" >> "$SCRIPT_FILE_PATH"
-
-        #create the stack file
-        echo "create_stack_file \
-         $RESOURCE_TYPE \   
-         $STACK_NAME \
-         $ENV_PROFILE \
-         $REGION \
-         $TEMPLATE_FILE_PATH \
-         $SCRIPT_FILE_PATH \
-         $IAM_CAPABILITY \
-         $PARAMETER_OVERRIDES_B64" >> "$SCRIPT_FILE_PATH"
+    
             
     
 }
