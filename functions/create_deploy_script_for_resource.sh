@@ -1,7 +1,7 @@
 #!/bin/bash -e
 create_deploy_script_for_resource() {
 
-    validate_first_n_args_set 7 "$@"
+    validate_first_n_args_set 8 "$@"
 
     local RESOURCE_TYPE="$1"
     local SCRIPT_FILE_PATH="$2"
@@ -10,6 +10,7 @@ create_deploy_script_for_resource() {
     local REGION="$5"
     local SCHEMA_B64="$6"
     local STACK_NAME="$7"
+    local STACK_FILE_PATH="$8"
     
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
     chmod +x "$SCRIPT_FILE_PATH"
@@ -49,6 +50,7 @@ create_deploy_script_for_resource() {
     #all values can be hardcoded except PARAMETER_OVERRIDES
     #which are set at run time
     echo "create_stack_file \
+     \"$STACK_FILE_PATH\" \    
      \"$RESOURCE_TYPE\" \
      \"$STACK_NAME\" \
      \"$ENV_PROFILE\" \
