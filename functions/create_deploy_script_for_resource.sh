@@ -17,14 +17,14 @@ create_deploy_script_for_resource() {
 
     #record the values used for this deployment to the stack file path
     s="#record deployment values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $ENV_PROFILE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $REGION >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $RESOURCE_TYPE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $SCRIPT_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $TEMPLATE_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $SCHEMA_B64 >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $STACK_NAME >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo $STACK_FILE_PATH >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"ENV_PROFILE: $ENV_PROFILE\" > $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"REGION: $REGION\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"RESOURCE: $RESOURCE_TYPE\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"TEMPLATE_FILE_PATH: $TEMPLATE_FILE_PATH\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"SCHEMA_B64: $SCHEMA_B64\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"STACK_NAME: $STACK_NAME\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo \"STACK_FILE_PATH: $STACK_FILE_PATH\">> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
     #this function loop sthrough properties and adds them to the file 
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
@@ -32,7 +32,7 @@ create_deploy_script_for_resource() {
     #PARAMETER OVERRIDES IS SET IN THE CODE ADDED BY THE LAST FUNCTION AND WILL BE AVAILABLE TO THE
     #CODE BELOW ADDED IN THE FILE BUT NOT IN THIS FUNCTION
     s="#record parameter values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
-    s="echo \$PARAMETER_OVERRIDES >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="echo PARAMETER_OVERRIDES_B64: \$PARAMETER_OVERRIDES_B64: >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
     # Set IAM_CAPABILITY variable based on resource type
     echo "" >> "$SCRIPT_FILE_PATH"
