@@ -3,13 +3,13 @@
 if [ -n "$RESOURCE_NAME" ]; then 
 
 prompt_service="
-The current $SERVICE_NAME resource name is $RESOURCE_NAME. Enter a new service name to change it. (type help for a list of services):
+The current $SERVICE_NAME resource name is $RESOURCE_NAME. Enter a new service name to change it. (Type help for a list of services):
 "
 
 else
 
 prompt_service="
-Enter the resource of the $SERVICE_NAME resource name that you want to deploy (type help for a list of resources):
+Enter the $SERVICE_NAME resource name that you want to deploy (type help for a list of resources):
 "
 
 fi
