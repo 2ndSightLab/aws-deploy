@@ -31,30 +31,36 @@ create_cloudformation_template_condition_code(){
         else
             local param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
             local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
-      
+            
             # Only create conditions for optional properties
             if [[ "$required" == "false" || "$required" == "No" ]]; then
                 echo "  ${property}Condition:" >> "$TEMPLATE_FILE_PATH"
-                if [ "$param_type" == "array" ]; then
-                    # For array types, check if the array is empty using Fn::Join
-                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
-                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - Fn::Join:" >> "$TEMPLATE_FILE_PATH"
-                    echo "              - ''" >> "$TEMPLATE_FILE_PATH"
-                    echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - ''" >> "$TEMPLATE_FILE_PATH"
-                elif [ "$param_type" == "number" ]; then
-                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
-                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - 0" >> "$TEMPLATE_FILE_PATH"                
-                else
-                    # For non-array types, non-number types, check if the value is not empty
-                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
-                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
-                    echo "          - ''" >> "$TEMPLATE_FILE_PATH"
-                fi
+
+                case "$param_type" in
+                        "integer"|"number") 
+                        echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
+                        echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - -9999" >> "$TEMPLATE_FILE_PATH"    
+                        ;;
+                    "array") 
+                        # For array types, check if the array is empty using Fn::Join
+                        echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
+                        echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - Fn::Join:" >> "$TEMPLATE_FILE_PATH"
+                        echo "              - ''" >> "$TEMPLATE_FILE_PATH"
+                        echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - ''" >> "$TEMPLATE_FILE_PATH"
+                        ;;
+                    *) 
+                        # For all other types, non-number types, check if the value is not empty
+                        echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
+                        echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
+                        echo "          - ''" >> "$TEMPLATE_FILE_PATH"
+                        ;;
+                esac
+              
             fi
        fi
     done < <(echo "$properties_json" | jq -r 'keys[]')
