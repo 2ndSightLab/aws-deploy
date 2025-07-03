@@ -49,10 +49,11 @@ run(){
     source init/service_resource_schema.sh
     
     source init/template_file.sh
-  
-    source init/script_file.sh
 
     source init/stack_file.sh
+    
+    source init/script_file.sh
+
    
     echo ""
     echo "ENV: $ENV_NAME"
