@@ -12,8 +12,6 @@ create_deploy_script_for_resource() {
     local STACK_NAME="$7"
     local STACK_FILE_PATH="$8"
 
-  
-    
     echo '#!/bin/bash -e' > "$SCRIPT_FILE_PATH"
     chmod +x "$SCRIPT_FILE_PATH"
 
