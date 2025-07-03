@@ -51,11 +51,10 @@ run(){
     source init/template_file.sh
     
     source init/stack_file.sh
-
-    exit
     
     source init/script_file.sh
-
+    
+    exit
    
     echo ""
     echo "ENV: $ENV_NAME"
