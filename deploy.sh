@@ -95,8 +95,7 @@ run(){
  
 }
 
-#run in function to protect local vars
-run
+if "$1" == "debug"; then DEBUG=1; fi
 
 #run in function to protect local vars
 run
