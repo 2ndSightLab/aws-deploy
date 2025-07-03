@@ -47,6 +47,10 @@ run(){
     source init/service_resource_schema.sh
     
     source init/file_paths.sh
+
+    source init/temlpate_file.sh
+    
+    source init/script_file.sh
    
     echo ""
     echo "ENV: $ENV_NAME"
