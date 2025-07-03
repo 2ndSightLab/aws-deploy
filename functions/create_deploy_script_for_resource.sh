@@ -47,13 +47,6 @@ create_deploy_script_for_resource() {
     echo "  exit 1" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
     echo "" >> "$SCRIPT_FILE_PATH"
-
-     echo "create_stack_file \
-     $STACK_FILE_PATH \
-     $RESOURCE_TYPE \
-     $TEMPLATE_FILE_PATH \
-     $SCRIPT_FILE_PATH \
-     $PARAMETER_OVERRIDES_B64" 
      
     #create the stack file
     echo "create_stack_file \
