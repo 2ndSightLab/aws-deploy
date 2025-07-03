@@ -95,7 +95,7 @@ run(){
  
 }
 
-if [ "$1" == "debug" ]; then DEBUG=1; fi
+if [ "$1" == "debug" ]; then DEBUG=1; echo "DEBUG ON"; fi
 
 #run in function to protect local vars
 run
