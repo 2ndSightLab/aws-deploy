@@ -30,6 +30,8 @@ run(){
 
   source init/identity.sh
 
+  source init/aws_account_number.sh
+    
   while [ true ]; do
 
     source init/region.sh
@@ -43,8 +45,6 @@ run(){
     source init/stack_name.sh
   
     source init/stack_resource_name.sh
-  
-    source init/aws_account_number.sh
   
     source init/service_resource_schema.sh
     
