@@ -1,7 +1,7 @@
 #!/bin/bash -e
 create_cloudformation_template_parameter_code(){
 
-     validate_first_n_args_set 3 "$@"
+    validate_first_n_args_set 3 "$@"
     
     local RESOURCE_TYPE=$1
     local TEMPLATE_FILE_PATH=$2
@@ -31,6 +31,7 @@ create_cloudformation_template_parameter_code(){
         local ref=""
         local object_schema=""
         local allowed_values=""
+        local default_value=""
 
         local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
  
@@ -81,6 +82,7 @@ create_cloudformation_template_parameter_code(){
             if [ "$allowed_values" != "" ]; then 
                 echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
             fi
+            echo "#Done" >> "$TEMPLATE_FILE_PATH"
         fi
         
     done < <(echo "$properties_json" | jq -r 'keys[]')
