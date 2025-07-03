@@ -71,7 +71,7 @@ run(){
     echo "ACCOUNT: $ACCOUNT"
     echo "TEMPLATE FILE PATH: $TEMPLATE_FILE_PATH"
     echo "SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH"
-    echo "SCRIPT_FILE_PATH: $STACK_FILE_PATH"
+    echo "STACK_FILE_PATH: $STACK_FILE_PATH"
     echo ""
   
     #the deploy script assumes the above values have been set prior to sourcing it
