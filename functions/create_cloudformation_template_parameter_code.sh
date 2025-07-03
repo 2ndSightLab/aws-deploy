@@ -52,21 +52,22 @@ create_cloudformation_template_parameter_code(){
             
             # Map JSON Schema types to CloudFormation parameter types
             # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
-            case "$param_type" in
+        
+           case "$param_type" in
                 "integer"|"number") 
                     cf_type="Number" 
                     ;;
                 "boolean")
-                    cf_type="String"
+                    cf_type="String" 
                     ;;
                 "array") 
-                    cf_type="CommaDelimitedList"
+                    cf_type="CommaDelimitedList" 
                     ;;
                 *) 
                     cf_type="String"
                     ;;
             esac
-
+            
             #if required is false default value is '' and the property will not 
             #be set. When reading the parameter list, don't add properties set to 
             #'' to the property list
@@ -78,19 +79,18 @@ create_cloudformation_template_parameter_code(){
             allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
  
             #default allowed value list for boolean
-            if [ "$param_type" ==
+            #if [ "$param_type" ==
 
+            if [[ "$required" == "true" ]]; then required="Required"; else required="Optional"; fi
+
+            if [ "$allowed_values" != "" ]; then 
+                allowed_values="    AllowedValues: $allowed_values" 
+            fi
+            
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
-            if [[ "$required" == "true" ]]; then
-                echo "    Description: Required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
-            else
-                echo "    Description: Optional - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
-                echo "$default_value" >> "$TEMPLATE_FILE_PATH"
-            fi
-            if [ "$allowed_values" != "" ]; then 
-                echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
-            fi
+            echo "    Description: $required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
+            echo $allowed_values
           
         fi
         
