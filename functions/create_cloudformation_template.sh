@@ -34,7 +34,6 @@ create_cloudformation_template() {
     echo "    Description: The ID of the ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
     echo "    Value:" >> "$TEMPLATE_FILE_PATH"
     echo "      Ref: $RESOURCE_NAME" >> "$TEMPLATE_FILE_PATH"
-    echo "#DONE" >> "$TEMPLATE_FILE_PATH"
 
     echo "CloudFormation template created and saved to $TEMPLATE_FILE_PATH"
 }
