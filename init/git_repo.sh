@@ -19,7 +19,6 @@ Enter environment name. (To learn more about environments, enter help):
 "
 
 while [ -z "$e" ]; do
-
     read -p "$prompt_environment" e    
     if [ "$e" == "help" ]; then echo $help; e=""; fi
 done
@@ -54,9 +53,12 @@ GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
 clone="n"
 if [ -z $GIT_REPO_URL ]; then
   clone="y"
-  while [ -z "$g" ]; do
+  while true; do
     read -p "$prompt_git_url" g
-    if [ "$g" == "help" ]; then echo $help; g=""; fi
+    if [ "$g" != "help" ]; then
+        break
+    fi
+    echo "$help"
   done
 
   GIT_REPO_URL="$g"
