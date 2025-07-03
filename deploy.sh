@@ -48,7 +48,7 @@ run(){
     
     source init/file_paths.sh
 
-    source init/temlpate_file.sh
+    source init/template_file.sh
     
     source init/script_file.sh
    
