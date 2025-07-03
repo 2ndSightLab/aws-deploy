@@ -20,7 +20,11 @@ Enter the AWS CLI profile name you want to use. Enter for the default profile.
 
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
+#if the envirnoment profile is set check to see if it is valid.
 if [ -n "$ENV_PROFILE" ]; then
+     if [ $DEBUG ]; then 
+       echo "Environment profile set: $ENV_PROFILE. Check if valid."; 
+     fi
      is_valid_aws_profile $ENV_PROFILE
      if [ $? -ne 0 ]; then 
          echo "Invald profile: $ENV_PROFILE"
@@ -28,8 +32,8 @@ if [ -n "$ENV_PROFILE" ]; then
     fi
 fi
 
+#not set so propmpt for one
 if [ -z "$ENV_PROFILE" ]; then
-
   while [ -z "$p" ]; do
     read -p "$prompt_profile" p
     if [ "$p" == "help" ]; then echo $help; p=""
@@ -43,6 +47,7 @@ if [ -z "$ENV_PROFILE" ]; then
     fi
   done
 
+  if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
   ENV_PROFILE=$p
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
   ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
