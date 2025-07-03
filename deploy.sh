@@ -52,6 +52,8 @@ run(){
   
     source init/script_file.sh
 
+    source init/stack_file.sh
+   
     echo ""
     echo "ENV: $ENV_NAME"
     echo "IDENTITY_ARN: $IDENTITY_ARN"
@@ -69,6 +71,7 @@ run(){
     echo "ACCOUNT: $ACCOUNT"
     echo "TEMPLATE FILE PATH: $TEMPLATE_FILE_PATH"
     echo "SCRIPT_FILE_PATH: $SCRIPT_FILE_PATH"
+    echo "SCRIPT_FILE_PATH: $STACK_FILE_PATH"
     echo ""
   
     #the deploy script assumes the above values have been set prior to sourcing it
@@ -79,8 +82,6 @@ run(){
    
     # this script depends on some of the variables set above
     source $SCRIPT_FILE_PATH
-
-    source init/stack_file.sh
 
     echo "Do you want to deploy another resource? Enter to continue. Ctrl-C to exit."
     read ok
