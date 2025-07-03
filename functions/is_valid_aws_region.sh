@@ -17,7 +17,8 @@ is_valid_aws_region() {
         echo "Error: Failed to retrieve AWS region list." >&2
         return 1
     fi
-    
+
+    echo  "if [[ $aws_regions =~ (^|[[:space:]])$REGION($|[[:space:]]) ]]; then return 0; else echo 'invalid'; fi"
     # Check if the region name is in the list
     if [[ $aws_regions =~ (^|[[:space:]])$REGION($|[[:space:]]) ]]; then
         return 0  # Valid region
