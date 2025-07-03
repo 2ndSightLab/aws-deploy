@@ -18,7 +18,7 @@ create_deploy_script_for_resource() {
     chmod +x "$SCRIPT_FILE_PATH"
 
     #record the values used for this deployment to the stack file path
-    s="record deployment values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
+    s="#record deployment values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     s="echo $ENV_PROFILE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     s="echo $REGION >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     s="echo $RESOURCE_TYPE >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
@@ -33,6 +33,7 @@ create_deploy_script_for_resource() {
 
     #PARAMETER OVERRIDES IS SET IN THE CODE ADDED BY THE LAST FUNCTION AND WILL BE AVAILABLE TO THE
     #CODE BELOW ADDED IN THE FILE BUT NOT IN THIS FUNCTION
+    s="#record parameter values in $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     s="echo \$PARAMETER_OVERRIDES >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
     # Set IAM_CAPABILITY variable based on resource type
