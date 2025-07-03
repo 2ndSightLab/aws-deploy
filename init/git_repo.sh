@@ -28,9 +28,12 @@ ENV_NAME="$e"
 ENV_FILE_PATH="$ENV_DIR/$ENV_NAME"   
 if [ ! -f "$env_file_path" ]; then touch $ENV_FILE_PATH; fi    
 
-echo "ENV_FILE_PATH: $ENV_FILE_PATH"
+if [ $DEBUG ]; then 
+  echo "ENV_FILE_PATH: $ENV_FILE_PATH"
 
-echo "Configure git repository"
+  echo "Configure git repository"
+fi
+
 help="
 ~~~
 The github repository URL is used to clone the git repo where the output files will be stored that are generated
@@ -83,11 +86,15 @@ if [ -z "$GIT_REPO_PARENT_DIR" ]; then
   GIT_REPO_PARENT_DIR=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_PARENT_DIR")
 fi
 
-echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+if [ $DEBUG ]; then
+  echo "GIT_REPO_PARENT_DIR: $GIT_REPO_PARENT_DIR"
+fi
 if [ -z "$GIT_REPO_PARENT_DIR" ]; then echo "Error: GIT_REPO_PARENT_DIR is not set in environment file."; ecxit 1; fi
 
 GIT_REPO_DIR="$GIT_REPO_PARENT_DIR/$GIT_REPO_NAME"
-echo "GIT_REPO_DIR: $GIT_REPO_DIR"
+if [ $DEBUG ]; then
+  echo "GIT_REPO_DIR: $GIT_REPO_DIR"
+fi 
 
 pompt_repo_overwrite="
 Repo directory: $GIT_REPO_DIR already exists. Do you want to overwrite it? (y)
