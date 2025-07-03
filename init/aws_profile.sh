@@ -49,4 +49,4 @@ if [ -z "$ENV_PROFILE" ]; then
 
 fi
 
-if [ DEBUG ]; then echo "ENV_PROFILE: $ENV_PROFILE"; fi
+if [ $DEBUG ]; then echo "ENV_PROFILE: $ENV_PROFILE"; fi
