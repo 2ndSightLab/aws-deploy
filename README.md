@@ -28,6 +28,7 @@ chmod 700 deploy.sh
 14. Continue with additional resources or exit.
    
 # Revisions:
+
 7/3/25 - Fixed issue with mutually exclusive property which actually had to do with
          incorrect processing of numeric default values and conditions. Added debug mode.
          Simplified file paths.
