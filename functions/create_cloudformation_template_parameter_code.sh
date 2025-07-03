@@ -49,20 +49,24 @@ create_cloudformation_template_parameter_code(){
             case "$param_type" in
                 "integer"|"number") 
                     cf_type="Number" 
+                    default_value="    Default: 0"
                     ;;
                 "boolean")
                     cf_type="String"
                     if [[ "$required" == "true" ]]; then
                         allowed_values="    AllowedValues: [true, false]"
                     else
-                        allowed_values="    AllowedValues: [true, false, '']"                        
+                        allowed_values="    AllowedValues: [true, false, '']"
+                        default_value="    Default: 'true'"
                     fi
                     ;;
                 "array") 
-                    cf_type="CommaDelimitedList" 
+                    cf_type="CommaDelimitedList"
+                    default_value=''
                     ;;
                 *) 
-                    cf_type="String" 
+                    cf_type="String"
+                    default_value=''
                     ;;
             esac
             
@@ -72,7 +76,7 @@ create_cloudformation_template_parameter_code(){
                 echo "    Description: Required - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
             else
                 echo "    Description: Optional - Enter value for ${property}" >> "$TEMPLATE_FILE_PATH"
-                echo "    Default: ''" >> "$TEMPLATE_FILE_PATH"
+                echo $default_value >> "$TEMPLATE_FILE_PATH"
             fi
             if [ "$allowed_values" != "" ]; then 
                 echo "$allowed_values" >> "$TEMPLATE_FILE_PATH"
