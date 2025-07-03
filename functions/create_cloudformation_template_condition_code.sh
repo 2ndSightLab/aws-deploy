@@ -43,8 +43,13 @@ create_cloudformation_template_condition_code(){
                     echo "              - ''" >> "$TEMPLATE_FILE_PATH"
                     echo "              - Ref: $property" >> "$TEMPLATE_FILE_PATH"
                     echo "          - ''" >> "$TEMPLATE_FILE_PATH"
+                elif [ "$type" == "number" ]; then
+                    echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
+                    echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
+                    echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
+                    echo "          - 0" >> "$TEMPLATE_FILE_PATH"                
                 else
-                    # For non-array types, check if the value is not empty
+                    # For non-array types, non-number types, check if the value is not empty
                     echo "    Fn::Not:" >> "$TEMPLATE_FILE_PATH"
                     echo "      - Fn::Equals:" >> "$TEMPLATE_FILE_PATH"
                     echo "          - Ref: $property" >> "$TEMPLATE_FILE_PATH"
