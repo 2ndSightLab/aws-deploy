@@ -14,17 +14,16 @@ create_cloudformation_template_parameter_code(){
 
     local properties_json=$(jq -r 'if type == "string" then fromjson else . end | .properties' <<< "$SCHEMA") 
     local readOnlyProps=$(jq -r 'if type == "string" then fromjson else . end | if has("readOnlyProperties") then .readOnlyProperties[] else empty end' <<< "$SCHEMA" | sed 's|/properties/||g')
-
-    #echo "Properties json:"
-    #echo $properties_json | jq '.'
     
      while read -r property; do
 
         pcode=""
-        
-        local pjson=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]')
-        echo "Processing property:"
-        echo $pjson | jq .
+
+        if [ $DEBUG ]; then
+          local pjson=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]')
+          echo "Processing parameters property:"
+          echo $pjson | jq .
+        fi
         
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             continue
