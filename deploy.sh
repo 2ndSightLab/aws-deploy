@@ -3,7 +3,13 @@ echo "Initializing..."
 run(){
 
   #source all the files in the functions directory
-  for file in functions/*; do [ -f "$file" ] && source "$file"; done
+  for file in functions/*; do 
+    [ -f "$file" ] && source "$file"; 
+    if [ $? -ne 0 ]; then
+      echo "Error: failed to import $file with exit code $?"
+      exit 1
+    fi
+  done
 
   local ENV_NAME=""
   local ENV_DIR=""
