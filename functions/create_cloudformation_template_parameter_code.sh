@@ -70,7 +70,17 @@ create_cloudformation_template_parameter_code(){
             if [[ "$required" == "true" ]]; then required="Required"; else required="Optional"; fi
 
             if [ "$required" == "Optional" ]; then
-                default_value="    Default: ''"
+            
+               case "$param_type" in
+                    "integer"|"number") 
+                        default_value="-99999"
+                        ;;
+                    *) 
+                        default_value="''"
+                        ;;
+                esac
+                
+                default_value="    Default: $default_value"
             fi
 
             allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" 'if has($prop) and .[$prop].enum then .[$prop].enum | join(",") else empty end')
