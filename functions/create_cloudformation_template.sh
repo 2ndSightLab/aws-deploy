@@ -15,16 +15,16 @@ create_cloudformation_template() {
     echo "" >> "$TEMPLATE_FILE_PATH"
 
     echo "Parameters:" >> "$TEMPLATE_FILE_PATH"
-    x=create_cloudformation_template_parameter_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    create_cloudformation_template_parameter_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
     
     echo "Conditions:" >> "$TEMPLATE_FILE_PATH"
-    x=create_cloudformation_template_condition_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    create_cloudformation_template_condition_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
 
     echo "Resources:" >> "$TEMPLATE_FILE_PATH"
     echo "  $RESOURCE_NAME:" >> "$TEMPLATE_FILE_PATH"
     echo "    Type: ${RESOURCE_TYPE}" >> "$TEMPLATE_FILE_PATH"
     echo "    Properties:" >> "$TEMPLATE_FILE_PATH"
-    x=create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
+    create_cloudformation_template_resource_code $RESOURCE_TYPE $TEMPLATE_FILE_PATH $SCHEMA_B64
 
     echo "Create CloudFormation template outputs code"
     #todo: all outputs
