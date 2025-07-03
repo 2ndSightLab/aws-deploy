@@ -40,7 +40,7 @@ create_deploy_script_resource_properties() {
             #echo "Property: $property"
             
             local description=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].description')
-            description_b64=$echo $description | base64 -w 0)
+            description_b64=$(echo $description | base64 -w 0)
             echo "description_b64=$description_b64" >>  "$SCRIPT_FILE_PATH"
             echo "echo \"Description:\"" >> "$SCRIPT_FILE_PATH"
             echo "echo $description_b64 | base64 -d"
