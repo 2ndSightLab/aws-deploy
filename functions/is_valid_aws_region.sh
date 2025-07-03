@@ -17,16 +17,16 @@ is_valid_aws_region() {
         echo "Error: Failed to retrieve AWS region list." >&2
         exit
     fi
+    
+    echo "Valid regions: $aws_regions"
+    echo "$aws_regions" | grep -qw "$REGION"
 
-    case "$REGION" in $aws_regions )
+    if [ $? -eq 0 ]; then
         echo "REGION $REGION is valid"
         return 0
-        ;;
-      *)
+    else
         echo "REGION $REGION is not valid"
-        exit
-        ;;
-    esac
-    
+        exit 1
+    fi
   
 }
