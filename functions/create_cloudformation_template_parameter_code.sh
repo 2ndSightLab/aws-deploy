@@ -19,8 +19,13 @@ create_cloudformation_template_parameter_code(){
     #echo $properties_json | jq '.'
     
      while read -r property; do
+
+        pcode=""
         
-        #echo "Processing property: $property in parameters"
+        local pjson=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]')
+        echo "Processing property:"
+        echo $pjson | jq .
+        
         if echo "$readOnlyProps" | grep -q "^$property$"; then
             continue
         fi
@@ -50,27 +55,31 @@ create_cloudformation_template_parameter_code(){
             case "$param_type" in
                 "integer"|"number") 
                     cf_type="Number" 
-                    default_value="    Default: 0"
                     ;;
                 "boolean")
                     cf_type="String"
-                    if [[ "$required" == "true" ]]; then
-                        allowed_values="    AllowedValues: [true, false]"
-                    else
-                        allowed_values="    AllowedValues: [true, false, '']"
-                        default_value="    Default: 'true'"
-                    fi
                     ;;
                 "array") 
                     cf_type="CommaDelimitedList"
-                    default_value="    Default: ''"
                     ;;
                 *) 
                     cf_type="String"
-                    default_value="    Default: ''"
                     ;;
             esac
-            
+
+            #if required is false default value is '' and the property will not 
+            #be set. When reading the parameter list, don't add properties set to 
+            #'' to the property list
+            if [ "$required" != "true" ]; then
+                default_value="    Default: ''"
+            esac
+
+            # get allowed values from enum
+            allowed_values=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].enum')
+ 
+            #default allowed value list for boolean
+            if [ "$param_type" ==
+
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
             if [[ "$required" == "true" ]]; then
