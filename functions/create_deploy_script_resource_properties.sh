@@ -128,22 +128,6 @@ create_deploy_script_resource_properties() {
         echo "  echo \"Base64 encoded parameters:\"" >> "$SCRIPT_FILE_PATH"
         echo "  echo \"\$PARAMETER_OVERRIDES_B64\"" >> "$SCRIPT_FILE_PATH"
         echo "fi" >> "$SCRIPT_FILE_PATH"
- 
-        # Add template file existence check
-        echo "# Check if CloudFormation template file exists" >> "$SCRIPT_FILE_PATH"
-        echo "if [[ ! -f \"$TEMPLATE_FILE_PATH\" ]]; then" >> "$SCRIPT_FILE_PATH"
-        echo "  echo \"Error: CloudFormation template file not found at $TEMPLATE_FILE_PATH\" >&2" >> "$SCRIPT_FILE_PATH"
-        echo "  exit 1" >> "$SCRIPT_FILE_PATH"
-        echo "fi" >> "$SCRIPT_FILE_PATH"
-        echo "" >> "$SCRIPT_FILE_PATH"
-         
-        # Deploy CloudFormation stack
-        echo "# Deploy CloudFormation stack" >> "$SCRIPT_FILE_PATH"
-        echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
-        echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \"\" \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
-        echo "else" >> "$SCRIPT_FILE_PATH"
-        echo "  deploy_cloudformation_stack \$STACK_NAME \$TEMPLATE_FILE_PATH \$ENV_PROFILE \$REGION \$PARAMETER_OVERRIDES_B64 \$IAM_CAPABILITY " >> "$SCRIPT_FILE_PATH"
-        echo "fi" >> "$SCRIPT_FILE_PATH"
 
         #create the stack file
         echo "create_stack_file \
