@@ -50,6 +50,8 @@ run(){
     
     source init/template_file.sh
 
+    exit
+    
     source init/stack_file.sh
     
     source init/script_file.sh
