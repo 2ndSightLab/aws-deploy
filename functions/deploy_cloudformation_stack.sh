@@ -29,7 +29,7 @@ deploy_cloudformation_stack() {
     # "InstanceType=t2.micro" "KeyName=my-key" "BucketName=my-bucket" "Description=This is a sample description with spaces" 
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket "Description=This is a sample description with spaces" 
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket Description="This is a sample description with spaces" 
-    if [ -z ENCODED_PARAMETER_LIST ]; then
+    if [ "$ENCODED_PARAMETER_LIST" == "" ]; then
         if [ $DEBUG ]; then echo "No parameters in deploy_cloudformation_stack"; fi
     else 
         if [ $DEBUG ]; then echo "Decoding parameters"; fi
