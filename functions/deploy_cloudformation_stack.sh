@@ -26,8 +26,9 @@ deploy_cloudformation_stack() {
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket "Description=This is a sample description with spaces" 
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket Description="This is a sample description with spaces" 
     if [ -n "$ENCODED_PARAMETER_LIST" ]; then
+        if [ $DEBUG ]; then echo "Decoding parameters"; fi
         local decoded_params=$(echo "$ENCODED_PARAMETER_LIST" | base64 --decode)
-        echo "Parameters: $decoded_parameters"
+        if [ $DEBUG ]; then echo "Parameters: $decoded_parameters"; fi
         deploy_cmd+=" --parameter-overrides $decoded_params"
     fi
 
