@@ -21,9 +21,9 @@ is_valid_aws_profile() {
               mkdir -p $HOME/.aws/
           fi
 
-          aws config set region $REGION
-          aws config set output json
-          aws config set credential_source EcsContainer
+          aws configure set region $REGION
+          aws configure set output json
+          aws configure set credential_source EcsContainer
           
     fi
 
