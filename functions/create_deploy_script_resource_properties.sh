@@ -17,7 +17,7 @@ create_deploy_script_resource_properties() {
      echo "echo \"Enter property values for $RESOURCE_TYPE:\""  >> "$SCRIPT_FILE_PATH"
      while read -r property; do
         
-            #echo "Processing property: $property in script resource code"
+            if [ $DEBUG ]; then echo "Processing property: $property in script resource code"; fi
     
             # Check if property is in the read-only list
             if echo "$readOnlyProps" | grep -q "^$property$"; then
@@ -43,15 +43,16 @@ create_deploy_script_resource_properties() {
             local ref=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]["$ref"]')
             
             if [[ -n "$ref" && "$ref" != "null" ]]; then
-                #echo "Processing complex type: $ref"
+                if [ $DEBUG ]; then echo "Processing complex type: $ref"; fi
                 local object_schema=$(jq -r --arg defname "$property" 'fromjson | .definitions[$defname]' <<< "$SCHEMA") 
                 local object_schema_b64=$(echo "$object_schema" | base64)
+                
                 create_deploy_script_resource_properties "$property" "$object_schema_b64" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH"
             else
 
-                #echo "Processing non-complex type"
+                if [ $DEBUG ]; then  "Processing non-complex type"; fi
                 param_type=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop].type')
-                echo "echo \"Type: $param_type\"" >> "$SCRIPT_FILE_PATH"
+                if [ $DEBUG ]; then echo "echo \"Type: $param_type\"" >> "$SCRIPT_FILE_PATH"; fi
                 
                 # Map JSON Schema types to CloudFormation parameter types
                 # Valid CF parameter types: String, Number, List, Comma Delimited List, AWS specific types (e.g. AWS::EC2::Image::Id)
@@ -62,7 +63,7 @@ create_deploy_script_resource_properties() {
                     "string") cf_type="String" ;;
                     *) echo "Other type: $param_type to String: $param_type"; cf_type="String" ;;
                 esac
-                #echo "CloudFormation Type: $cf_type"
+                if [ $DEBUG ]; then echo "CloudFormation Type: $cf_type"; fi
                 
                 local required=$(echo "$properties_json" | jq -r --arg prop "$property" '.[$prop]? // {} | .required? | index($prop) | (. >= 0) | tostring')
 
@@ -77,7 +78,7 @@ create_deploy_script_resource_properties() {
                 
                 if [[ -n "$enum_values" && "$enum_values" != "" && "$enum_values" != "null" ]]; then
                     echo "echo \"Allowed values: $enum_values\"" >> "$SCRIPT_FILE_PATH"
-                    #echo "Enum: $enum_values"
+                    if [ $DEBUG ]; then echo "Enum: $enum_values"; fi
                 else
                     if [ type == "boolean" ]; then 
                         if [[ "$required" == "true" ]]; then
@@ -92,7 +93,7 @@ create_deploy_script_resource_properties() {
                 echo "echo \"Enter value for $property:\"" >> "$SCRIPT_FILE_PATH"
                 echo "read -r ${property}_value" >> "$SCRIPT_FILE_PATH"
 
-                # Add to parameter overrides
+                if [ $DEBUG ]; then echo "Add to parameter overrides"; fi
                 echo "if [[ -n \"\${${property}_value}\" ]]; then" >> "$SCRIPT_FILE_PATH"
                 echo " echo \"Property Value: \${${property}_value}\"" >> "$SCRIPT_FILE_PATH"
                 echo "  # Handle special characters including @ in parameter values" >> "$SCRIPT_FILE_PATH"
