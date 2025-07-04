@@ -3,13 +3,13 @@ deploy_cloudformation_stack() {
   
     validate_first_n_args_set 4 "$@"
     
-    local STACK_NAME=$1
-    local TEMPLATE_FILE_PATH=$2
-    local ENV_PROFILE=$3
-    local REGION=$4
+    local STACK_NAME="$1"
+    local TEMPLATE_FILE_PATH="$2"
+    local ENV_PROFILE="$3"
+    local REGION="$4"
     local IAM=${5:-false}
     local ENCODED_PARAMETER_LIST=$6
-    
+
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
         echo "Stack $STACK_NAME exists in a failed state. Deleting..."
@@ -25,7 +25,9 @@ deploy_cloudformation_stack() {
     # "InstanceType=t2.micro" "KeyName=my-key" "BucketName=my-bucket" "Description=This is a sample description with spaces" 
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket "Description=This is a sample description with spaces" 
     # InstanceType=t2.micro KeyName=my-key BucketName=my-bucket Description="This is a sample description with spaces" 
-    if [ -n "$ENCODED_PARAMETER_LIST" ]; then
+    if [ -z ENCODED_PARAMETER_LIST ]; then
+        if [ $DEBUG ]; then echo "No parameters in deploy_cloudformation_stack"; fi
+    else 
         if [ $DEBUG ]; then echo "Decoding parameters"; fi
         local decoded_params=$(echo "$ENCODED_PARAMETER_LIST" | base64 --decode)
         if [ $DEBUG ]; then echo "Parameters: $decoded_parameters"; fi
