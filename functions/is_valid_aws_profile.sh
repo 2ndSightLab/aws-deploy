@@ -5,10 +5,11 @@ is_valid_aws_profile() {
     
     if [ $DEBUG ]; then
       echo "Checking to see if $profile is a valid AWS CLI profile on this system."
+      aws configure list-profiles
+      aws configure list-profiles | grep -q "^${profile}$";
     fi
 
     if aws configure list-profiles | grep -q "^${profile}$"; then
-       echo "Default profile added for CloudShell"
        exists="y"
     fi
     
