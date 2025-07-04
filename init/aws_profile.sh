@@ -17,50 +17,42 @@ Enter the AWS CLI profile name you want to use. Enter for the default profile.
 (Type help for more information.)
 "
 if [ $DEBUG ]; then  echo "Checking for profile in environment file."; fi
-
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
-#if in cloudshell set the default profile even if not used
 if [ -z "$ENV_PROFILE" ]; then 
 
-  if [ $DEBUG ]; then echo "Profile not set in environment file."; fi
-
-  if [ -n "$AWS_EXECUTION_ENV" ] && [ "$profile" == "default" ];  then
-  
-        if [ $DEBUG ]; then echo "AWS CloudShell environment"; fi
-        
-        REGION=$(echo $AWS_REGION)
-        aws configure set region $REGION
-        aws configure set output json
-        aws configure set credential_source EcsContainer
-  fi
-fi
-
-if [ -z "$ENV_PROFILE" ]; then 
-
-  if [ $DEBUG ]; then echo "Profile not set so prompt for one.";  fi
+  if [ $DEBUG ]; then echo "Profile not set in environment file so prompt for one.";  fi
 
   p=""
   while [ "$p" != "help" ]; do
       read -p "$prompt_profile" p
       if [ "$p" == "help" ]; then echo $help; p=""
       else
-        if [ "$p" == "" ]; then p="default"; fi
+        if [ -z "$p" ]; then p="default"; fi
         break
       fi
   done
   
-  is_valid_aws_profile $p
-  if [ $? -ne 0 ]; then echo "Invald profile: $p"; exit; p=""; fi
-
   ENV_PROFILE=$p
 
-  if [ $DEBUG ]; then echo "ENV_PROFILE set to $ENV_PROFILE"; fi
-  
-  if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
-  set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
-  ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
+  #if we are in the CloudShell environment make sure the default profile is configured
+  if [ -n "$AWS_EXECUTION_ENV" ];  then
+     if [ $DEBUG ]; then echo "AWS CloudShell environment"; fi  
+        
+     REGION=$(echo $AWS_REGION)
+     aws configure set region $REGION
+     aws configure set output json
+     aws configure set credential_source EcsContainer   
+   fi
 
 fi
 
-if [ $DEBUG ]; then echo "ENV_PROFILE: $ENV_PROFILE"; fi
+if [ $DEBUG ]; then echo "ENV_PROFILE: $ENV_PROFILE"; fi  
+is_valid_aws_profile $p
+if [ $? -ne 0 ]; then echo "Invald profile: $p"; exit; p=""; fi
+
+if [ $DEBUG ]; then echo "$p is a valid profile."; fi
+if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
+set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
+ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
+if [ $DEBUG ]; then echo "ENV_PROFILE from environment config file: $ENV_PROFILE"; fi
