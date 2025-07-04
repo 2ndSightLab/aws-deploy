@@ -26,22 +26,21 @@ create_deploy_script_for_resource() {
     s="echo \"STACK_NAME: $STACK_NAME\" >> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     s="echo \"STACK_FILE_PATH: $STACK_FILE_PATH\">> $STACK_FILE_PATH"; echo $s >> "$SCRIPT_FILE_PATH"
     
-    #this function loop sthrough properties and adds them to the file 
+    if [ $DEBUG ]; then echo "Generate proprety code"; fi
     create_deploy_script_resource_properties "$RESOURCE_TYPE" "$SCRIPT_FILE_PATH" "$TEMPLATE_FILE_PATH" "$SCHEMA_B64" "$IAM_CAPABILITY"
     
-    # Set IAM_CAPABILITY variable based on resource type
+    if [ $DEBUG ]; then echo "Set IAM_CAPABILITY variable based on resource type"; fi
     echo "" >> "$SCRIPT_FILE_PATH"
     echo "# Set IAM capability flag based on resource type" >> "$SCRIPT_FILE_PATH"
     echo "IAM_CAPABILITY=false" >> "$SCRIPT_FILE_PATH"
 
-    # Check if resource type requires IAM permissions with more precise matching
+    if [ $DEBUG ]; then echo "Check if resource type requires IAM permissions with more precise matching"; fi
     echo "# Check if resource requires IAM permissions" >> "$SCRIPT_FILE_PATH"
     echo "if [[ \"$RESOURCE_TYPE\" == \"AWS::IAM::\"* ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  IAM_CAPABILITY=true" >> "$SCRIPT_FILE_PATH"
     echo "  echo \"This resource requires IAM capabilities for deployment.\"" >> "$SCRIPT_FILE_PATH"
     echo "fi" >> "$SCRIPT_FILE_PATH"
 
-    #base64 parameter overrides
     echo "if [[ -z \"\$PARAMETER_OVERRIDES\" ]]; then" >> "$SCRIPT_FILE_PATH"
     echo "  read -p \"No parameters provided. Continue? (y/n): \" REPLY " >> "$SCRIPT_FILE_PATH"
     echo "  [[ ! \$REPLY =~ ^[Yy]$ ]] && exit 1" >> "$SCRIPT_FILE_PATH"
