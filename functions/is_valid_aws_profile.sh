@@ -6,26 +6,6 @@ is_valid_aws_profile() {
     if [ $DEBUG ]; then
       echo "Checking to see if $profile is a valid AWS CLI profile on this system."
     fi
-    
-    if [ -n "$AWS_EXECUTION_ENV" ] && [ "$profile" == "default" ];  then
-
-          if [ $DEBUG ]; then
-            echo "AWS CloudShell environment" >&2
-          fi
-          
-          REGION=$(echo $AWS_REGION)
-      
-          #add default profile
-          if [ ! -f $HOME/.aws/ ]; then 
-              echo "Create $HOME/.aws/" >&2
-              mkdir -p $HOME/.aws/
-          fi
-
-          aws configure set region $REGION
-          aws configure set output json
-          aws configure set credential_source EcsContainer
-          
-    fi
 
     if aws configure list-profiles | grep -q "^${profile}$"; then
        echo "Default profile added for CloudShell"
