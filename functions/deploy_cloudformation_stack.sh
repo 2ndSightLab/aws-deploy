@@ -10,6 +10,10 @@ deploy_cloudformation_stack() {
     local IAM=${5:-false}
     local ENCODED_PARAMETER_LIST=$6
 
+    if [ $DEBUG ]; then 
+      echo "ENCODED_PARAMETER_LIST: $ENCODED_PARAMETER_LIST"
+    fi 
+    
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
         echo "Stack $STACK_NAME exists in a failed state. Deleting..."
