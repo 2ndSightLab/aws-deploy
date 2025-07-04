@@ -50,7 +50,7 @@ if [ -z "$ENV_PROFILE" ]; then
       read -p "$prompt_profile" p
       if [ "$p" == "help" ]; then echo $help; p=""
       else
-        if "$p" == ""; then p="default"; fi
+        if [ "$p" == "" ]; then p="default"; fi
         break
       fi
   done
@@ -63,9 +63,7 @@ if [ -z "$ENV_PROFILE" ]; then
 
   ENV_PROFILE=$p
 
-  if [ $DEBUG ]; then
-     echo "ENV_PROFILE set to $ENV_PROFILE"
-  fi
+  if [ $DEBUG ]; then echo "ENV_PROFILE set to $ENV_PROFILE"; fi
   
   if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
