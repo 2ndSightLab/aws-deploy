@@ -25,38 +25,49 @@ fi
 
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
-if [ -n "$ENV_PROFILE" ]; then
+#if in cloudshell set the default profile even if not used
+if [ -z "$ENV_PROFILE" ]; then 
 
-     if [ $DEBUG ]; then 
-       echo "Environment profile set: $ENV_PROFILE. Check if valid."; 
-     fi
+  if [ $DEBUG ]; then echo "Profile not set in environment file." fi
 
-     is_valid_aws_profile $ENV_PROFILE
-     
-     if [ $? -ne 0 ]; then 
-         echo "Invald profile: $ENV_PROFILE"
-         ENV_PROFILE=""; 
-    fi
-    
+  if [ -n "$AWS_EXECUTION_ENV" ] && [ "$profile" == "default" ];  then
+  
+        if [ $DEBUG ]; then echo "AWS CloudShell environment"  fi
+        
+        REGION=$(echo $AWS_REGION)
+        aws configure set region $REGION
+        aws configure set output json
+        aws configure set credential_source EcsContainer
+  fi
 fi
 
-#not set so propmpt for one
-if [ -z "$ENV_PROFILE" ]; then
-  while [ -z "$p" ]; do
-    read -p "$prompt_profile" p
-    if [ "$p" == "help" ]; then echo $help; p=""
-    else
-      if [ "$p" == "" ]; then p="default"; fi
-      is_valid_aws_profile $p
-      if [ $? -ne 0 ]; then 
-         echo "Invald profile: $p"
-         p=""; 
-      fi
-    fi
-  done
+if [ -z "$ENV_PROFILE" ]; then 
 
-  if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
+  if [ $DEBUG ]; then echo "Profile not set so prompt for one."  fi
+
+  p=""
+  while [ "$p" != "help" ]; do
+      read -p "$prompt_profile" p
+      if [ "$p" == "help" ]; then echo $help; p=""
+      else
+        if "$p" == ""; then p="default"; fi
+        break
+      fi
+  done
+  
+  is_valid_aws_profile $p
+  if [ $? -ne 0 ]; then 
+     echo "Invald profile: $p"
+     p=""; 
+  fi
+
   ENV_PROFILE=$p
+
+  if [ $DEBUG ]; then
+     echo "ENV_PROFILE set to $ENV_PROFILE"
+  fi
+  
+  if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
   set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
   ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
