@@ -7,6 +7,8 @@ set_env_param_value() {
   param_name="$2"
   value="$3"
 
+  echo $param_name
+  echo $value
   value=$(trim_spaces_and_quotes $value)
   param_name=$(trim_spaces_and_quotes $param_nam)
 
