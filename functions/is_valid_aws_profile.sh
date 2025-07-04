@@ -1,6 +1,8 @@
 #!/bin/bash -e
 is_valid_aws_profile() {
 
+    validate_first_n_args_set 1  "$@"
+    
     local profile="$1"
     
     if [ $DEBUG ]; then
