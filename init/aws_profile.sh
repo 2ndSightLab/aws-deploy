@@ -1,8 +1,6 @@
 #!/bin/bash -e
 
-if [ $DEBUG ]; then
-  echo "Configure AWS CLI profile"
-fi
+if [ $DEBUG ]; then echo "Configure AWS CLI profile"; fi
 
 help="
 ~~~
@@ -14,25 +12,22 @@ or commands are executed using a default profile for the environment (e.g. Cloud
 If do not enter a profile name, then the default profile will be used to run aws commands.
 ~~~
 "
-      
 prompt_profile="
 Enter the AWS CLI profile name you want to use. Enter for the default profile. 
 (Type help for more information.)
 "
-if [ $DEBUG ]; then 
-  echo "Checking to see if the profile is in the environment file."
-fi
+if [ $DEBUG ]; then  echo "Checking for profile in environment file."; fi
 
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 
 #if in cloudshell set the default profile even if not used
 if [ -z "$ENV_PROFILE" ]; then 
 
-  if [ $DEBUG ]; then echo "Profile not set in environment file." fi
+  if [ $DEBUG ]; then echo "Profile not set in environment file."; fi
 
   if [ -n "$AWS_EXECUTION_ENV" ] && [ "$profile" == "default" ];  then
   
-        if [ $DEBUG ]; then echo "AWS CloudShell environment"  fi
+        if [ $DEBUG ]; then echo "AWS CloudShell environment"; fi
         
         REGION=$(echo $AWS_REGION)
         aws configure set region $REGION
@@ -43,7 +38,7 @@ fi
 
 if [ -z "$ENV_PROFILE" ]; then 
 
-  if [ $DEBUG ]; then echo "Profile not set so prompt for one."  fi
+  if [ $DEBUG ]; then echo "Profile not set so prompt for one.";  fi
 
   p=""
   while [ "$p" != "help" ]; do
@@ -56,10 +51,7 @@ if [ -z "$ENV_PROFILE" ]; then
   done
   
   is_valid_aws_profile $p
-  if [ $? -ne 0 ]; then 
-     echo "Invald profile: $p"
-     p=""; 
-  fi
+  if [ $? -ne 0 ]; then echo "Invald profile: $p"; exit; p=""; fi
 
   ENV_PROFILE=$p
 
