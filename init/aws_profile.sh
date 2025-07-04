@@ -48,7 +48,7 @@ if [ -z "$ENV_PROFILE" ]; then
 fi
 
 if [ $DEBUG ]; then echo "ENV_PROFILE: $ENV_PROFILE"; fi  
-is_valid_aws_profile $p
+is_valid_aws_profile "$ENV_PROFILE"
 if [ $? -ne 0 ]; then echo "Invald profile: $p"; exit; p=""; fi
 
 if [ $DEBUG ]; then echo "$p is a valid profile."; fi
