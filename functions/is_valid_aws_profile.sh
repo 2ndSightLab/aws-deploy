@@ -21,6 +21,7 @@ is_valid_aws_profile() {
               echo "Create $HOME/.aws/" >&2
               mkdir -p $HOME/.aws/
           fi
+          echo "[default]" >> ~/.aws/config
           echo "region = $REGION" >> ~/.aws/config
           echo "output = json" >> ~/.aws/config
           echo "credential_source = EcsContainer" >> ~/.aws/config
