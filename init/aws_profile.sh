@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
-echo "Configure AWS CLI profile"
+if [ $DEBUG ]; then
+  echo "Configure AWS CLI profile"
+fi
 
 help="
 ~~~
