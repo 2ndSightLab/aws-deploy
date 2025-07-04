@@ -22,7 +22,7 @@ is_valid_aws_profile() {
           echo "region = $REGION" >> ~/.aws/config
           echo "output = json" >> ~/.aws/config
           echo "credential_source = EcsContainer" >> ~/.aws/config
-       fi
+       
     fi
 
     if aws configure list-profiles | grep -q "^${profile}$"; then
