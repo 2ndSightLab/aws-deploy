@@ -8,9 +8,7 @@ deploy_cloudformation_stack() {
     local ENV_PROFILE="$3"
     local REGION="$4"
     local IAM=${5:-false}
-    local ENCODED_PARAMETER_LIST="$6"
-
-    ENCODED_PARAMETER_LIST=$(trim_spaces_and_quotes $ENCODED_PARAMETER_LIST)
+    local ENCODED_PARAMETER_LIST=$6
 
     # Check if the stack exists in a failed state
     if aws cloudformation describe-stacks --stack-name "$STACK_NAME" --profile $ENV_PROFILE --region $REGION 2>/dev/null | grep -q "CREATE_FAILED\|ROLLBACK_COMPLETE"; then
