@@ -17,9 +17,9 @@ is_valid_aws_profile() {
           REGION=$(get_region)
  
           #add default profile
-          if [ ! -f $HOME/.aws/config ]; then 
-              echo "Create $HOME/.aws/config" >&2
-              mkdir -p $HOME/.aws/config; 
+          if [ ! -f $HOME/.aws/ ]; then 
+              echo "Create $HOME/.aws/" >&2
+              mkdir -p $HOME/.aws/
           fi
           echo "region = $REGION" >> ~/.aws/config
           echo "output = json" >> ~/.aws/config
