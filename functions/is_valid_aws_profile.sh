@@ -12,12 +12,15 @@ is_valid_aws_profile() {
           if [ $DEBUG ]; then
             echo "AWS CloudShell environment" >&2
           fi
+          
+          REGION=$(aws configure get region)
       
           #add default profile
           if [ ! -f $HOME/.aws/ ]; then 
               echo "Create $HOME/.aws/" >&2
               mkdir -p $HOME/.aws/
           fi
+          
           echo "[default]" >> ~/.aws/config
           echo "region = $REGION" >> ~/.aws/config
           echo "output = json" >> ~/.aws/config
