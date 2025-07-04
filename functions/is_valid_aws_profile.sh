@@ -17,7 +17,10 @@ is_valid_aws_profile() {
           REGION=$(get_region)
  
           #add default profile
-          echo "[default]" >> ~/.aws/config
+          if [ ! -f $HOME/.aws/config ]; then 
+              echo "Create $HOME/.aws/config" >&2
+              mkdir -p $HOME/.aws/config; 
+          fi
           echo "region = $REGION" >> ~/.aws/config
           echo "output = json" >> ~/.aws/config
           echo "credential_source = EcsContainer" >> ~/.aws/config
