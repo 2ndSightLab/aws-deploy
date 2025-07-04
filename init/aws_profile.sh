@@ -56,3 +56,4 @@ if [ $DEBUG ]; then echo "Set environment profile in environment file."; fi
 set_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE" "$ENV_PROFILE"
 ENV_PROFILE=$(get_env_param_value "$ENV_FILE_PATH" "ENV_PROFILE")
 if [ $DEBUG ]; then echo "ENV_PROFILE from environment config file: $ENV_PROFILE"; fi
+if [ -z $ENV_PROFILE ]; then echo "ENV_PROFILE not set. Exiting"; exit; fi
