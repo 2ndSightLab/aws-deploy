@@ -8,7 +8,7 @@ set_env_param_value() {
   value="$3"
 
   value=$(trim_spaces_and_quotes $value)
-  param_name=$(trim_spaces_and_quotes $param_nam
+  param_name=$(trim_spaces_and_quotes $param_nam)
 
   if [ $DEBUG ]; then
     echo "Set $param_name: $value in $env_file_path"
