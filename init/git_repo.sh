@@ -35,7 +35,9 @@ if [ -z $GIT_REPO_URL ]; then
   GIT_REPO_URL="$g"
   set_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL" "$GIT_REPO_URL"
   GIT_REPO_URL=$(get_env_param_value "$ENV_FILE_PATH" "GIT_REPO_URL")
-  echo "GIT_REPO_URL: $GIT_REPO_URL"
+  if [ $DEBUG ]; then
+    echo "GIT_REPO_URL: $GIT_REPO_URL"
+  fi
   if [ -z "$GIT_REPO_URL" ]; then echo "GIT_REPO_URL not set"; fi
   
 fi
