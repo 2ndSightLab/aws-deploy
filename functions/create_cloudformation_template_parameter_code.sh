@@ -90,7 +90,6 @@ create_cloudformation_template_parameter_code(){
             if [ -n "$allowed_values" ]; then 
                 allowed_values="    AllowedValues: $allowed_values" 
             fi
-
             
             echo "  $property:" >> "$TEMPLATE_FILE_PATH"
             echo "    Type: ${cf_type}" >> "$TEMPLATE_FILE_PATH"
